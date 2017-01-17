@@ -10,7 +10,15 @@ mongoose = require('mongoose').connect(config.dbURL),
 passport = require('passport'),
 FacebookStrategy = require('passport-facebook').Strategy;
 
+app.set('views', path.join( __dirname + '/../', 'ui'));
+//console.log(app.get('views'));
 
+app.set('view engine', 'html');
+app.engine('html', require('hogan-express'));
+
+
+app.use(express.static(path.join(__dirname + '/../', 'ui')));
+app.use(cookieParser());
 app.set('port', process.env.PORT || 3000);
 app.set('host', process.env.IP || config.host);
 
@@ -22,11 +30,3 @@ require('./routes/routes.js')(express, app, passport, config);
 server.listen(app.get('port'), () => {
    console.log('server started on ', app.get('host') + ':' + app.get('port')); 
 });
-
-// const http = require('http');
-
-// http.createServer((req, res) => {
-//     res.writeHead(200, {'Content-type': 'text/html'});
-//     res.end('<h1>New Repo</h1>')
-// })
-// .listen(process.env.PORT, () => console.log('server started'));
