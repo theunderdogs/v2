@@ -1,0 +1,11 @@
+{
+    "dbURL" : "mongodb://kirandeore:Shiv1984@ds023654.mlab.com:23654/underdogsdb",
+    "host": "https://material-code84.c9users.io",
+    "port": 8080,
+    "sessionSecret": "59a04ea34defd3973abbedb40ff0ed64",
+    "fb":{
+        "appID": "258563667910331",
+        "appSecret": "cc35af8db6c0972604e46dfd1e65f7b3",
+        "callbackURL": "https://material-code84.c9users.io/auth/facebook/callback"
+    }
+}
