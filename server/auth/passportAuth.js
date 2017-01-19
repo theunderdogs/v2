@@ -2,17 +2,38 @@ module.exports = function(path, passport, FacebookStrategy, config, mongoose) {
     
     //console.log('user--- ', path.join( process.cwd(), '/models/user'));
     
-    var User = require(path.join( process.cwd(), '/models/user'))(mongoose);
-    
-    
+    var userModel = require(path.join( process.cwd(), '/models/user'))(mongoose);
     
     passport.serializeUser((user, done) => {
-        done(null, user.id);
+        console.log('serializeUser', user);
+        done(null, user);
+        //done(null, user.id);
     });
     
     passport.deserializeUser((id, done) => {
-        User.findById(id, (err, user) => {
-            done(err, user);
-        });
+        //userModel.findById(id, (err, user) => {
+        //    done(err, user);
+        //});
+        console.log('deserializeUser', id);
+        done(null, id);
     });
+    
+    passport.use(new FacebookStrategy({
+        clientID: config.fb.appID,
+        clientSecret: config.fb.appSecret,
+        callbackURL: config.fb.callbackURL,
+        profileFields: ['id', 'displayName', 'photos']
+    }, (accessToken, refreshToken, profile, done) => {
+        //check if the user exists in mongoDB
+        
+               
+        
+        //userModel.findOne({'profileID': profile.id}, (err, result) => {
+            //if(result){
+                done(null, profile);
+            //} else {
+            //    console.log('No user present');
+            //}
+        //})
+    }));
 }

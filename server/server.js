@@ -42,6 +42,9 @@ if(env === 'development'){
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 require('./auth/passportAuth.js')(path, passport, FacebookStrategy, config, mongoose);
 require('./routes/routes.js')(express, app, passport, config);
 
