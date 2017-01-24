@@ -1,6 +1,7 @@
-module.exports = function(express, app, passport, config){
+module.exports = function(express, app, passport, config, mongoose){
     
     var router = express.Router();
+    var userApi =  require( process.cwd() + '/api/user_api');
     var securePages = (req, res, next) => {
         if(req.isAuthenticated()){
             next();
@@ -21,6 +22,16 @@ module.exports = function(express, app, passport, config){
     
     router.get('/chatrooms', securePages, (req, res, next) => {
         res.render('chatrooms', {title: 'Chatrooms', user: req.user})
+    });
+    
+    router.get('/finduser/:facebookid', (req, res, next) => {
+        userApi.getUserByFacebookId(req.params.facebookid)
+        .then((user) => {
+			res.json(user);
+		}, (err) => {
+			res.send('err occured');
+		});
+        //res.send('Setting favourite color!');
     });
     
     router.get('/setcolor', (req, res, next) => {
