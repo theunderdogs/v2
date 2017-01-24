@@ -12,14 +12,14 @@ var express = require('express'),
 
 var env = process.env.NODE_ENV || 'development';
 
-app.set('views', path.join( __dirname + '/../', 'ui'));
+app.set('views', path.join( __dirname + '/../', 'ui_src'));
 //console.log(app.get('views'));
 
 app.set('view engine', 'html');
 app.engine('html', require('hogan-express'));
 
 
-app.use(express.static(path.join(__dirname + '/../', 'ui')));
+app.use(express.static(path.join(__dirname + '/../', 'ui_src')));
 app.use(cookieParser());
 app.set('port', config.port || process.env.PORT);
 app.set('host', config.host || process.env.IP);
