@@ -60,6 +60,9 @@ fs.readdirSync( process.cwd() + '/api').forEach(function(filename){
 	require( process.cwd() + '/api/' + filename)(mongoose, path);
 });   
 
+//populate master data
+
+
 require('./auth/passportAuth.js')(path, passport, FacebookStrategy, config, mongoose);
 require('./routes/routes.js')(express, app, passport, config, mongoose);
 

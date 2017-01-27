@@ -30,10 +30,12 @@ module.exports = function (setup_mongoose) {
         },
         dateAdded: { type: Date, default: Date.now },
         role: {
-            type: mongoose.Schema.ObjectId,
-            required: [true, 'role is not set']
+            type: mongoose.Schema.ObjectId//,
+            //required: [true, 'role is not set']
         }
     });
+    
+    userSchema.index({ facebookId: 1/*, isAdmin: -1*/ }, { unique: true }); // schema level
     
     userSchema.virtual('getDetails').get(function () {
       return this.facebookId + ' ' + this.status;
@@ -55,6 +57,8 @@ module.exports = function (setup_mongoose) {
         dateAdded: { type: Date, default: Date.now },
     });
     
+    roleSchema.index({ name: 1/*, isAdmin: -1*/ }, { unique: true }); // schema level
+    
     RoleModel = mongoose.model('role', roleSchema);
     
     /* permission */
@@ -66,7 +70,46 @@ module.exports = function (setup_mongoose) {
         dateAdded: { type: Date, default: Date.now },
     });
     
+    permissionSchema.index({ name: 1/*, isAdmin: -1*/ }, { unique: true }); // schema level
+    
     PermissionModel = mongoose.model('permission', permissionSchema);
+    
+    //populate master data
+    return new PermissionModel({
+          name: 'ADDUSER',
+    	  description: 'Can add user?', 
+    	  acceptedValues: [true,false]
+    })
+    .save()
+    .then((doc)=> {
+        var role = new RoleModel({
+            name : 'MANAGER', 
+        	permissions : [{
+        		item: doc._id,
+        		value: true
+        	}]
+        });
+        
+        return role.save();
+    })
+    .then((role) => {
+        return UserModel.insertMany([{ 
+        	facebookId : '10158081909300057', 
+        	isAdmin: true,
+        	status: 'active'
+        },{ 
+        	facebookId : '5555', 
+        	isAdmin: false,
+        	role: role._id,
+        	status: 'active' 
+        }])
+    })
+    .then((users) => {
+        console.log(users)        
+    })
+    .catch((error) => {
+        console.log(error);
+    });
 }
 
 module.exports.getModel = (name) => {
