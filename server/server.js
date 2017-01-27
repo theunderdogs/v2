@@ -27,8 +27,6 @@ app.set('host', config.host || process.env.IP);
 
 mongoose.Promise = global.Promise;
 
-//console.log(mongoose.connections[0]);
-
 if(env === 'development'){
     app.use(session({ secret: config.sessionSecret, resave: true, saveUninitialized: true }))
 } else {

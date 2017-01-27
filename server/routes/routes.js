@@ -34,6 +34,16 @@ module.exports = function(express, app, passport, config, mongoose){
         //res.send('Setting favourite color!');
     });
     
+    router.get('/per', (req, res, next) => {
+        userApi.calculatePermissions()
+        .then((user) => {
+			res.json(user);
+		}, (err) => {
+			res.send(err);
+		});
+        //res.send('Setting favourite color!');
+    });
+    
     router.get('/setcolor', (req, res, next) => {
         req.session.favColor = 'Red';
         res.send('Setting favourite color!');

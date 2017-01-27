@@ -6,40 +6,69 @@ db.getCollectionNames().forEach(function(c) {
     }
  });
 
-db.createCollection('user')
-db.createCollection('permission')
-db.createCollection('role')    
+db.createCollection('users')
+db.createCollection('permissions')
+db.createCollection('roles')    
+db.users.ensureIndex( { facebookId: 1 }, { unique: true } );
 
-db.permission.insert({ description: 'Can user add pet?', dateAdded: new Date() })
+db.permissions.insert([{ 
+	  name: 'ADDUSER',
+	  description: 'Can add user?', 
+	  acceptedValues: [true,false],
+	  dateAdded: new Date()
+	}, { 
+	  name: 'ADDPET',
+	  description: 'Can add pet?', 
+	  acceptedValues: [true,false],
+	  dateAdded: new Date()
+	}])
 
-cursor = db.permission.find({ description: 'Can user add pet?'})
+cursor = db.permissions.find({ name: 'ADDUSER'})
+cursor2 = db.permissions.find({ name: 'ADDPET'})
 
 //print(cursor[0]._id);
 
-db.role.insert({ 
-	name : 'admin', 
-	permission : [{
-		re: { 
+db.roles.insert({ 
+	name : 'MANAGER', 
+	permissions : [{
+		item: new DBRef('permissions', cursor[0]._id)
+		/* { 
 			$ref: 'permission', 
-			$id :  cursor[0]._id 
-		}
+			$id :  cursor[0]._id
+		}*/,
+		value: true
+	}, {
+		item: new DBRef('permissions', cursor2[0]._id),
+		value: true
 	}], 
 	dateAdded: new Date() 
 });
 
-cursor = db.role.find({ name: 'admin'})
+cursor = db.roles.find({ name: 'MANAGER'})
 
-db.user.insert({ 
+db.users.insert([{ 
 	facebookId : '10158081909300057', 
-	role: { 
-		$ref: 'role', 
-		$id :  cursor[0]._id 
-	},
+	isAdmin: true,
 	status: 'active',
 	dateAdded: new Date() 
-});
+},{ 
+	facebookId : '5555', 
+	isAdmin: false,
+	role: new DBRef('roles', cursor[0]._id) /*{ 
+		$ref: 'roles', 
+		$id :  cursor[0]._id 
+	}*/,
+	status: 'active',
+	dateAdded: new Date() 
+}]);
 
 
+cursor = db.roles.find({ name: 'MANAGER'});
+per = cursor[0].permissions[0];
+val = per.value;
+permissions = db[per.item.$ref].find({ _id: per.item.$id })
+
+print('value: ' + val + ', permissions: ' + permissions[0].name + ', ' + permissions[0].description);
 
 /*
 if ( cursor.hasNext() ){

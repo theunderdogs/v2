@@ -7,5 +7,6 @@
         "appID": "258563667910331",
         "appSecret": "cc35af8db6c0972604e46dfd1e65f7b3",
         "callbackURL": "https://material-code84.c9users.io/auth/facebook/callback"
-    }
+    },
+    "useCache": true
 }
