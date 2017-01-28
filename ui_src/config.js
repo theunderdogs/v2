@@ -218,6 +218,7 @@ System.config({
     "datatables": "vendors:bower_components/datatables.net/js/jquery.dataTables.min",
     "vendors:bower_components/datatables.net/js/jquery.dataTables.min": {
       "jquery": "npm:jquery@2.2.4"
-    }
+    },
+    "bootstrap-select": "vendors:bower_components/bootstrap-select/dist/js/bootstrap-select"
   }
 });

@@ -19,7 +19,7 @@ module.exports = function(express, app, passport, config, mongoose){
         res.render('login', { host: config.host });
     });
     
-    router.get('/admin', (req, res, next) => {
+    router.get('/admin', securePages, (req, res, next) => {
         res.render('admin', { host: config.host });
     });
     
@@ -39,6 +39,16 @@ module.exports = function(express, app, passport, config, mongoose){
 			res.json(user);
 		}, (err) => {
 			res.send('err occured');
+		});
+        //res.send('Setting favourite color!');
+    });
+    
+    router.get('/getroles', securePages, (req, res, next) => {
+        userApi.getRoles()
+        .then((roles) => {
+			res.send(200, { roles });
+		}, (err) => {
+			res.send(err);
 		});
         //res.send('Setting favourite color!');
     });

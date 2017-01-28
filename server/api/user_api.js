@@ -41,6 +41,12 @@ module.exports.getAllUsers = () => {
         //.findOne({ facebookId: facebookId })
 };
 
+module.exports.getRoles = () => {
+    checkInitialization();
+    
+    return RoleModel.find().exec();
+};
+
 module.exports.calculatePermissions = () => {
     checkInitialization();
     

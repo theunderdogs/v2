@@ -7,13 +7,13 @@
   "moduleType": [],
   "license": "MIT",
   "homepage": "",
-  "ignore": [
-    "**/.*",
-    "node_modules",
+  //"ignore": [
+  //  "**/.*",
+  //  "node_modules",
     //"bower_components",
-    "test",
-    "tests"
-  ],
+  //  "test",
+  //  "tests"
+  //],
   "dependencies": {
     "bower": "*",
     "install": "~1.0.4",
