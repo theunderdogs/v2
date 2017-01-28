@@ -24,8 +24,8 @@ module.exports = function (setup_mongoose) {
             type: Boolean,
             required: [true, 'isAdmin is not set']
         },
-        status: {
-            type: String,
+        enable: {
+            type: Boolean,
             required: [true, 'status is not set']
         },
         dateAdded: { type: Date, default: Date.now },
@@ -54,6 +54,7 @@ module.exports = function (setup_mongoose) {
                 }, 
               value: mongoose.Schema.Types.Mixed 
             } ],
+        enable: Boolean,
         dateAdded: { type: Date, default: Date.now },
     });
     
@@ -73,7 +74,7 @@ module.exports = function (setup_mongoose) {
     permissionSchema.index({ name: 1/*, isAdmin: -1*/ }, { unique: true }); // schema level
     
     PermissionModel = mongoose.model('permission', permissionSchema);
-    
+    /*
     //populate master data
     return new PermissionModel({
           name: 'ADDUSER',
@@ -87,7 +88,8 @@ module.exports = function (setup_mongoose) {
         	permissions : [{
         		item: doc._id,
         		value: true
-        	}]
+        	}],
+        	enable: true
         });
         
         return role.save();
@@ -96,20 +98,21 @@ module.exports = function (setup_mongoose) {
         return UserModel.insertMany([{ 
         	facebookId : '10158081909300057', 
         	isAdmin: true,
-        	status: 'active'
+        	enable: true
         },{ 
         	facebookId : '5555', 
         	isAdmin: false,
         	role: role._id,
-        	status: 'active' 
+        	enable: true 
         }])
     })
     .then((users) => {
-        console.log(users)        
+       // console.log(users)        
     })
     .catch((error) => {
-        console.log(error);
+        console.log('oh boy: ' + error);
     });
+    */
 }
 
 module.exports.getModel = (name) => {

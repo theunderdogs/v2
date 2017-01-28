@@ -10,14 +10,22 @@ module.exports = function(express, app, passport, config, mongoose){
         }
     };
     
-    router.get('/', (res, req, next) => {
-        res.render('index');
+    router.get('/', (req, res, next) => {
+        res.render('admin');
+    });
+    
+    router.get('/login', (req, res, next) => {
+        res.render('login');
+    });
+    
+    router.get('/admin', (req, res, next) => {
+        res.render('admin');
     });
     
     router.get('/auth/facebook', passport.authenticate('facebook'));
     router.get('/auth/facebook/callback', passport.authenticate('facebook', {
         successRedirect: '/chatrooms',
-        failureRedirect: '/'
+        failureRedirect: '/login'
     }))
     
     router.get('/chatrooms', securePages, (req, res, next) => {

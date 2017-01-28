@@ -13,6 +13,14 @@ export class Login extends Page{
     attached(){
     	 this.onPageRenderComplete();
     }
+    
+    click_login(){
+      this.httpFetch.fetch('https://material-code84.c9users.io/per')
+      .then(response => response.json())
+      .then(data => {
+         console.log(data);
+      });
+    }
 
     getViewStrategy() {
         return 'login/views/login.html';

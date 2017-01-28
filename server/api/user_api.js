@@ -44,10 +44,12 @@ module.exports.getAllUsers = () => {
 module.exports.calculatePermissions = () => {
     checkInitialization();
     
-    return RoleModel.findOne().exec()
+    return RoleModel.findOne()
+            .populate('permissions.item')
+            .exec()
             .then((docs) => {
                 
-                return docs.permissions;         
+                return docs;         
                 
            });
     
