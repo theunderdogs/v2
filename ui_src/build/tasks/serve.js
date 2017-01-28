@@ -8,7 +8,9 @@ gulp.task('serve', ['build'], function(done) {
   browserSync({
     online: false,
     open: false,
-    port: 8081,
+    port: 8082,
+    proxy: 'http://material-code84.c9users.io', 
+    /*
     server: {
       baseDir: ['.'],
       middleware: function(req, res, next) {
@@ -16,6 +18,7 @@ gulp.task('serve', ['build'], function(done) {
         next();
       }
     }
+    */
   }, done);
 });
 

@@ -3,8 +3,7 @@ import 'vendors:bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomSc
 import Waves from 'waves';
 import { TaskQueue, inject, Aurelia, noView } from 'aurelia-framework';
 import 'fetch';
-//import {HttpClient} from 'aurelia-http-client';
-import {HttpClient as HttpFetch} from 'aurelia-fetch-client';
+import {HttpClient as HttpFetch, json} from 'aurelia-fetch-client';
 
 @inject(TaskQueue, Aurelia, HttpFetch)
 export class Page{

@@ -4,6 +4,8 @@ import 'bootstrap';
 window.$ = $;
 
 export function configure(aurelia) {
+  //aurelia.use.instance('apiRoot', 'https://material-code84.c9users.io/');
+
   aurelia.use
     .standardConfiguration()
     .developmentLogging();

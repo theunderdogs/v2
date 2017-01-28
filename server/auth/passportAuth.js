@@ -1,21 +1,19 @@
 module.exports = function(path, passport, FacebookStrategy, config, mongoose) {
     
-    //console.log('user--- ', path.join( process.cwd(), '/models/user'));
+    var UserModel = require(path.join( process.cwd(), '/models/model')).getModel('user');
     
-    //var userModel = require(path.join( process.cwd(), '/models/user'));//(mongoose);
-    
-    passport.serializeUser((user, done) => {
-        console.log('serializeUser', user);
-        done(null, user);
+    passport.serializeUser((userData, done) => {
+        console.log('serializeUser', userData);
+        done(null, userData);
         //done(null, user.id);
     });
     
-    passport.deserializeUser((id, done) => {
+    passport.deserializeUser((userData, done) => {
         //userModel.findById(id, (err, user) => {
         //    done(err, user);
         //});
-        console.log('deserializeUser', id);
-        done(null, id);
+        console.log('deserializeUser', userData);
+        done(null, userData);
     });
     
     passport.use(new FacebookStrategy({
@@ -26,14 +24,12 @@ module.exports = function(path, passport, FacebookStrategy, config, mongoose) {
     }, (accessToken, refreshToken, profile, done) => {
         //check if the user exists in mongoDB
         
-               
-        
-        //userModel.findOne({'profileID': profile.id}, (err, result) => {
-            //if(result){
-                done(null, profile);
-            //} else {
-            //    console.log('No user present');
-            //}
-        //})
+        UserModel.findOne({'facebookId': profile.id}, (err, user) => {
+            if(user){
+                done(null, { user, profile});
+            } else {
+                console.log('No user present');
+            }
+        })
     }));
 }

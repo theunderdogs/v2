@@ -10,21 +10,22 @@ module.exports = function(express, app, passport, config, mongoose){
         }
     };
     
-    router.get('/', (req, res, next) => {
+    router.get('/', securePages, (req, res, next) => {
+        
         res.render('admin');
     });
     
     router.get('/login', (req, res, next) => {
-        res.render('login');
+        res.render('login', { host: config.host });
     });
     
     router.get('/admin', (req, res, next) => {
-        res.render('admin');
+        res.render('admin', { host: config.host });
     });
     
     router.get('/auth/facebook', passport.authenticate('facebook'));
     router.get('/auth/facebook/callback', passport.authenticate('facebook', {
-        successRedirect: '/chatrooms',
+        successRedirect: '/admin',
         failureRedirect: '/login'
     }))
     
@@ -44,8 +45,8 @@ module.exports = function(express, app, passport, config, mongoose){
     
     router.get('/per', (req, res, next) => {
         userApi.calculatePermissions()
-        .then((user) => {
-			res.json(user);
+        .then((permissions) => {
+			res.json(permissions);
 		}, (err) => {
 			res.send(err);
 		});
@@ -68,7 +69,7 @@ module.exports = function(express, app, passport, config, mongoose){
     
     router.get('/logout', (req, res, next) => {
         req.logout();
-        res.redirect('/');
+        res.redirect('/login');
     });
     
     app.use('/', router);

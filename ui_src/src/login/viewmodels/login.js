@@ -15,11 +15,28 @@ export class Login extends Page{
     }
     
     click_login(){
+        /*
       this.httpFetch.fetch('https://material-code84.c9users.io/per')
       .then(response => response.json())
       .then(data => {
          console.log(data);
       });
+      */
+      
+      window.location.href = host + '/auth/facebook';
+      //console.log(host);
+      /*
+      this.httpFetch.fetch('https://material-code84.c9users.io/per', {
+          method: 'POST',
+          body: json(job)
+      })
+      .then(response => response.json())
+      .then(data => {
+         console.log(data);
+      }).catch(err => {
+          
+      });
+      */
     }
 
     getViewStrategy() {

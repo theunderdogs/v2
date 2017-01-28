@@ -9,11 +9,15 @@ export class App {
   configureRouter(config, router) {
     config.title = 'Aurelia';
     config.map([
-      { route: ['', 'addpet'], name: 'addpet',      moduleId: 'admin/viewmodels/addpet',      nav: false, title: 'Add a pet' }//,
-      // { route: ['', 'addpet'], name: 'addpet',      moduleId: 'admin/viewmodels/addpet',      nav: false, title: 'Add a pet' }
+      { route: ['', '_=_', 'addpet'], name: 'addpet',      moduleId: 'admin/viewmodels/addpet',      nav: false, title: 'Add a pet' },
+      { route: ['roles'], name: 'roles',      moduleId: 'admin/viewmodels/roles/index',      nav: false, title: 'Manage roles' }
     ]);
 
     this.router = router;
+  }
+
+  click_logout(){
+  	window.location.href = host + '/logout';
   }
 
   attached(){
