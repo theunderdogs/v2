@@ -63,6 +63,24 @@ module.exports = function(express, app, passport, config, mongoose){
        })
     });
     
+    router.get('/getPermissions', securePages, (req, res, next) => {
+       userApi.getPermissions()
+       .then((permissions) => {
+           res.json(permissions);
+       }, (err) => {
+           res.send(err);
+       })
+    });
+    
+    router.get('/saveRole', securePages, (req, res, next) => {
+       userApi.saveRole()
+       .then((permissions) => {
+           res.json(permissions);
+       }, (err) => {
+           res.send(err);
+       })
+    });
+    
     router.get('/per', (req, res, next) => {
         userApi.calculatePermissions()
         .then((permissions) => {

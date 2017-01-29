@@ -5,8 +5,20 @@ export const services = {
     
     getPermissionsByRoleId: (roleId) => {
         return $.get( host + '/getPermissionsByRoleId/' + roleId)
-    }
+    },
     
+    getPermissions: () => {
+        return $.get( host + '/getPermissions')
+    },
+    
+    saveRole: (role) => {
+        return $.ajax(host + '/getPermissions', {
+			    method: 'POST',
+			    data: role,
+			    processData: false,
+			    contentType: false
+			  });
+    }
 }
 
 // export function squarex() {

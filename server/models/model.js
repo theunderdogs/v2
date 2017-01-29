@@ -76,17 +76,38 @@ module.exports = function (setup_mongoose) {
     PermissionModel = mongoose.model('permission', permissionSchema);
     /*
     //populate master data
-    return new PermissionModel({
-          name: 'ADDUSER',
-    	  description: 'Can add user?', 
-    	  acceptedValues: [true,false]
-    })
-    .save()
-    .then((doc)=> {
+    return PermissionModel.insertMany([
+            new PermissionModel({
+                  name: 'ADDUSER',
+            	  description: 'Can add user?', 
+            	  acceptedValues: [true,false]
+            }), new PermissionModel({
+                  name: 'ADDPET',
+            	  description: 'Can add pet?', 
+            	  acceptedValues: [true,false]
+            }), new PermissionModel({
+                  name: 'EDITPET',
+            	  description: 'Can edit pet?', 
+            	  acceptedValues: ['yes', 'no', 'maybe']
+            }), new PermissionModel({
+                  name: 'EDITUSER',
+            	  description: 'Can edit user?', 
+            	  acceptedValues: ['yes', 'no', 'maybe']
+            })
+        ]) 
+    .then((docs)=> {
+        console.log(docs);
+        let id;
+        docs.forEach((doc) => {
+            if(doc.name == 'ADDUSER') {
+                id = doc._id;
+            }
+        });
+        
         var role = new RoleModel({
             name : 'MANAGER', 
         	permissions : [{
-        		item: doc._id,
+        		item: id,
         		value: true
         	}],
         	enable: true
@@ -113,6 +134,7 @@ module.exports = function (setup_mongoose) {
         console.log('oh boy: ' + error);
     });
     */
+    
 }
 
 module.exports.getModel = (name) => {

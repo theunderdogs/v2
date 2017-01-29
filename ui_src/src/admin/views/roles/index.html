@@ -53,11 +53,25 @@
                     </select>
                 
                 </div>
+                <div class="col-sm-7 m-b-25 pull-right">
+                    <button class="btn btn-primary btn-icon-text waves-effect pull-right m-l-20"><i class="zmdi zmdi-plus"></i>
+                                    Create New Role
+                    </button>
+                    
+                    <button class="btn btn-success btn-icon-text waves-effect pull-right" if.bind="selectedRole" click.delegate="click_applyChanges()"><i class="zmdi zmdi-floppy"></i>
+                                    Apply Changes
+                    </button>
+                </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="table-responsive" ref="dynamicDom">
                     </div>                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 pull-right">
+                    
                 </div>
             </div>
         </div>

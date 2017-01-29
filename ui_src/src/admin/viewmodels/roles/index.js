@@ -18,6 +18,7 @@ export class RoleManagement extends Page{
         let self = this;
         this.roleList = [];
         this.selectedRole;
+        this.allPermissions= [];
         this.tableHtml = '<table ref="dtable" class="table table-striped">' +
                                 '<thead>' +
                                     '<tr>' +
@@ -29,12 +30,17 @@ export class RoleManagement extends Page{
                             '</table>';
         this.tdata;
         
-        return this.db.getroles()
+        return Promise.all([this.db.getroles(), this.db.getPermissions()])
         .then(( data ) => {
-          console.log( data );
+          //console.log('roles', data[0] );
+          //console.log('permissions', data[1] );
           
-          if(data && data.length > 0){
-            self.roleList = data;
+          if(data[0] && data[0].length > 0){
+            self.roleList = data[0];
+          }
+          
+          if(data[1] && data[1].length > 0){
+              self.allPermissions = data[1];
           }
         });
     }
@@ -54,9 +60,22 @@ export class RoleManagement extends Page{
         
         return this.db.getPermissionsByRoleId(this.selectedRole._id)
         .then((result) => {
-            console.log('permissions', result);
+            //console.log('permissions', result);
             this.tdata = result;
             
+            this.allPermissions.forEach((permission) => {
+                let match = false;
+                this.tdata.permissions.forEach((userPermission) => {
+                    if(userPermission.item._id == permission._id){
+                        match = true;
+                    }
+                });
+                
+                if(!match) {
+                    this.tdata.permissions.push({ value: undefined, item: permission });
+                }
+            });
+                
             $(this.dynamicDom).html(this.tableHtml);
             
             return new Promise((resolve, reject) => {
@@ -78,7 +97,7 @@ export class RoleManagement extends Page{
     }
     
     renderDatatable() {
-        //console.log('table data', this.tdata.permissions);
+        console.log('table data', this.tdata.permissions);
         
         let promises = [];
         
@@ -99,7 +118,7 @@ export class RoleManagement extends Page{
                 data: 'item.name'
             }],
             createdRow: (row, data, index) => {
-                console.log('cell data', data);
+                //console.log('cell data', data);
                 $(row).find('td').css('vertical-align', 'middle');
                 let $cell = $(row).find('td').eq(2);
                 
@@ -124,6 +143,24 @@ export class RoleManagement extends Page{
         });
         
         return promises;
+    }
+    
+    click_applyChanges(){
+        //obj = JSON.parse(JSON.stringify(o));
+        var newObject = $.extend(true, {}, this.tdata);
+        
+        let indexesToDelete = [];
+        newObject.permissions.forEach((permission) => {
+            if(permission.value == undefined) {
+                indexesToDelete.push(newObject.permissions.indexOf(permission));
+            }
+        });
+        
+        for(let i = indexesToDelete.length - 1; i >=0; i--) {
+            newObject.permissions.splice(indexesToDelete[i] , 1);
+        }
+        
+        console.log('newrole to be saved', newObject);
     }
     
     getViewStrategy() {
