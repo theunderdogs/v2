@@ -1,22 +1,19 @@
 import 'jquery-mCustomScrollbar';
 import 'vendors:bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css!';
 import Waves from 'waves';
-import { TaskQueue, inject, Aurelia, noView } from 'aurelia-framework';
+import { TaskQueue, inject, Aurelia, noView, TemplatingEngine, BindingEngine, computedFrom } from 'aurelia-framework';
+import {services} from 'common/services'
 //import 'fetch';
-//import {HttpClient} from 'aurelia-fetch-client';
+//import {HttpClient} from 'aurelia-http-client';
 
-@inject(TaskQueue, Aurelia)
+@inject(TaskQueue, Aurelia, TemplatingEngine, BindingEngine, services)
 export class Page{
-	constructor(taskQueue, aurelia) {   
+	constructor(taskQueue, aurelia, templatingEngine, bindingEngine, db) {   
         this.taskQueue = taskQueue;
         this.aurelia = aurelia;
-        //this.httpClient = httpClient;
-        //this.http = new HttpClient(); //httpClient; 
-        // this.httpClient
-        // .configure(x => {
-        //     x.withBaseUrl('https://material-code84.c9users.io');
-        //     //x.withHeader('Authorization', 'bearer 123');
-        // });
+        this.templatingEngine = templatingEngine;    
+        this.bindingEngine = bindingEngine;
+        this.db = db;
     }   
 
     onPageRenderComplete(){

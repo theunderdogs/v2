@@ -48,22 +48,20 @@
                 <div class="col-sm-5 m-b-25">
                     <!--<p class="f-500 m-b-15 c-black">Roles</p>-->
                 
-                    <select class="selectpicker" ref="rolesCombo" data-live-search="true" title="Select a role">
-                        <option>Mustard</option>
-                        <option>Ketchup</option>
-                        <option>Relish</option>
-                        <option>Tent</option>
-                        <option>Flashlight</option>
-                        <option>Toilet Paper</option>
+                    <select class="selectpicker" ref="rolesCombo" value.bind="selectedRole" change.delegate="change_selectedRole()" data-live-search="true" title="Select a role">
+                        <option repeat.for="role of roleList" model.bind="role">${role.name}</option>
                     </select>
                 
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive" ref="dynamicDom">
+                    </div>                    
+                </div>
+            </div>
         </div>
 
-        <div class="table-responsive">
-            
-        </div>
     </div>
     
 </template>

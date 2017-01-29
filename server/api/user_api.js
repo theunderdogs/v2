@@ -47,6 +47,13 @@ module.exports.getRoles = () => {
     return RoleModel.find().exec();
 };
 
+module.exports.getPermissionsByRoleId = (roleId) => {
+    checkInitialization();
+    
+    return RoleModel.findOne({ _id: roleId})
+            .populate('permissions.item').exec();
+};
+
 module.exports.calculatePermissions = () => {
     checkInitialization();
     

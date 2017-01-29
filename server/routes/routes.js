@@ -46,11 +46,21 @@ module.exports = function(express, app, passport, config, mongoose){
     router.get('/getroles', securePages, (req, res, next) => {
         userApi.getRoles()
         .then((roles) => {
-			res.send(200, { roles });
+			//res.send(200, roles);
+			res.json(roles);
 		}, (err) => {
 			res.send(err);
 		});
         //res.send('Setting favourite color!');
+    });
+    
+    router.get('/getPermissionsByRoleId/:roleid', securePages, (req, res, next) => {
+       userApi.getPermissionsByRoleId(req.params.roleid)
+       .then((permissions) => {
+           res.json(permissions);
+       }, (err) => {
+           res.send(err);
+       })
     });
     
     router.get('/per', (req, res, next) => {

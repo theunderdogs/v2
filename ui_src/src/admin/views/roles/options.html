@@ -1,0 +1,9 @@
+<div class="row" repeat.for="i of item.acceptedValues.length">
+    <div class="radio col-md-12">
+        <label>
+            <input type="radio" name.bind="item.name" model.bind="item.acceptedValues[i]" checked.bind="value">
+            <i class="input-helper"></i>
+            ${item.acceptedValues[i]}
+        </label>  
+    </div>
+</div>
