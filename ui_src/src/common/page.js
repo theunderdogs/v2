@@ -1,11 +1,11 @@
 import 'jquery-mCustomScrollbar';
 import 'vendors:bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css!';
 import Waves from 'waves';
+import 'bootstrap-growl';
 import {Router} from 'aurelia-router';
 import { TaskQueue, inject, Aurelia, noView, TemplatingEngine, BindingEngine, computedFrom } from 'aurelia-framework';
 import {services} from 'common/services'
-//import 'fetch';
-//import {HttpClient} from 'aurelia-http-client';
+//import {uiHelper} from 'common/uihelper';
 
 @inject(TaskQueue, Aurelia, TemplatingEngine, BindingEngine, Router, services)
 export class Page{
@@ -16,6 +16,7 @@ export class Page{
         this.bindingEngine = bindingEngine;
         this.router = router;
         this.db = db;
+        //this.uiHelper = uiHelper;
     }   
 
     onPageRenderComplete(){
@@ -89,4 +90,77 @@ export class Page{
             Waves.init();
         });
     }
+    
+    showProgress(message) {
+        let hideFn = this.notify({
+                type: 'info',
+                icon: 'zmdi zmdi-thumb-up m-r-20',
+                message: message || 'Please wait',
+                delay: 0
+            });
+            
+        return () => {
+            hideFn.close();
+        }
+    }
+    
+    showSuccess(message){
+        this.notify({
+                type: 'success',
+                icon: 'zmdi zmdi-thumb-up m-r-20',
+                message: message || 'Saved successfully'
+            }); 
+    }
+    
+    showError(message){
+        this.notify({
+                type: 'danger',
+                icon: 'zmdi zmdi-thumb-down m-r-20',
+                message: message || 'Something went wrong',
+                delay: 0
+            }); 
+    }
+    
+    notify(config) {
+        $.growl({
+                icon: config.icon,// 'fa fa-check',//icon,
+                title: config.title, // ' Bootstrap Growl ',
+                message: config.message ,//'Turning standard Bootstrap alerts into awesome notifications',
+                url: ''
+            },{
+                    element: 'body',
+                    type: config.type, //'success', //'inverse',
+                    allow_dismiss: true,
+                    placement: {
+                            from: config.from,
+                            align: config.align
+                    },
+                    offset: {
+                        x: 20,
+                        y: 85
+                    },
+                    spacing: 10,
+                    z_index: 1031,
+                    delay: config.delay || 2500,  //0 is permanent
+                    timer: 1000,
+                    url_target: '_blank',
+                    mouse_over: false,
+                    animate: {
+                            enter: config.animIn || 'animated bounceInUp', //config.animIn,
+                            exit: config.animOut || 'animated bounceOutUp'// config.animOut
+                    },
+                    icon_type: 'class',
+                    template: '<div data-growl="container" class="alert" role="alert">' +
+                                    '<button type="button" class="close" data-growl="dismiss">' +
+                                        '<span aria-hidden="true">&times;</span>' +
+                                        '<span class="sr-only">Close</span>' +
+                                    '</button>' +
+                                    '<span data-growl="icon"></span>' +
+                                    '<span data-growl="title"></span>' +
+                                    '<span data-growl="message"></span>' +
+                                    '<a href="#" data-growl="url"></a>' +
+                                '</div>'
+            });
+    }
+    
 }

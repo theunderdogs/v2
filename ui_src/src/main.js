@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import 'bootstrap';
-
 window.$ = $;
 
 export function configure(aurelia) {

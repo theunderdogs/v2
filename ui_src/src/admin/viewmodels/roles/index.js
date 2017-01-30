@@ -57,6 +57,7 @@ export class RoleManagement extends Page{
     change_selectedRole() {
         //console.log(this.selectedRole);
         //var data;
+        let hideFn = this.showProgress('Loading role...');
         
         return this.db.getPermissionsByRoleId(this.selectedRole._id)
         .then((result) => {
@@ -92,8 +93,13 @@ export class RoleManagement extends Page{
             });
         })
         .then(() => {
+            hideFn();
             return this.renderDatatable();
         });
+        
+        //this.uiHelper.loadPromise(pr, 'Yay');
+        
+        //return pr;
     }
     
     renderDatatable() {
@@ -147,6 +153,9 @@ export class RoleManagement extends Page{
     
     click_applyChanges(){
         //obj = JSON.parse(JSON.stringify(o));
+        
+        let hideFn = this.showProgress('Saving changes...');
+        
         var newObject = $.extend(true, {}, this.tdata);
         
         let indexesToDelete = [];
@@ -166,13 +175,17 @@ export class RoleManagement extends Page{
         .then((role) => {
             console.log('success', role);
             this.change_selectedRole();
+            hideFn();
+            this.showSuccess('Role updated successfully'); 
         },(err) => {
-            console.log(err)
+            console.log(err);
+            this.showError();
         });
     }
     
     click_createRole() {
-        this.router.navigate('createrole');
+       this.router.navigate('createrole');
+       //this.showSuccess();
     }
     
     getViewStrategy() {
