@@ -122,7 +122,7 @@ export class Page{
     }
     
     notify(config) {
-        $.growl({
+        return $.growl({
                 icon: config.icon,// 'fa fa-check',//icon,
                 title: config.title, // ' Bootstrap Growl ',
                 message: config.message ,//'Turning standard Bootstrap alerts into awesome notifications',
