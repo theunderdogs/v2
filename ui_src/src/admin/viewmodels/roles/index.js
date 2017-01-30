@@ -161,6 +161,18 @@ export class RoleManagement extends Page{
         }
         
         console.log('newrole to be saved', newObject);
+    
+        return this.db.saveRole(newObject)
+        .then((role) => {
+            console.log('success', role);
+            this.change_selectedRole();
+        },(err) => {
+            console.log(err)
+        });
+    }
+    
+    click_createRole() {
+        this.router.navigate('createrole');
     }
     
     getViewStrategy() {

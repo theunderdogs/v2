@@ -9,8 +9,9 @@ export class App {
   configureRouter(config, router) {
     config.title = 'Aurelia';
     config.map([
-      { route: ['', '_=_', 'addpet'], name: 'addpet',      moduleId: 'admin/viewmodels/addpet',      nav: false, title: 'Add a pet' },
-      { route: ['roles'], name: 'roles',      moduleId: 'admin/viewmodels/roles/index',      nav: false, title: 'Manage roles' }
+      { route: ['', '_=_', 'addpet'], name: 'addpet', moduleId: 'admin/viewmodels/addpet', nav: false, title: 'Add a pet' },
+      { route: ['roles'], name: 'roles', moduleId: 'admin/viewmodels/roles/index', nav: false, title: 'Manage roles' },
+      { route: ['createrole'], name: 'createrole', moduleId: 'admin/viewmodels/roles/createrole', nav: false, title: 'Create role' }
     ]);
 
     this.router = router;

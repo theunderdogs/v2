@@ -8,7 +8,9 @@ var express = require('express'),
     config = require('./config/config.js'),
     ConnectMongo = require('connect-mongo')(session),
     mongoose = require('mongoose').connect(config.dbURL),
+    formidable = require('formidable'),
     passport = require('passport'),
+    bodyParser = require('body-parser'),
     FacebookStrategy = require('passport-facebook').Strategy;
 
 var env = process.env.NODE_ENV || 'development';
@@ -63,7 +65,7 @@ fs.readdirSync( process.cwd() + '/api').forEach(function(filename){
 
 
 require('./auth/passportAuth.js')(path, passport, FacebookStrategy, config, mongoose);
-require('./routes/routes.js')(express, app, passport, config, mongoose);
+require('./routes/routes.js')(express, app, passport, config, mongoose, formidable, bodyParser);
 
 server.listen(app.get('port'), () => {
    console.log('server started on ', app.get('host') + ':' + app.get('port')); 

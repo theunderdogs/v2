@@ -12,11 +12,16 @@ export const services = {
     },
     
     saveRole: (role) => {
-        return $.ajax(host + '/getPermissions', {
-			    method: 'POST',
-			    data: role,
-			    processData: false,
-			    contentType: false
+        //let form = new FormData();
+        //form.append('data', role);
+        //return $.post(host + '/saveRole', role);
+        
+        return $.ajax({
+                url: host + '/saveRole', 
+			    type: 'POST',
+			    data: JSON.stringify(role),
+			    //dataType: 'json',
+			    contentType: 'application/json'
 			  });
     }
 }

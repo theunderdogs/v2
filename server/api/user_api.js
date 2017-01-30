@@ -63,15 +63,38 @@ module.exports.getPermissions = () => {
 module.exports.saveRole = (role) => {
     checkInitialization();
     
+    // delete role['__v'];
+    
+    // role.permissions.forEach(() => {
+        
+    // });
+    
+    //return RoleModel.create(role)
+    
+    // .then((_role) => {
+    //     console.log(_role);
+    //     return _role;
+    // })
+    // .catch((err) => {
+    //     return err;
+    // });
+    //return role.save()
+    
     if(role._id){
       //update
+      
+      return RoleModel.findById(role._id)
+            .then((r) => {
+                r.enable = role.enable;
+                r.permissions = role.permissions;
+                
+                return r.save();
+            })
       
     } else {
       //save
       
     }
-    
-    //return PermissionModel.find().exec();
 };
 
 module.exports.calculatePermissions = () => {

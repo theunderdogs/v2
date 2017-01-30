@@ -3,7 +3,7 @@ module.exports = function(path, passport, FacebookStrategy, config, mongoose) {
     var UserModel = require(path.join( process.cwd(), '/models/model')).getModel('user');
     
     passport.serializeUser((userData, done) => {
-        console.log('serializeUser', userData);
+        //console.log('serializeUser', userData);
         done(null, userData);
         //done(null, user.id);
     });
@@ -12,7 +12,7 @@ module.exports = function(path, passport, FacebookStrategy, config, mongoose) {
         //userModel.findById(id, (err, user) => {
         //    done(err, user);
         //});
-        console.log('deserializeUser', userData);
+        //console.log('deserializeUser', userData);
         done(null, userData);
     });
     

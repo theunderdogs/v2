@@ -1,6 +1,9 @@
-module.exports = function(express, app, passport, config, mongoose){
+//https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+
+module.exports = function(express, app, passport, config, mongoose, formidable, bodyParser){
     
     var router = express.Router();
+    var jsonParser = bodyParser.json();
     var userApi =  require( process.cwd() + '/api/user_api');
     var securePages = (req, res, next) => {
         if(req.isAuthenticated()){
@@ -38,7 +41,7 @@ module.exports = function(express, app, passport, config, mongoose){
         .then((user) => {
 			res.json(user);
 		}, (err) => {
-			res.send('err occured');
+			res.status(400).send('err occured');
 		});
         //res.send('Setting favourite color!');
     });
@@ -59,7 +62,7 @@ module.exports = function(express, app, passport, config, mongoose){
        .then((permissions) => {
            res.json(permissions);
        }, (err) => {
-           res.send(err);
+           res.status(400).send(err);
        })
     });
     
@@ -68,25 +71,32 @@ module.exports = function(express, app, passport, config, mongoose){
        .then((permissions) => {
            res.json(permissions);
        }, (err) => {
-           res.send(err);
+           res.status(500).send(err);
        })
     });
     
-    router.get('/saveRole', securePages, (req, res, next) => {
-       userApi.saveRole()
-       .then((permissions) => {
-           res.json(permissions);
-       }, (err) => {
-           res.send(err);
-       })
+    router.post('/saveRole', securePages, jsonParser ,(req, res, next) => {
+        console.log(req.body);
+        userApi.saveRole(req.body)
+        .then(() => {
+           res.json(true);
+        }, (err) => {
+           res.status(500).send(err); 
+        });
     });
     
+    router.get('/logout', (req, res, next) => {
+        req.logout();
+        res.redirect('/login');
+    });
+    
+    /*
     router.get('/per', (req, res, next) => {
         userApi.calculatePermissions()
         .then((permissions) => {
 			res.json(permissions);
 		}, (err) => {
-			res.send(err);
+			res.status(500).send(err);
 		});
         //res.send('Setting favourite color!');
     });
@@ -104,11 +114,7 @@ module.exports = function(express, app, passport, config, mongoose){
         res.writeHead(200, {'Content-type': 'text/html'});
         res.end('<h1>Express route</h1>');
     });
-    
-    router.get('/logout', (req, res, next) => {
-        req.logout();
-        res.redirect('/login');
-    });
+    */
     
     app.use('/', router);
 }
