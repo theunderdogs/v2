@@ -8,7 +8,7 @@ import optionHtml from 'admin/views/roles/options.html!text'
 //import {json} from 'aurelia-fetch-client';
 
 //@inject(TaskQueue)
-export class RoleManagement extends Page{
+export class CreateRole extends Page{
     constructor(...rest) {   
         //this.taskQueue = TaskQueue;
         super(...rest);

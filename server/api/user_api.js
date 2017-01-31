@@ -88,3 +88,27 @@ module.exports.getUsers = () => {
             .populate('role', 'name')
             .exec();
 };
+
+module.exports.saveUser = (user) => {
+    checkInitialization();
+    
+    if(user._id){
+      //update
+      return UserModel
+            .findById(user._id)
+            .then((u) => {
+                u.facebookId = user.facebookId;
+                u.isAdmin = user.isAdmin;
+                u.enable = user.enable;
+                
+                if(user.hasOwnProperty('role'))
+                    u.role = user.role._id;
+                
+                return u.save();
+            })
+      
+    } else {
+      //save
+      return UserModel.create(user);
+    }
+};

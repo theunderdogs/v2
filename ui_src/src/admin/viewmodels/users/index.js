@@ -38,7 +38,6 @@ export class UserManagement extends Page{
         //let self = this;
     	this.onPageRenderComplete();
     	
-    	console.log('users', this.users);
     	this.renderDatatable();
     }
     
@@ -99,7 +98,7 @@ export class UserManagement extends Page{
                     
                     cells.eq(2).html(data.enable ? 'Yes': 'No');
                     cells.eq(3).html(data.isAdmin ? 'Yes': 'No');
-                    cells.eq(5).html('<button class="btn btn-primary btn-icon-text waves-effect" click.delegate="click_createUser(\'' + data._id + '\')"><i class="zmdi zmdi-border-color"></i> Edit</button>');
+                    cells.eq(5).html('<button class="btn btn-primary btn-icon-text waves-effect" click.delegate="click_createUser(\'' + data.facebookId + '\')"><i class="zmdi zmdi-border-color"></i> Edit</button>');
                     
                     promises.push(new Promise((resolve, reject) => {
                         if(!cells.eq(5)[0].querySelectorAll('.au-target').length) {
@@ -125,11 +124,11 @@ export class UserManagement extends Page{
         return Promise.all(promises);
     }
     
-    click_createUser(userId){
+    click_createUser(facebookId){
         let urlDetail;
         
-        if(userId){
-            urlDetail = this.router.generate('createuser', {model: this.model});
+        if(facebookId){
+            urlDetail = this.router.generate('createuser', {facebookId});
         }else {
             urlDetail = 'createuser';
         }

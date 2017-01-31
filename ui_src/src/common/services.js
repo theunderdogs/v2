@@ -28,8 +28,19 @@ export const services = {
     },
     getUsers : () => {    
         return $.get( host + '/getUsers')
+    },
+    saveUser: (user) => {
+        return $.ajax({
+                url: host + '/saveUser', 
+			    type: 'POST',
+			    data: JSON.stringify(user),
+			    //dataType: 'json',
+			    contentType: 'application/json'
+			  });
+    },
+    getUserByFacebookId: (facebookId) => {
+        return $.get( host + '/getUserByFacebookId/' + facebookId)
     }
-    
 }
 
 // export function squarex() {

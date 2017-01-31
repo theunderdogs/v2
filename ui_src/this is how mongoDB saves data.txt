@@ -1,0 +1,59 @@
+//permission
+
+{
+    "_id": {
+        "$oid": "588b6fb1f510b36b20a9ad54"
+    },
+    "name": "ADDUSER",
+    "description": "Can add user?",
+    "acceptedValues": [
+        true,
+        false
+    ],
+    "dateAdded": {
+        "$date": "2017-01-27T16:05:05.208Z"
+    }
+}
+
+//roles
+
+{
+    "_id": {
+        "$oid": "588b6fb1f510b36b20a9ad55"
+    },
+    "name": "MANAGER",
+    "permissions": [
+        {
+            "item": {
+                "$ref": "permissions",
+                "$id": {
+                    "$oid": "588b6fb1f510b36b20a9ad54"
+                }
+            },
+            "value": true
+        }
+    ],
+    "dateAdded": {
+        "$date": "2017-01-27T16:05:05.353Z"
+    }
+}
+
+//users
+
+{
+    "_id": {
+        "$oid": "588b6fb1f510b36b20a9ad57"
+    },
+    "facebookId": "5555",
+    "isAdmin": false,
+    "role": {
+        "$ref": "roles",
+        "$id": {
+            "$oid": "588b6fb1f510b36b20a9ad55"
+        }
+    },
+    "status": "active",
+    "dateAdded": {
+        "$date": "2017-01-27T16:05:05.559Z"
+    }
+}

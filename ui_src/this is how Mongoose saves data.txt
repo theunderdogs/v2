@@ -1,0 +1,41 @@
+//permission
+
+{
+    "_id": {
+        "$oid": "588b723469a6c118f9d9fd22"
+    },
+    "name": "ADDUSER",
+    "description": "Can add user?",
+    "dateAdded": {
+        "$date": "2017-01-27T16:15:48.435Z"
+    },
+    "acceptedValues": [
+        true,
+        false
+    ],
+    "__v": 0
+}
+
+//roles
+
+{
+    "_id": {
+        "$oid": "588b723469a6c118f9d9fd23"
+    },
+    "name": "MANAGER",
+    "dateAdded": {
+        "$date": "2017-01-27T16:15:48.468Z"
+    },
+    "permissions": [
+        {
+            "item": {
+                "$oid": "588b723469a6c118f9d9fd22"
+            },
+            "value": true,
+            "_id": {
+                "$oid": "588b723469a6c118f9d9fd24"
+            }
+        }
+    ],
+    "__v": 0
+}

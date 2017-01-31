@@ -35,7 +35,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         failureRedirect: '/login'
     }))
     
-    router.get('/finduser/:facebookid', (req, res, next) => {
+    router.get('/getUserByFacebookId/:facebookid', securePages, (req, res, next) => {
         userApi.getUserByFacebookId(req.params.facebookid)
         .then((user) => {
 			res.json(user);
@@ -101,6 +101,16 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        }, (err) => {
            res.status(500).send(err);
        })
+    });
+    
+    router.post('/saveUser', securePages, jsonParser ,(req, res, next) => {
+        console.log(req.body);
+        userApi.saveUser(req.body)
+        .then(() => {
+           res.json(true);
+        }, (err) => {
+           res.status(500).send(err); 
+        });
     });
     
     router.get('/logout', (req, res, next) => {
