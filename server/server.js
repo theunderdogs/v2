@@ -28,20 +28,20 @@ app.set('host', config.host || process.env.IP);
 
 mongoose.Promise = global.Promise;
 
-if(env === 'development'){
-    app.use(session({ secret: config.sessionSecret, resave: true, saveUninitialized: true }))
-} else {
+//if(env === 'development'){
+//    app.use(session({ secret: config.sessionSecret, resave: true, saveUninitialized: true }))
+//} else {
     app.use(session({
         secret: config.sessionSecret,
+        resave: true,
+        saveUninitialized: true,
         store: new ConnectMongo({
             //url: config.dbURL,
             mongooseConnection: mongoose.connections[0],
-            stringify: true,
-            resave: true,
-            saveUninitialized: true
+            stringify: true
         })
     }))
-}
+//}
 
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);

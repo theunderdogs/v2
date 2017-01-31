@@ -9,12 +9,11 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         if(req.isAuthenticated()){
             next();
         } else {
-            res.redirect('/')
+            res.redirect('/login')
         }
     };
     
     router.get('/', securePages, (req, res, next) => {
-        
         res.render('admin');
     });
     
@@ -35,10 +34,6 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         successRedirect: '/admin',
         failureRedirect: '/login'
     }))
-    
-    router.get('/chatrooms', securePages, (req, res, next) => {
-        res.render('chatrooms', {title: 'Chatrooms', user: req.user})
-    });
     
     router.get('/finduser/:facebookid', (req, res, next) => {
         userApi.getUserByFacebookId(req.params.facebookid)
@@ -97,6 +92,15 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         }, (err) => {
            res.status(500).send(err); 
         });
+    });
+    
+    router.get('/getUsers', securePages, (req, res, next) => {
+       userApi.getUsers()
+       .then((users) => {
+           res.json(users);
+       }, (err) => {
+           res.status(500).send(err);
+       })
     });
     
     router.get('/logout', (req, res, next) => {

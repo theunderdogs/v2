@@ -63,27 +63,10 @@ module.exports.getPermissions = () => {
 module.exports.saveRole = (role) => {
     checkInitialization();
     
-    // delete role['__v'];
-    
-    // role.permissions.forEach(() => {
-        
-    // });
-    
-    //return RoleModel.create(role)
-    
-    // .then((_role) => {
-    //     console.log(_role);
-    //     return _role;
-    // })
-    // .catch((err) => {
-    //     return err;
-    // });
-    //return role.save()
-    
     if(role._id){
       //update
-      
-      return RoleModel.findById(role._id)
+      return RoleModel
+            .findById(role._id)
             .then((r) => {
                 r.enable = role.enable;
                 r.permissions = role.permissions;
@@ -97,49 +80,11 @@ module.exports.saveRole = (role) => {
     }
 };
 
-module.exports.calculatePermissions = () => {
+module.exports.getUsers = () => {
     checkInitialization();
     
-    return RoleModel.findOne()
-            .populate('permissions.item')
-            .exec()
-            .then((docs) => {
-                
-                return docs;         
-                
-           });
-    
-    /*
-    
-    //save data using manual ref
-    var per = new PermissionModel({
-          name: 'ADDUSER',
-    	  description: 'Can add user?', 
-    	  acceptedValues: [true,false],
-    	  dateAdded: new Date() 
-    });
-    
-    return per.save()
-    .then((doc)=> {
-        var role = new RoleModel({
-            name : 'MANAGER', 
-        	permissions : [{
-        		item: doc._id,
-        		value: true
-        	}], 
-        	dateAdded: new Date() 
-        });
-        
-        return role.save()
-                .then((doc1) => {
-                   return doc1; 
-                });
-    });
-    
-    //retrieve saved data
-    return RoleModel.findOne()
-    .populate('permissions.item')
-    .exec();
-    
-    */
-}
+    return UserModel
+            .find()
+            .populate('role', 'name')
+            .exec();
+};

@@ -2,15 +2,12 @@ export const services = {
     getroles : () => {    
         return $.get( host + '/getroles')
     },
-    
     getPermissionsByRoleId: (roleId) => {
         return $.get( host + '/getPermissionsByRoleId/' + roleId)
     },
-    
     getPermissions: () => {
         return $.get( host + '/getPermissions')
     },
-    
     saveRole: (role) => {
         return $.ajax({
                 url: host + '/saveRole', 
@@ -20,7 +17,6 @@ export const services = {
 			    contentType: 'application/json'
 			  });
     },
-    
     createRole: (role) => {
         return $.ajax({
                 url: host + '/createRole', 
@@ -29,7 +25,11 @@ export const services = {
 			    //dataType: 'json',
 			    contentType: 'application/json'
 			  });
+    },
+    getUsers : () => {    
+        return $.get( host + '/getUsers')
     }
+    
 }
 
 // export function squarex() {

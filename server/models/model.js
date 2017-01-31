@@ -19,6 +19,10 @@ module.exports = function (setup_mongoose) {
         facebookId: { 
             type: String,
             required: [true, 'facebookId is not set']
+        }, 
+        realName: { 
+            type: String,
+            required: [true, 'realName is not set']
         },
         isAdmin: {
             type: Boolean,
@@ -30,7 +34,8 @@ module.exports = function (setup_mongoose) {
         },
         dateAdded: { type: Date, default: Date.now },
         role: {
-            type: mongoose.Schema.ObjectId//,
+            type: mongoose.Schema.ObjectId,
+            ref: 'role'//,
             //required: [true, 'role is not set']
         }
     });
@@ -89,6 +94,7 @@ module.exports = function (setup_mongoose) {
     permissionSchema.index({ name: 1/*, isAdmin: -1*/ }, { unique: true }); // schema level
     
     PermissionModel = mongoose.model('permission', permissionSchema);
+    
     /*
     //populate master data
     return PermissionModel.insertMany([
@@ -111,7 +117,7 @@ module.exports = function (setup_mongoose) {
             })
         ]) 
     .then((docs)=> {
-        console.log(docs);
+        //console.log(docs);
         let id;
         docs.forEach((doc) => {
             if(doc.name == 'ADDUSER') {
@@ -128,14 +134,20 @@ module.exports = function (setup_mongoose) {
         	enable: true
         });
         
-        return role.save();
+        return role.save()
+        .then(() => {
+            return role;
+        });
     })
     .then((role) => {
+        //console.log('role', role);
         return UserModel.insertMany([{ 
+            realName : 'Kiran Deore', 
         	facebookId : '10158081909300057', 
         	isAdmin: true,
         	enable: true
         },{ 
+            realName : 'Meike Parker', 
         	facebookId : '5555', 
         	isAdmin: false,
         	role: role._id,
