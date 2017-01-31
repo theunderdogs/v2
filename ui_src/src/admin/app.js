@@ -16,8 +16,9 @@ export class App {
     config.title = 'Aurelia';
     config.map([
       { route: ['addpet'], name: 'addpet', moduleId: 'admin/viewmodels/addpet', nav: false, title: 'Add a pet' },
-      { route: ['', '_=_', 'roles'], name: 'roles', moduleId: 'admin/viewmodels/roles/index', nav: false, title: 'Manage roles' },
-      { route: ['createrole'], name: 'createrole', moduleId: 'admin/viewmodels/roles/createrole', nav: false, title: 'Create role' }
+      { route: ['roles'], name: 'roles', moduleId: 'admin/viewmodels/roles/index', nav: false, title: 'Manage roles' },
+      { route: ['createrole'], name: 'createrole', moduleId: 'admin/viewmodels/roles/createrole', nav: false, title: 'Create role' },
+    	{ route: ['', '_=_', 'users'], name: 'users', moduleId: 'admin/viewmodels/users/index', nav: false, title: 'Manage users' }
     ]);
 
     this.router = router;

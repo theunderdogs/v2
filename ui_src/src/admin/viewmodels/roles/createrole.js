@@ -149,6 +149,10 @@ export class RoleManagement extends Page{
         });
     }
     
+    click_goback() {
+        this.router.navigate('roles');
+    }
+    
     getViewStrategy() {
         return 'admin/views/roles/createrole.html';
     }

@@ -5,7 +5,6 @@ import {Page} from 'common/page';
 import 'datatables'
 import 'bootstrap-select'
 import optionHtml from 'admin/views/roles/options.html!text'
-//import {json} from 'aurelia-fetch-client';
 
 //@inject(TaskQueue)
 export class RoleManagement extends Page{
