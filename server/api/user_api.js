@@ -93,7 +93,7 @@ module.exports.saveRole = (role) => {
       
     } else {
       //save
-      
+      return RoleModel.create(role);
     }
 };
 

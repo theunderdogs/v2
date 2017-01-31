@@ -23,7 +23,11 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
     });
     
     router.get('/admin', securePages, (req, res, next) => {
-        res.render('admin', { host: config.host });
+        res.render('admin', { host: config.host, 
+            profilePic: encodeURI(req.user.profile.photos[0].value),  
+            profileName: req.user.profile.displayName ,
+            year: new Date().getFullYear() 
+        });
     });
     
     router.get('/auth/facebook', passport.authenticate('facebook'));
@@ -76,6 +80,16 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
     });
     
     router.post('/saveRole', securePages, jsonParser ,(req, res, next) => {
+        console.log(req.body);
+        userApi.saveRole(req.body)
+        .then(() => {
+           res.json(true);
+        }, (err) => {
+           res.status(500).send(err); 
+        });
+    });
+    
+    router.post('/createRole', securePages, jsonParser ,(req, res, next) => {
         console.log(req.body);
         userApi.saveRole(req.body)
         .then(() => {

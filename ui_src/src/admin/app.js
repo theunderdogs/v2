@@ -4,6 +4,12 @@ import { TaskQueue, inject, Aurelia, noView } from 'aurelia-framework';
 export class App {
   constructor(TaskQueue) {   
     this.taskQueue = TaskQueue;
+    this.profileName = window.profileName;
+    
+    var elem = document.createElement('textarea');
+		elem.innerHTML = window.profilePic;
+		this.profilePic = elem.value;
+		this.year = window.year;
   }   
   
   configureRouter(config, router) {

@@ -12,12 +12,18 @@ export const services = {
     },
     
     saveRole: (role) => {
-        //let form = new FormData();
-        //form.append('data', role);
-        //return $.post(host + '/saveRole', role);
-        
         return $.ajax({
                 url: host + '/saveRole', 
+			    type: 'POST',
+			    data: JSON.stringify(role),
+			    //dataType: 'json',
+			    contentType: 'application/json'
+			  });
+    },
+    
+    createRole: (role) => {
+        return $.ajax({
+                url: host + '/createRole', 
 			    type: 'POST',
 			    data: JSON.stringify(role),
 			    //dataType: 'json',

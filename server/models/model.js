@@ -46,7 +46,10 @@ module.exports = function (setup_mongoose) {
     /* role */
     
     var roleSchema = new mongoose.Schema({
-        name: String,
+        name: { 
+            type: String,
+            required: [true, 'Role name is not set']
+        },
         permissions: [ 
             { item: { 
                     type: mongoose.Schema.ObjectId , 
@@ -54,7 +57,10 @@ module.exports = function (setup_mongoose) {
                 }, 
               value: mongoose.Schema.Types.Mixed 
             } ],
-        enable: Boolean,
+        enable: { 
+            type: Boolean,
+            required: [true, 'status for role is not set']
+        },
         dateAdded: { type: Date, default: Date.now },
     });
     
@@ -65,9 +71,18 @@ module.exports = function (setup_mongoose) {
     /* permission */
     
     var permissionSchema = new mongoose.Schema({
-        name: String,
-        description: String,
-        acceptedValues: [mongoose.Schema.Types.Mixed],
+        name: { 
+            type: String,
+            required: [true, 'Name for permission is not set']
+        },
+        description: { 
+            type: String,
+            required: [true, 'Description for permission is not set']
+        },
+        acceptedValues: { 
+            type: [mongoose.Schema.Types.Mixed],
+            required: [true, 'Accepted values is not set']
+        },
         dateAdded: { type: Date, default: Date.now },
     });
     
