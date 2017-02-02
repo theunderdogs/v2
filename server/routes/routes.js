@@ -85,7 +85,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
     });
     
     router.post('/createRole', securePages, jsonParser ,(req, res, next) => {
-        console.log(req.body);
+        //console.log(req.body);
         userApi.saveRole(req.body)
         .then(() => {
            res.json(true);

@@ -144,6 +144,7 @@ export class CreateRole extends Page{
             this.showSuccess('New role ' + this.role.name + ' created');
             this.router.navigate('roles');
         },(err) => {
+            hideFn();
             console.log(err);
             this.showError();
         });

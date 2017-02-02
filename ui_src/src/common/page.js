@@ -4,19 +4,25 @@ import Waves from 'waves';
 import 'bootstrap-growl';
 import {Router} from 'aurelia-router';
 import { TaskQueue, inject, Aurelia, noView, TemplatingEngine, BindingEngine, computedFrom } from 'aurelia-framework';
-import {services} from 'common/services'
+import {services} from 'common/services';
+import {
+  ValidationControllerFactory,
+  ValidationController,
+  ValidationRules
+} from 'aurelia-validation';
 //import {uiHelper} from 'common/uihelper';
 
-@inject(TaskQueue, Aurelia, TemplatingEngine, BindingEngine, Router, services)
+@inject(TaskQueue, Aurelia, TemplatingEngine, BindingEngine, Router, ValidationControllerFactory, services)
 export class Page{
-	constructor(taskQueue, aurelia, templatingEngine, bindingEngine, router, db) {   
+	constructor(taskQueue, aurelia, templatingEngine, bindingEngine, router, controllerFactory, db) {   
         this.taskQueue = taskQueue;
         this.aurelia = aurelia;
         this.templatingEngine = templatingEngine;    
         this.bindingEngine = bindingEngine;
         this.router = router;
+        this.controllerFactory = controllerFactory;
+        this.validationRules = ValidationRules;
         this.db = db;
-        //this.uiHelper = uiHelper;
     }   
 
     onPageRenderComplete(){

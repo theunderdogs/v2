@@ -16,7 +16,7 @@
             <div class="form-group fg-line"><!--<div class="form-group has-error">-->
                 <div class="fg-line">
                     <!--<label class="control-label" for="inputError1">Input with error</label>-->
-                    <input type="text" class="form-control" placeholder="Full name of the user" value.bind="user.realName" disabled.bind="editUser">
+                    <input type="text" class="form-control" placeholder="Full name of the user you want to add" value.bind="user.realName & validate" disabled.bind="editUser">
                 </div>
                 <!--<small class="help-block">This is an error help block</small>-->
             </div>
@@ -24,12 +24,12 @@
             <div class="form-group fg-line"><!--<div class="form-group has-error">-->
                 <div class="fg-line">
                     <!--<label class="control-label" for="inputError1">Input with error</label>-->
-                    <input type="text" class="form-control" placeholder="Facebook ID" value.bind="user.facebookId">
+                    <input type="text" class="form-control" placeholder="Facebook ID" value.bind="user.facebookId & validate">
                 </div>
                 <!--<small class="help-block">This is an error help block</small>-->
             </div>
             
-            <div class="has-error">
+            <div> <!-- <div class="has-error"> -->
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" checked.bind="user.isAdmin">
@@ -39,7 +39,7 @@
                 </div>
             </div>
             
-            <div class="has-error">
+            <div> <!-- <div class="has-error"> -->
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" checked.bind="user.enable">
@@ -50,9 +50,9 @@
             </div>
             
             <div class="row">
-                <div class="col-sm-5 col-xs-12 m-t-10">
-                    <select class="selectpicker" ref="rolesCombo" value.bind="user.role" change.delegate="change_selectedRole()" data-live-search="true" title="Select a role" disabled.bind="user.isAdmin">
-                        <option repeat.for="role of roleList" model.bind="role._id">${role.name}</option>
+                <div class="col-sm-5 col-xs-12 m-t-10 form-group">
+                    <select ref="rolesCombo" value.bind="user.role & validate" change.delegate="change_selectedRole()" data-live-search="true" title="Select a role" disabled.bind="user.isAdmin">
+                        <option repeat.for="role of roleList" model.bind="role._id" value.bind="role._id">${role.name}</option>
                     </select>
                 </div>
             </div>

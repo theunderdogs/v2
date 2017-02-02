@@ -102,7 +102,7 @@ module.exports.saveUser = (user) => {
                 u.enable = user.enable;
                 
                 if(user.hasOwnProperty('role'))
-                    u.role = user.role._id;
+                    u.role = user.role;
                 
                 return u.save();
             })
