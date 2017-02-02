@@ -32,7 +32,7 @@
             <div> <!-- <div class="has-error"> -->
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" checked.bind="user.isAdmin">
+                        <input type="checkbox" checked.bind="user.isAdmin" change.delegate="change_isAdmin()">
                         <i class="input-helper"></i>
                         Make Admin (This will allow unrestricted access along with ability to modify permissions. Be careful.)
                     </label>

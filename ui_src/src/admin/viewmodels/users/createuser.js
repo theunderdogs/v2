@@ -65,17 +65,19 @@ export class CreateUser extends Page{
     	 this.onPageRenderComplete();
     	 
     	 this.taskQueue.queueMicroTask(() => {  
-    	    //if(this.user.role) 
-        	    //$(this.rolesCombo).selectpicker('val', this.user.role);
-        	//else
-        	   $(this.rolesCombo).selectpicker();
+    	    $(this.rolesCombo).selectpicker();
     	 });
+    	 
+    	 this.taskQueue.queueMicroTask(() => {  
+    	    if(this.user.role) 
+        	    $(this.rolesCombo).selectpicker('val', this.user.role);
+         });
     }
     
     click_applyChanges(){
         let hideFn = this.showProgress('Loading role...');
         
-        console.log(this.user);
+        //console.log(this.user);
         
         return this.controller.validate()
         .then(result => {
@@ -83,11 +85,14 @@ export class CreateUser extends Page{
                 let user = JSON.parse(JSON.stringify(this.user));
                 user.role = user.role == ''? undefined: user.role;
                 
+                console.log('user to be saved', user);
+                
                 return this.db.saveUser(user)
                 .then((result) => {
                     console.log('success', result);
-                    hideFn();
+                    //hideFn();
                     this.showSuccess('User ' + (this.editUser ? 'updated' : 'added') + ' successfully');
+                    this.router.navigate('users');
                 },(err) => {
                     hideFn();
                     console.log(err);
@@ -101,6 +106,13 @@ export class CreateUser extends Page{
     
     change_selectedRole() {
         console.log(this.user.role);
+    }
+    
+    change_isAdmin(){
+        console.log(this.user.isAdmin);
+        this.taskQueue.queueMicroTask(() => {  
+    	    $(this.rolesCombo).selectpicker('refresh');
+    	});
     }
     
     click_goback(){

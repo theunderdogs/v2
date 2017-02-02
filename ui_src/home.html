@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>The Underdogs Rescue</title>
+
+      <script>
+        window.entryPage = 'public';
+        window.host = '{{ host  }}';
+        window.year = '{{ year }}';
+      </script>
+      
+      <!-- Vendor CSS -->
+      <link href= "assets/vendors/bower_components/fullcalendar/dist/fullcalendar.min.css" rel="stylesheet">
+      <link href="assets/vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+      <link href="assets/vendors/bower_components/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">
+      <link href="assets/vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
+      <link href="assets/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">
+
+      <link href="assets/vendors/bower_components/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
+      <link href="assets/vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
+
+      <!-- CSS -->
+      <link href="assets/css/app_1.min.css" rel="stylesheet">
+      <link href="assets/css/app_2.min.css" rel="stylesheet">
+  </head>
+  <body aurelia-app="main">
+    <!-- <div class="splash">
+      <div class="message">The Underdogs Resuce</div>
+      <i class="fa fa-spinner fa-spin"></i>
+    </div> -->
+
+    <!-- The bluebird version is locked at 4.6.3 in the package.json file to keep this from breaking -->
+    <!-- We include bluebird to bypass Edge's very slow Native Promise implementation. The Edge team -->
+    <!-- has fixed the issues with their implementation with these fixes being distributed with the  -->
+    <!-- Windows 10 Anniversary Update on 2 August 2016. Once that update has pushed out, you may    -->
+    <!-- consider removing bluebird from your project and simply using native promises if you do     -->
+    <!-- not need to support Internet Explorer.                                                      -->
+    <script src="jspm_packages/system.js"></script>
+    <script src="config.js"></script>
+    <script src="jspm_packages/npm/bluebird@3.4.1/js/browser/bluebird.min.js"></script>
+    <script>
+      System.import('aurelia-bootstrapper');
+
+      /*----------------------------------------------------------
+          Detect Mobile Browser
+      -----------------------------------------------------------*/
+      if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+        //$('html').addClass('ismobile');
+        document.documentElement.className += 'ismobile';
+      }
+
+      window.onload = function() {
+
+        function hasClass(element, cls) {
+            return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+        }
+        /*----------------------------------------------------------
+            Page Loader
+         -----------------------------------------------------------*/
+        if(!hasClass(document.documentElement, 'ismobile')) {
+            if(document.getElementsByClassName('page-loader').length > 0) {
+                setTimeout (function () {
+                    //$('.page-loader').fadeOut();
+                    document.getElementsByClassName('page-loader')[0].style.display = "none";
+                }, 500);
+
+            }
+        }
+      };
+    </script>
+  </body>
+</html>

@@ -16,7 +16,7 @@ var express = require('express'),
 var env = process.env.NODE_ENV || 'development';
 
 app.set('views', path.join( __dirname + '/../', 'ui_src'));
-console.log(app.get('views'));
+//console.log(app.get('views'));
 
 app.set('view engine', 'html');
 app.engine('html', require('hogan-express'));

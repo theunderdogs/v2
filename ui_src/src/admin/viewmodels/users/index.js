@@ -97,7 +97,7 @@ export class UserManagement extends Page{
                     let cells = $(row).find('td');
                     
                     cells.eq(2).html(data.enable ? 'Yes': 'No');
-                    cells.eq(3).html(data.isAdmin ? 'Yes': 'No');
+                    cells.eq(3).html(data.isAdmin ? '<mark>Yes</mark>': 'No');
                     cells.eq(5).html('<button class="btn btn-primary btn-icon-text waves-effect" click.delegate="click_createUser(\'' + data.facebookId + '\')"><i class="zmdi zmdi-border-color"></i> Edit</button>');
                     
                     promises.push(new Promise((resolve, reject) => {

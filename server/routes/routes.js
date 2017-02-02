@@ -13,8 +13,11 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         }
     };
     
-    router.get('/', securePages, (req, res, next) => {
-        res.render('admin');
+    router.get('/index', (req, res, next) => {
+        //console.log('index route hit');
+        res.render('home', { host: config.host, 
+            year: new Date().getFullYear() 
+        });
     });
     
     router.get('/login', (req, res, next) => {

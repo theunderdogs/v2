@@ -26,6 +26,9 @@ export function configure(aurelia) {
     case 'admin':
         root = "admin/app";
         break;
+    case 'public':
+        root = "public/app";
+        break;
   }	
 
   aurelia.start().then(() => aurelia.setRoot(root));

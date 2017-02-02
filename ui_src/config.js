@@ -223,6 +223,7 @@ System.config({
     "moment": "vendors:bower_components/moment/min/moment.min",
     "sweet-alert": "vendors:bower_components/sweetalert2/dist/sweetalert2.min",
     "fullcalendar": "vendors:bower_components/fullcalendar/dist/fullcalendar.min",
+    "gcal": "vendors:bower_components/fullcalendar/dist/gcal",
     "datatables": "vendors:bower_components/datatables.net/js/jquery.dataTables.min",
     "vendors:bower_components/datatables.net/js/jquery.dataTables.min": {
       "jquery": "npm:jquery@2.2.4"
