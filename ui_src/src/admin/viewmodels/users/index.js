@@ -17,6 +17,7 @@ export class UserManagement extends Page{
                                         '<th></th>' +
                                         '<th></th>' +
                                         '<th></th>' +
+                                        '<th></th>' +
                                     '</tr>' + 
                                 '</thead>' +
                             '</table>';
@@ -83,6 +84,10 @@ export class UserManagement extends Page{
                     title: 'Action',
                     data: 'realName',
                     ordering: false
+                }, { 
+                    title: 'Created On',
+                    data: 'dateAdded',
+                    ordering: false
                 }],
                 columnDefs: [ {
                     targets: 5,
@@ -99,6 +104,9 @@ export class UserManagement extends Page{
                     cells.eq(2).html(data.enable ? 'Yes': 'No');
                     cells.eq(3).html(data.isAdmin ? '<mark>Yes</mark>': 'No');
                     cells.eq(5).html('<button class="btn btn-primary btn-icon-text waves-effect" click.delegate="click_createUser(\'' + data.facebookId + '\')"><i class="zmdi zmdi-border-color"></i> Edit</button>');
+                    
+                    let _date = new Date(data.dateAdded);
+                    cells.eq(6).html(_date.getDate() + '/' + _date.getMonth() + '/' + _date.getFullYear());
                     
                     promises.push(new Promise((resolve, reject) => {
                         if(!cells.eq(5)[0].querySelectorAll('.au-target').length) {
