@@ -7,6 +7,10 @@ export class CreateUser extends Page{
     }  
     
     activate(params){
+        this.calendarModel = {
+          key: 'AIzaSyBhCHsSiB-YlfHtWp77HW2NvDUK83GRjlI',
+          email: 'theunderdogsrescue@gmail.com'
+        };
     }
     
     attached(){

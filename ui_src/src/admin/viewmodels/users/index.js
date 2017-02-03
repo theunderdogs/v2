@@ -106,7 +106,7 @@ export class UserManagement extends Page{
                     cells.eq(5).html('<button class="btn btn-primary btn-icon-text waves-effect" click.delegate="click_createUser(\'' + data.facebookId + '\')"><i class="zmdi zmdi-border-color"></i> Edit</button>');
                     
                     let _date = new Date(data.dateAdded);
-                    cells.eq(6).html(_date.getDate() + '/' + _date.getMonth() + '/' + _date.getFullYear());
+                    cells.eq(6).html(_date.getDate() + '/' + (_date.getMonth() + 1) + '/' + _date.getFullYear());
                     
                     promises.push(new Promise((resolve, reject) => {
                         if(!cells.eq(5)[0].querySelectorAll('.au-target').length) {
