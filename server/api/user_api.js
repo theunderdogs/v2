@@ -113,6 +113,24 @@ module.exports.saveUser = (user) => {
     }
 };
 
+module.exports.getEmailLists = () => {
+    checkInitialization();
+    
+    return EmailListModel
+            .find()
+            .populate('createdBy', 'realName')
+            .exec();
+};
+
+module.exports.getEmailListById = (id) => {
+    checkInitialization();
+    
+    return EmailListModel
+            .findOne({ _id: id })
+            .populate('createdBy')
+            .exec();
+};
+
 module.exports.saveEmailList = (emailList) => {
     checkInitialization();
     

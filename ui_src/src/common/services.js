@@ -40,7 +40,23 @@ export const services = {
     },
     getUserByFacebookId: (facebookId) => {
         return $.get( host + '/getUserByFacebookId/' + facebookId)
-    }
+    },
+    getEmailLists : () => {    
+        return $.get( host + '/getEmailLists')
+    },
+    getEmailListById: (id) => {
+        return $.get( host + '/getEmailListById/' + id)
+    },
+    saveEmailList: (list) => {
+        return $.ajax({
+                url: host + '/saveEmailList', 
+			    type: 'POST',
+			    data: JSON.stringify(list),
+			    //dataType: 'json',
+			    contentType: 'application/json'
+			  });
+    },
+    
 }
 
 // export function squarex() {

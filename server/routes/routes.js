@@ -116,6 +116,36 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         });
     });
     
+    router.get('/getEmailLists', securePages, (req, res, next) => {
+       userApi.getEmailLists()
+       .then((lists) => {
+           res.json(lists);
+       }, (err) => {
+           res.status(500).send(err);
+       })
+    });
+    
+    router.get('/getEmailListById/:id', securePages, (req, res, next) => {
+       userApi.getEmailListById(req.params.id)
+       .then((list) => {
+           res.json(list);
+       }, (err) => {
+           res.status(500).send(err);
+       })
+    });
+    
+    router.post('/saveEmailList', securePages, jsonParser ,(req, res, next) => {
+        console.log(req.user.user);
+        req.body.createdBy = req.user.user._id;
+        console.log(req.body);
+        userApi.saveEmailList(req.body)
+        .then(() => {
+           res.json(true);
+        }, (err) => {
+           res.status(500).send(err); 
+        });
+    });
+    
     router.get('/logout', (req, res, next) => {
         req.logout();
         res.redirect('/login');

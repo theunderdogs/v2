@@ -13,14 +13,15 @@ export class App {
   }   
   
   configureRouter(config, router) {
-    config.title = 'Aurelia';
+    config.title = 'The Underdogs Rescue Admin Control Panel';
     config.map([
       { route: ['addpet'], name: 'addpet', moduleId: 'admin/viewmodels/addpet', nav: false, title: 'Add a pet' },
       { route: ['roles'], name: 'roles', moduleId: 'admin/viewmodels/roles/index', nav: false, title: 'Manage roles' },
       { route: ['createrole'], name: 'createrole', moduleId: 'admin/viewmodels/roles/createrole', nav: false, title: 'Create role' },
     	{ route: ['users'], name: 'users', moduleId: 'admin/viewmodels/users/index', nav: false, title: 'Manage users' },
-    	{ route: ['', '_=_', 'createuser'], name: 'createuser', moduleId: 'admin/viewmodels/users/createuser', nav: false, title: 'Create user' },
-    	
+    	{ route: ['createuser'], name: 'createuser', moduleId: 'admin/viewmodels/users/createuser', nav: false, title: 'Create user' },
+			{ route: ['', '_=_', 'emaillists'], name: 'emaillists', moduleId: 'admin/viewmodels/emaillist/index', nav: false, title: 'Manage email lists' },
+			{ route: ['createemaillist'], name: 'createemaillist', moduleId: 'admin/viewmodels/emaillist/createemaillist', nav: false, title: 'Create email lists' }    	
     	//optional paramerters
     	//{ route: ['', '_=_', 'createuser/:userid?'], name: 'createuser', moduleId: 'admin/viewmodels/users/createuser', nav: false, title: 'Create user' }
     ]);
