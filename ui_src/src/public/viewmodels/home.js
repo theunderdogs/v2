@@ -1,5 +1,6 @@
 import {Page} from 'common/page';
-import 'bootstrap-select'
+import 'bootstrap-select';
+import 'autonumeric';
 
 export class CreateUser extends Page{
     constructor(...rest) {   
@@ -15,6 +16,8 @@ export class CreateUser extends Page{
     
     attached(){
         this.onPageRenderComplete();
+        
+        $(this.txtdonationAmt).autoNumeric('init', { currencySymbol : '$' });
     }
     
     getViewStrategy() {

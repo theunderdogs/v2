@@ -3,7 +3,8 @@
 var mongoose;
 var UserModel,
     RoleModel,
-    PermissionModel;
+    PermissionModel,
+    EmailListModel;
 
 module.exports = function (setup_mongoose) {
     if (setup_mongoose) {
@@ -12,7 +13,7 @@ module.exports = function (setup_mongoose) {
     
     /* user */
     
-    var userSchema = new mongoose.Schema({
+    let userSchema = new mongoose.Schema({
         //profileID: String,
         //fullname: String,
         //profilePic: String,
@@ -50,7 +51,7 @@ module.exports = function (setup_mongoose) {
     
     /* role */
     
-    var roleSchema = new mongoose.Schema({
+    let roleSchema = new mongoose.Schema({
         name: { 
             type: String,
             required: [true, 'Role name is not set']
@@ -75,7 +76,7 @@ module.exports = function (setup_mongoose) {
     
     /* permission */
     
-    var permissionSchema = new mongoose.Schema({
+    let permissionSchema = new mongoose.Schema({
         name: { 
             type: String,
             required: [true, 'Name for permission is not set']
@@ -94,6 +95,28 @@ module.exports = function (setup_mongoose) {
     permissionSchema.index({ name: 1/*, isAdmin: -1*/ }, { unique: true }); // schema level
     
     PermissionModel = mongoose.model('permission', permissionSchema);
+    
+    /* email list */
+    
+    let emailListSchema = new mongoose.Schema({
+        name: {
+            type: String,
+            required: [true, 'Name for email list is not set']
+        },
+        list: {
+            type: String
+        },
+        createdBy: {
+            type: mongoose.Schema.ObjectId,
+            ref: 'user',
+            required: [true, 'user is not set']
+        },
+        dateAdded: { type: Date, default: Date.now }
+    });
+    
+    emailListSchema.index({ name: 1 }, { unique: true }); // schema level
+    
+    EmailListModel = mongoose.model('emailList', emailListSchema);
     
     /*
     //populate master data
@@ -172,13 +195,12 @@ module.exports.getModel = (name) => {
     switch (name) {
       case 'user':
         return UserModel;
-        //break;
       case 'role':
         return RoleModel;
-        //break;
       case 'permission':
         return PermissionModel;
-        //break;
+      case 'emailList':
+        return EmailListModel;
       default:
         console.log('Model not found');
         break;

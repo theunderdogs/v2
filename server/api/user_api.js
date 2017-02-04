@@ -4,7 +4,7 @@
 //new DBRef
 //http://stackoverflow.com/questions/15923788/mongodb-construct-dbref-with-string-or-objectid
 
-var mongoose, path, UserModel, RoleModel, PermissionModel;
+var mongoose, path, UserModel, RoleModel, PermissionModel, EmailListModel;
 var checkInitialization = () => {
     if (!mongoose && !path) {
         throw new Error("Can't use constructor until mongoose and path are properly initalized");
@@ -21,7 +21,7 @@ module.exports = (setup_mongoose, setup_path) => {
         UserModel = require(path.join( process.cwd(), '/models/model')).getModel('user');
         RoleModel = require(path.join( process.cwd(), '/models/model')).getModel('role');
         PermissionModel = require(path.join( process.cwd(), '/models/model')).getModel('permission');
-        //console.log('usermodel', UserModel);
+        EmailListModel = require(path.join( process.cwd(), '/models/model')).getModel('emailList');
     }
     
     return module.exports;
@@ -110,5 +110,25 @@ module.exports.saveUser = (user) => {
     } else {
       //save
       return UserModel.create(user);
+    }
+};
+
+module.exports.saveEmailList = (emailList) => {
+    checkInitialization();
+    
+    if(emailList._id){
+      //update
+      return EmailListModel
+            .findById(emailList._id)
+            .then((e) => {
+                e.name = emailList.name;
+                e.list = emailList.list;
+                
+                return e.save();
+            })
+      
+    } else {
+      //save
+      return EmailListModel.create(emailList);
     }
 };

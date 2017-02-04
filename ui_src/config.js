@@ -229,6 +229,7 @@ System.config({
       "jquery": "npm:jquery@2.2.4"
     },
     "bootstrap-select": "vendors:bower_components/bootstrap-select/dist/js/bootstrap-select",
-    "css": "node_modules:systemjs-plugin-css/css.js"
+    "css": "node_modules:systemjs-plugin-css/css.js",
+    "autonumeric": "vendors:autoNumeric-2.0.7/dist/autoNumeric"
   }
 });
