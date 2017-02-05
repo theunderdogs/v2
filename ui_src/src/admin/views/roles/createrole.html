@@ -18,13 +18,13 @@
                     <!--<p class="f-500 m-b-15 c-black">Roles</p>-->
                 
                     <div class="form-group fg-line">
-                        <label>Role name:</label>
-                        <input type="text" class="form-control input-sm" placeholder="Enter role name" value.bind="role.name">
+                        <!--<label>Role name:</label>-->
+                        <input type="text" class="form-control input-sm" placeholder="Enter role name" value.bind="role.name & validate">
                     </div>
                 
                 </div>
                 <div class="col-sm-2 m-b-25 pull-left">
-                    <label class="checkbox checkbox-inline m-t-30">
+                    <label class="checkbox checkbox-inline m-t-10">
                         <input type="checkbox" checked.bind="role.enable">
                         <i class="input-helper"></i>
                         Active
@@ -35,11 +35,11 @@
                     <!--                Create New Role-->
                     <!--</button>-->
                     
-                    <button class="btn btn-success btn-icon-text waves-effect pull-right m-l-20" click.delegate="click_applyChanges()"><i class="zmdi zmdi-floppy"></i>
-                                    Save Changes
-                    </button>
+                    <!--<button class="btn btn-success btn-icon-text waves-effect pull-right m-l-20" click.delegate="click_applyChanges()"><i class="zmdi zmdi-floppy"></i>-->
+                    <!--                Save Changes-->
+                    <!--</button>-->
                     
-                    <button class="btn btn-default waves-effect pull-right" click.delegate="click_goback()"><i class="zmdi zmdi-arrow-back"></i></button>
+                    <!--<button class="btn btn-default waves-effect pull-right" click.delegate="click_goback()"><i class="zmdi zmdi-arrow-back"></i></button>-->
                     
                 </div>
             </div>
@@ -47,6 +47,16 @@
                 <div class="col-md-12">
                     <div class="table-responsive" ref="dynamicDom">
                     </div>                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-xs-12 m-t-30">
+                    <button class="btn btn-success btn-icon-text waves-effect pull-right m-l-20" click.delegate="click_applyChanges()"><i class="zmdi zmdi-floppy"></i>
+                                    Save Changes
+                    </button>
+                    
+                    <button class="btn btn-default waves-effect pull-right" click.delegate="click_goback()"><i class="zmdi zmdi-arrow-back"></i></button>
+                    
                 </div>
             </div>
         </div>

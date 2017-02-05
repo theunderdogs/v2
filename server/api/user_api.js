@@ -68,6 +68,7 @@ module.exports.saveRole = (role) => {
       return RoleModel
             .findById(role._id)
             .then((r) => {
+                r.name = role.name;
                 r.enable = role.enable;
                 r.permissions = role.permissions;
                 

@@ -162,6 +162,18 @@ export class EmailListManagement extends Page{
         this.router.navigate(urlDetail);
     }
     
+    click_sendEmail(emailListId){
+        let urlDetail;
+        
+        if(emailListId){
+            urlDetail = this.router.generate('sendemail', {emailListId});
+        }else {
+            urlDetail = 'sendemail';
+        }
+            
+        this.router.navigate(urlDetail);
+    }
+    
     getViewStrategy() {
         return 'admin/views/emaillist/index.html';
     }

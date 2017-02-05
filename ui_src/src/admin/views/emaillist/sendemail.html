@@ -1,0 +1,98 @@
+<template>
+    <div class="block-header">
+        <h2>Send Email - ${emailList.name}</h2>
+    </div>
+    
+    <div class="card">
+        <!--<div class="card-header">-->
+        <!--    <h2>Roles-->
+        <!--        <small>You can assign/remove permissions for a given role or even add a new role on this screen.-->
+        <!--        </small>-->
+        <!--    </h2>-->
+        <!--</div>-->
+        
+       
+        <div class="card-body card-padding">
+            <div class="row">
+                <div class="col-sm-3 col-xs-12 m-t-30">
+                    <div class="fg-line">
+                        <!--<label class="control-label" for="inputError1">Input with error</label>-->
+                        <input type="text" class="form-control" placeholder="From" value.bind="username">
+                    </div>
+                </div>
+                <div class="col-sm-3 col-xs-12 m-t-30">
+                    <div class="fg-line">
+                        <!--<label class="control-label" for="inputError1">Input with error</label>-->
+                        <input type="password" class="form-control" placeholder="Password for email" value.bind="password">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group fg-line"><!--<div class="form-group has-error">-->
+                <div class="fg-line">
+                    <!--<label class="control-label" for="inputError1">Input with error</label>-->
+                    <input type="text" class="form-control" placeholder="Enter comma-separated emails" value.bind="emailList.list & validate">
+                </div>
+                <!--<small class="help-block">This is an error help block</small>-->
+            </div>
+            
+            <div class="form-group fg-line"><!--<div class="form-group has-error">-->
+                <div class="fg-line">
+                    <!--<label class="control-label" for="inputError1">Input with error</label>-->
+                    <input type="text" class="form-control" placeholder="Subject" value.bind="emailList.subject">
+                </div>
+                <!--<small class="help-block">This is an error help block</small>-->
+            </div>
+            
+            <div class="form-group fg-line"><!--<div class="form-group has-error">-->
+                <div class="fg-line">
+                    <!--<label class="control-label" for="inputError1">Input with error</label>-->
+                    <!--<textarea class="form-control" rows="5" placeholder="Message body" value.bind="emailList.bodyhtml"></textarea>-->
+                    
+                    <div ref="txtsubject" class="html-editor"></div>
+                    
+                </div>
+                <!--<small class="help-block">This is an error help block</small>-->
+            </div>
+            
+            
+            <div class="row">
+                <div class="col-sm-12 col-xs-12 m-t-30">
+                    <button class="btn btn-primary btn-icon-text waves-effect pull-right m-l-20" click.delegate="click_applyChanges()"><i class="zmdi zmdi-email"></i>
+                                    Send
+                    </button>
+                    
+                    <button class="btn btn-default waves-effect pull-right" click.delegate="click_goback()"><i class="zmdi zmdi-arrow-back"></i></button>
+                </div>
+            </div>
+            
+            
+            <!-- Modal -->
+            <div class="modal fade" ref="modalCredentials" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <!--<h4 class="modal-title" id="myModalLabel">Please enter your email credentials</h4>-->
+                  </div>
+                  <div class="modal-body">
+                       <div class="form-group fg-line">
+                            <!--<label for="exampleInputEmail1">Email address</label>-->
+                            <input type="email" class="form-control input-sm" placeholder="Enter email" value.bind="username">
+                        </div>
+                        <div class="form-group fg-line">
+                            <!--<label for="exampleInputEmail1">Email address</label>-->
+                            <input type="password" class="form-control input-sm" placeholder="Enter password" value.bind="password">
+                        </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" click.delegate="click_sendEmail()">Save changes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        </div>
+    </div>
+</template>

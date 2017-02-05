@@ -146,6 +146,29 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         });
     });
     
+    router.post('/sendEmail', securePages, jsonParser ,(req, res, next) => {
+        console.log(req.body);
+        
+        var send = require('gmail-send')({
+          user: req.body.from,               // Your GMail account used to send emails
+          pass: req.body.password,             // Application-specific password
+          to:   req.body.list,      // Send back to yourself
+          // from:   '"User" <user@gmail.com>'  // from: by default equals to user
+          // replyTo:'user@gmail.com'           // replyTo: by default undefined
+          subject: req.body.subject,
+          text:    'hey'//req.body.bodyhtml
+          // html:    '<b>html text text</b>'
+        })();
+            
+        res.json(true);
+        // send({}, function(err, resj){ 
+        //     if(err)    
+        //         res.status(500).send(err);
+        //     else 
+        //         res.json(true);
+        // });    
+    });
+    
     router.get('/logout', (req, res, next) => {
         req.logout();
         res.redirect('/login');

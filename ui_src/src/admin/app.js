@@ -16,12 +16,13 @@ export class App {
     config.title = 'The Underdogs Rescue Admin Control Panel';
     config.map([
       { route: ['addpet'], name: 'addpet', moduleId: 'admin/viewmodels/addpet', nav: false, title: 'Add a pet' },
-      { route: ['roles'], name: 'roles', moduleId: 'admin/viewmodels/roles/index', nav: false, title: 'Manage roles' },
+      { route: ['', '_=_', 'roles'], name: 'roles', moduleId: 'admin/viewmodels/roles/index', nav: false, title: 'Manage roles' },
       { route: ['createrole'], name: 'createrole', moduleId: 'admin/viewmodels/roles/createrole', nav: false, title: 'Create role' },
     	{ route: ['users'], name: 'users', moduleId: 'admin/viewmodels/users/index', nav: false, title: 'Manage users' },
     	{ route: ['createuser'], name: 'createuser', moduleId: 'admin/viewmodels/users/createuser', nav: false, title: 'Create user' },
-			{ route: ['', '_=_', 'emaillists'], name: 'emaillists', moduleId: 'admin/viewmodels/emaillist/index', nav: false, title: 'Manage email lists' },
-			{ route: ['createemaillist'], name: 'createemaillist', moduleId: 'admin/viewmodels/emaillist/createemaillist', nav: false, title: 'Create email lists' }    	
+			{ route: ['emaillists'], name: 'emaillists', moduleId: 'admin/viewmodels/emaillist/index', nav: false, title: 'Manage email lists' },
+			{ route: ['createemaillist'], name: 'createemaillist', moduleId: 'admin/viewmodels/emaillist/createemaillist', nav: false, title: 'Create email lists' },    	
+    	{ route: ['sendemail'], name: 'sendemail', moduleId: 'admin/viewmodels/emaillist/sendemail', nav: false, title: 'Send email' }
     	//optional paramerters
     	//{ route: ['', '_=_', 'createuser/:userid?'], name: 'createuser', moduleId: 'admin/viewmodels/users/createuser', nav: false, title: 'Create user' }
     ]);

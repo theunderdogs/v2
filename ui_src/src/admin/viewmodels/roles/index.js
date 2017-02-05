@@ -4,7 +4,8 @@ import {Page} from 'common/page';
 //import 'vendors:bower_components/bootstrap-select/dist/css/bootstrap-select.css!'
 import 'datatables'
 import 'bootstrap-select'
-import optionHtml from 'admin/views/roles/options.html!text'
+import moment from 'moment'
+//import optionHtml from 'admin/views/roles/options.html!text'
 
 //@inject(TaskQueue)
 export class RoleManagement extends Page{
@@ -16,11 +17,10 @@ export class RoleManagement extends Page{
     activate(){
         let self = this;
         this.roleList = [];
-        this.selectedRole;
-        this.allPermissions= [];
         this.tableHtml = '<table ref="dtable" class="table table-striped">' +
                                 '<thead>' +
                                     '<tr>' +
+                                        '<th></th>' +
                                         '<th></th>' +
                                         '<th></th>' +
                                         '<th></th>' +
@@ -29,17 +29,10 @@ export class RoleManagement extends Page{
                             '</table>';
         this.tdata;
         
-        return Promise.all([this.db.getroles(), this.db.getPermissions()])
+        return this.db.getroles()
         .then(( data ) => {
-          //console.log('roles', data[0] );
-          //console.log('permissions', data[1] );
-          
-          if(data[0] && data[0].length > 0){
-            self.roleList = data[0];
-          }
-          
-          if(data[1] && data[1].length > 0){
-              self.allPermissions = data[1];
+          if(data && data.length > 0){
+            self.roleList = data;
           }
         });
     }
@@ -48,143 +41,90 @@ export class RoleManagement extends Page{
         //let self = this;
     	 this.onPageRenderComplete();
     	 
-    	 this.taskQueue.queueMicroTask(() => {       
-        	$(this.rolesCombo).selectpicker();
-    	 });
-    }
-    
-    change_selectedRole() {
-        //console.log(this.selectedRole);
-        //var data;
-        let hideFn = this.showProgress('Loading role...');
-        
-        return this.db.getPermissionsByRoleId(this.selectedRole._id)
-        .then((result) => {
-            //console.log('permissions', result);
-            this.tdata = result;
-            
-            this.allPermissions.forEach((permission) => {
-                let match = false;
-                this.tdata.permissions.forEach((userPermission) => {
-                    if(userPermission.item._id == permission._id){
-                        match = true;
-                    }
-                });
-                
-                if(!match) {
-                    this.tdata.permissions.push({ value: undefined, item: permission });
-                }
-            });
-                
-            $(this.dynamicDom).html(this.tableHtml);
-            
-            return new Promise((resolve, reject) => {
-                if(!this.dynamicDom.querySelectorAll('.au-target').length) {
-                    this.templatingEngine.enhance({
-                        element: this.dynamicDom,
-                        bindingContext: this
-                    });
-                    
-                    resolve();
-                } else {
-                    reject();
-                }
-            });
-        })
-        .then(() => {
-            hideFn();
-            return this.renderDatatable();
-        });
-        
-        //this.uiHelper.loadPromise(pr, 'Yay');
-        
-        //return pr;
+    	 this.renderDatatable();
     }
     
     renderDatatable() {
-        console.log('table data', this.tdata.permissions);
-        
         let promises = [];
         
-        $(this.dtable).DataTable({
-            data: this.tdata.permissions,
-            paging: false,
-            ordering: false,
-            info: false,
-            searching: true,
-            columns: [{
-                title: 'Name',
-                data: 'item.name'
-            }, {
-                title: 'Description',
-                data: 'item.description'
-            }, {
-                title: 'Actions',
-                data: 'item.name'
-            }],
-            createdRow: (row, data, index) => {
-                //console.log('cell data', data);
-                $(row).find('td').css('vertical-align', 'middle');
-                let $cell = $(row).find('td').eq(2);
+        $(this.dynamicDom).html(this.tableHtml);
+            
+        let tablePromise = new Promise((resolve, reject) => {
+            if(!this.dynamicDom.querySelectorAll('.au-target').length) {
+                this.templatingEngine.enhance({
+                    element: this.dynamicDom,
+                    bindingContext: this
+                });
                 
-                $cell.html(optionHtml);
-                
-                promises.push(new Promise((resolve, reject) => {
-                    if(!$cell[0].querySelectorAll('.au-target').length) {
-                        this.templatingEngine.enhance({
-                            element: $cell[0],
-                            bindingContext: data
-                        });
-                        
-                        resolve();
-                    } else {
-                        reject();
-                    }
-                }));
-            },
-            initComplete: (settings, json) => {
-                
+                resolve();
+            } else {
+                reject();
             }
+        }).then(() => {
+           $(this.dtable).DataTable({
+                data: this.roleList,
+                paging: false,
+                ordering: true,
+                info: false,
+                searching: true,
+                columns: [{
+                    title: 'Name',
+                    data: 'name'
+                }, {
+                    title: 'Active',
+                    data: 'enable'
+                }, { //edit button
+                    title: 'Action',
+                    data: 'name',
+                    ordering: false
+                }, { 
+                    title: 'Created On',
+                    data: 'dateAdded',
+                    ordering: false
+                }],
+                createdRow: (row, data, index) => {
+                    let cells = $(row).find('td');
+                    
+                    // cells.eq(3).html(data.isAdmin ? '<mark>Yes</mark>': 'No');
+                    cells.eq(2).html('<button class="btn btn-primary btn-icon-text waves-effect" click.delegate="click_createRole(\'' + data._id + '\')"><i class="zmdi zmdi-border-color"></i> Edit</button>');
+                    
+                    let _date = moment(data.dateAdded);
+                    cells.eq(3).html(_date.format('MM') + '/' + _date.format('DD') + '/' + _date.format('YYYY'));
+                    
+                    promises.push(new Promise((resolve, reject) => {
+                        if(!cells.eq(2)[0].querySelectorAll('.au-target').length) {
+                            this.templatingEngine.enhance({
+                                element: cells.eq(2)[0],
+                                bindingContext: this
+                            });
+                            
+                            resolve();
+                        } else {
+                            reject();
+                        }
+                    }));
+                },
+                initComplete: (settings, json) => {
+                    
+                }
+            }); 
         });
         
-        return promises;
+        promises.push(tablePromise);
+        
+        return Promise.all(promises);
     }
     
-    click_applyChanges(){
-        //obj = JSON.parse(JSON.stringify(o));
+    click_createRole(id){
+        let urlDetail;
         
-        let hideFn = this.showProgress('Saving changes...');
-        
-        var newObject = $.extend(true, {}, this.tdata);
-        
-        let indexesToDelete = [];
-        newObject.permissions.forEach((permission) => {
-            if(permission.value == undefined) {
-                indexesToDelete.push(newObject.permissions.indexOf(permission));
-            }
-        });
-        
-        for(let i = indexesToDelete.length - 1; i >=0; i--) {
-            newObject.permissions.splice(indexesToDelete[i] , 1);
+        if(id){
+            urlDetail = this.router.generate('createrole', {id});
+        }else {
+            urlDetail = 'createrole';
         }
-        
-        console.log('newrole to be saved', newObject);
-    
-        return this.db.saveRole(newObject)
-        .then((role) => {
-            console.log('success', role);
-            this.change_selectedRole();
-            hideFn();
-            this.showSuccess('Role updated successfully'); 
-        },(err) => {
-            console.log(err);
-            this.showError();
-        });
-    }
-    
-    click_createRole() {
-       this.router.navigate('createrole');
-       //this.showSuccess();
+            
+        this.router.navigate(urlDetail);
     }
     
     getViewStrategy() {

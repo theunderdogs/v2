@@ -56,6 +56,15 @@ export const services = {
 			    contentType: 'application/json'
 			  });
     },
+    sendEmail: (email) => {
+        return $.ajax({
+                url: host + '/sendEmail', 
+			    type: 'POST',
+			    data: JSON.stringify(email),
+			    //dataType: 'json',
+			    contentType: 'application/json'
+			  });
+    },
     
 }
 
