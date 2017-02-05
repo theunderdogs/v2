@@ -23,7 +23,7 @@ module.exports = function(path, passport, FacebookStrategy, config, mongoose) {
         profileFields: ['id', 'displayName', 'photos']
     }, (accessToken, refreshToken, profile, done) => {
         //check if the user exists in mongoDB
-        //console.log(profile.photos[0].value);
+        console.log(profile.id, profile.displayName);
         
         UserModel.findOne({'facebookId': profile.id}, (err, user) => {
             if(user){
