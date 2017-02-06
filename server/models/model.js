@@ -118,25 +118,25 @@ module.exports = function (setup_mongoose) {
     
     EmailListModel = mongoose.model('emailList', emailListSchema);
     
-    /*
+    
     //populate master data
     return PermissionModel.insertMany([
             new PermissionModel({
                   name: 'ADDUSER',
-            	  description: 'Can add user?', 
-            	  acceptedValues: [true,false]
+            	  description: 'Is the user allowed to add another user?', 
+            	  acceptedValues: ['yes','no']
             }), new PermissionModel({
                   name: 'ADDPET',
-            	  description: 'Can add pet?', 
-            	  acceptedValues: [true,false]
+            	  description: 'Is the user allowed to add pet?', 
+            	  acceptedValues: ['yes','no']
             }), new PermissionModel({
-                  name: 'EDITPET',
-            	  description: 'Can edit pet?', 
-            	  acceptedValues: ['yes', 'no', 'maybe']
+                  name: 'CANEMAIL',
+            	  description: 'Can user mass email using email list?', 
+            	  acceptedValues: ['yes', 'no']
             }), new PermissionModel({
-                  name: 'EDITUSER',
-            	  description: 'Can edit user?', 
-            	  acceptedValues: ['yes', 'no', 'maybe']
+                  name: 'CANEDITEMAILLIST',
+            	  description: 'Can user edit email list?', 
+            	  acceptedValues: ['yes', 'no']
             })
         ]) 
     .then((docs)=> {
@@ -152,7 +152,7 @@ module.exports = function (setup_mongoose) {
             name : 'MANAGER', 
         	permissions : [{
         		item: id,
-        		value: true
+        		value: 'yes'
         	}],
         	enable: true
         });
@@ -183,7 +183,7 @@ module.exports = function (setup_mongoose) {
     .catch((error) => {
         console.log('oh boy: ' + error);
     });
-    */
+    /**/
     
 }
 
