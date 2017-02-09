@@ -15,18 +15,22 @@ var  nodemailer = require('nodemailer');
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'kirandeore@gmail.com',
-        pass: 'faucyikczdvutifw'
+        user: 'pumpedupdevs@gmail.com',
+        pass: 'rmvsrtlpmpuzemkx'
     }
 });
 
 // setup email data with unicode symbols
 var mailOptions = {
     from: '"Winner 👻" <theunderdogs@gmail.com>', // sender address
-    to: 'pumpedupdevs@gmail.com, pumpedupbro@gmail.com', // list of receivers
+    to: 'kirandeore@gmail.com, pumpedupbro@gmail.com', // list of receivers
     subject: 'Hello ✔', // Subject line
     text: 'Hello world ?', // plain text body
-    html: '<b>Hello world ?</b>' // html body
+    html: '<b>Hello world ?</b>', // html body
+    attachments: [{   // file on disk as an attachment
+        filename: 'testmail2.txt',
+        path: __dirname + '/testmail2.js' // stream this file
+    }]
 };
 
 // send mail with defined transport object

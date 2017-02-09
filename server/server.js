@@ -11,7 +11,10 @@ var express = require('express'),
     formidable = require('formidable'),
     passport = require('passport'),
     bodyParser = require('body-parser'),
-    FacebookStrategy = require('passport-facebook').Strategy;
+    FacebookStrategy = require('passport-facebook').Strategy,
+    _ = require('lodash'),
+    util = require('util'),
+    os = require('os');
 
 var env = process.env.NODE_ENV || 'development';
 
@@ -65,7 +68,7 @@ fs.readdirSync( process.cwd() + '/api').forEach(function(filename){
 
 
 require('./auth/passportAuth.js')(path, passport, FacebookStrategy, config, mongoose);
-require('./routes/routes.js')(express, app, passport, config, mongoose, formidable, bodyParser);
+require('./routes/routes.js')(express, app, passport, config, mongoose, formidable, bodyParser, _, fs, util);
 
 server.listen(app.get('port'), () => {
    console.log('server started on ', app.get('host') + ':' + app.get('port')); 

@@ -1,6 +1,6 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
 
-module.exports = function(express, app, passport, config, mongoose, formidable, bodyParser){
+module.exports = function(express, app, passport, config, mongoose, formidable, bodyParser, _, fs, util, os){
     
     var router = express.Router();
     var jsonParser = bodyParser.json();
@@ -146,8 +146,49 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         });
     });
     
+    router.post('/file/post', securePages, (req, res, next) => {
+        var form = new formidable.IncomingForm();
+        var tmpFile, nfile, fname;
+        
+        function generateFilename(filename) {
+            var ext_regex = /(?:\.([^.]+))?$/;
+            var ext = ext_regex.exec(filename[1]);
+            var date = new Date().getTime();
+            var charBank = 'abcdefghijklmnopqrstuvwxyz';
+            var fstring = '';
+            for(var i = 0; i < 15; i++){
+                fstring += charBank[parseInt(Math.random()*26)];
+            }
+            return (fstring += date + '.' + ext);
+        }
+        
+        form.parse(req, function(err, fields, files) {
+          tmpFile = files.file.path;
+          fname = generateFilename(files.file.name);
+          //nfile = os.tmpDir() + '/' + fname;
+          nfile = process.cwd() + '/token/' + fname;
+          console.log(nfile);
+          
+          res.writeHead(200, {'content-type': 'text/plain'});
+          res.write('received upload:\n\n');
+          res.end(util.inspect({fields: fields, files: files}));
+        });
+    
+        form.on('end', function(){
+            fs.rename(tmpFile, nfile, function(){
+                
+            })
+        });
+    });
+    
+    router.get('/getSendersEmails', securePages, (req, res, next) => {
+       res.json(config.gmail.map( credentials => ({ user: credentials.user, from: credentials.from }) )  );
+    });
+    
     router.post('/sendEmail', securePages, jsonParser ,(req, res, next) => {
         console.log(req.body);
+        
+        
         
         var send = require('gmail-send')({
           user: req.body.from,               // Your GMail account used to send emails

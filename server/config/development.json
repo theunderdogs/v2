@@ -8,5 +8,14 @@
         "appSecret": "cc35af8db6c0972604e46dfd1e65f7b3",
         "callbackURL": "https://material-code84.c9users.io/auth/facebook/callback"
     },
+    "gmail":[{
+      "user": "pumpedupdevs@gmail.com",
+      "pass": "rmvsrtlpmpuzemkx",
+      "from": "\"Meike Parker 👻\" <mail@theunderdogs.com>"
+    },{
+      "user": "kirandeore@gmail.com",
+      "pass": "rmvsrtlpmpuzemkx",
+      "from": "\"Kiran Deore 👻\" <mail@kiran.com>"
+    }],
     "useCache": true
 }

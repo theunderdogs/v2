@@ -65,6 +65,9 @@ export const services = {
 			    contentType: 'application/json'
 			  });
     },
+    getSendersEmails: () => {
+        return $.get( host + '/getSendersEmails')
+    }
     
 }
 

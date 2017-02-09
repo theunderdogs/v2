@@ -231,6 +231,7 @@ System.config({
     "bootstrap-select": "vendors:bower_components/bootstrap-select/dist/js/bootstrap-select",
     "css": "node_modules:systemjs-plugin-css/css.js",
     "autonumeric": "vendors:autoNumeric-2.0.7/dist/autoNumeric",
-    "summernote": "vendors:summernote/dist/summernote-updated.min"
+    "summernote": "vendors:summernote/dist/summernote-updated.min",
+    "dropzone": "vendors:bower_components/dropzone/dist/min/dropzone.min"
   }
 });

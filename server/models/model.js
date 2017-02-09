@@ -118,7 +118,7 @@ module.exports = function (setup_mongoose) {
     
     EmailListModel = mongoose.model('emailList', emailListSchema);
     
-    
+    /*
     //populate master data
     return PermissionModel.insertMany([
             new PermissionModel({
@@ -183,7 +183,7 @@ module.exports = function (setup_mongoose) {
     .catch((error) => {
         console.log('oh boy: ' + error);
     });
-    /**/
+    */
     
 }
 

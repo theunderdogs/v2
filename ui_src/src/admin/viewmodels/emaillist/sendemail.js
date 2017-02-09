@@ -3,6 +3,8 @@ import {Page} from 'common/page';
 import {BootstrapFormRenderer} from 'admin/viewmodels/users/createusererror';
 import 'vendors:summernote/dist/summernote.css!'
 import 'summernote'
+import 'bootstrap-select'
+import 'dropzone'
 
 export class CreateUser extends Page{
     constructor(...rest) {   
@@ -20,6 +22,10 @@ export class CreateUser extends Page{
         
         this.username = undefined;
         this.password = undefined;
+        
+        this.senderEmails = [];
+        this.selectedSender = undefined;
+        this.senderName = undefined;
         
         if(params.hasOwnProperty('emailListId')){
             //console.log(params.userId);    
@@ -39,12 +45,17 @@ export class CreateUser extends Page{
           .on(this);
         
         
-        return this.db.getEmailListById(this.emailList._id)
+        return Promise.all([this.db.getEmailListById(this.emailList._id), this.db.getSendersEmails()])
         .then((data) => {
-            if(data) {
-                console.log('email list', data);
-                this.emailList.name = data.name;
-                this.emailList.list = data.list;
+            if(data[0]) {
+                console.log('email list', data[0]);
+                this.emailList.name = data[0].name;
+                this.emailList.list = data[0].list;
+            }
+            
+            if(data[1] && data[1].length > 0){
+                console.log('senders email', data[1]);
+                this.senderEmails = data[1];
             }
         });
     }
@@ -52,10 +63,20 @@ export class CreateUser extends Page{
     attached(){
     	 this.onPageRenderComplete();
     	 
-    	 $(this.txtsubject).summernote({
-                height: 150,
-                placeholder: 'Write your message here'
-            });
+    // 	 $(this.txtsubject).summernote({
+    //             height: 150,
+    //             placeholder: 'Write your message here'
+    //         });
+            
+        this.taskQueue.queueMicroTask(() => {       
+        	$(this.senderEmailCombo).selectpicker();
+    	 });
+    	 
+    	$(this.dropzoneUpload).dropzone({
+            url: "/file/post",
+            addRemoveLinks: true
+
+        });
     }
     
     click_applyChanges(){
@@ -112,10 +133,8 @@ export class CreateUser extends Page{
         // });
     }
     
-    click_sendEmail(){
-       
-        
-        
+    change_selectedSender(){
+       this.senderName = this.selectedSender.from;
     }
     
     click_goback(){

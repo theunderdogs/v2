@@ -8,5 +8,9 @@
         "appSecret": "cc35af8db6c0972604e46dfd1e65f7b3",
         "callbackURL": "https://material-code84.c9users.io/auth/facebook/callback"
     },
+    "gmail":[{
+      user: 'pumpedupdevs@gmail.com',
+      pass: 'rmvsrtlpmpuzemkx'  
+    }],
     "useCache": true
 }
