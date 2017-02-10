@@ -61,6 +61,8 @@ export class CreateUser extends Page{
     }
     
     attached(){
+         let self = this;
+         
     	 this.onPageRenderComplete();
     	 
     // 	 $(this.txtsubject).summernote({
@@ -73,10 +75,38 @@ export class CreateUser extends Page{
     	 });
     	 
     	$(this.dropzoneUpload).dropzone({
-            url: "/file/post",
-            addRemoveLinks: true
-
-        });
+            url: '/file/post',
+            addRemoveLinks: true,
+            maxFilesize: 1, //in MB
+            //acceptedFiles: 'image/*,application/pdf,.psd'
+            success: (file, response) => {  //this is response from 'file/post'
+                //console.log(file, response);
+                
+                if (file.previewElement) {
+                  return file.previewElement.classList.add("dz-success");
+                }
+            },
+            removedfile: function(file) {
+                console.log('removedfile', file);
+                //$(self.dropzoneUpload).removeFile(file);
+                let _ref;
+                
+                if (file.previewElement) {
+                  if ((_ref = file.previewElement) != null) {
+                    _ref.parentNode.removeChild(file.previewElement);
+                  }
+                }
+                return this._updateMaxFilesReachedClass();
+            },
+            maxfilesexceeded : (args) => {
+              console.log(args);
+            },
+            // canceled: (args) => {
+            //   console.log(args);
+            // }
+        })
+        
+        
     }
     
     click_applyChanges(){

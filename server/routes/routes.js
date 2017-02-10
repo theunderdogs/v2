@@ -152,7 +152,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         
         function generateFilename(filename) {
             var ext_regex = /(?:\.([^.]+))?$/;
-            var ext = ext_regex.exec(filename[1]);
+            var ext = ext_regex.exec(filename)[1];
             var date = new Date().getTime();
             var charBank = 'abcdefghijklmnopqrstuvwxyz';
             var fstring = '';
