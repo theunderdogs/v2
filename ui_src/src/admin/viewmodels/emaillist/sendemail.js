@@ -4,7 +4,7 @@ import {BootstrapFormRenderer} from 'admin/viewmodels/users/createusererror';
 import 'vendors:summernote/dist/summernote.css!'
 import 'summernote'
 import 'bootstrap-select'
-import 'dropzone'
+import Dropzone from 'dropzone'
 
 export class CreateUser extends Page{
     constructor(...rest) {   
@@ -74,38 +74,80 @@ export class CreateUser extends Page{
         	$(this.senderEmailCombo).selectpicker();
     	 });
     	 
+    	 /*
     	$(this.dropzoneUpload).dropzone({
             url: '/file/post',
             addRemoveLinks: true,
             maxFilesize: 1, //in MB
             //acceptedFiles: 'image/*,application/pdf,.psd'
-            success: (file, response) => {  //this is response from 'file/post'
-                //console.log(file, response);
-                
-                if (file.previewElement) {
-                  return file.previewElement.classList.add("dz-success");
-                }
-            },
-            removedfile: function(file) {
-                console.log('removedfile', file);
-                //$(self.dropzoneUpload).removeFile(file);
-                let _ref;
-                
-                if (file.previewElement) {
-                  if ((_ref = file.previewElement) != null) {
-                    _ref.parentNode.removeChild(file.previewElement);
-                  }
-                }
-                return this._updateMaxFilesReachedClass();
-            },
-            maxfilesexceeded : (args) => {
-              console.log(args);
-            },
-            // canceled: (args) => {
-            //   console.log(args);
-            // }
+            init: function() {
+                 let instance = this;
+                 instance.on("maxfilesreached", function(file) {
+                        alert("MAX_FILES_REACHED");
+                 });
+                 instance.on("maxfilesexceeded", function(file) {
+                            alert("MAX_FILES_EXCEEDED");
+                 });
+                // success: (file, response) => {  //this is response from 'file/post'
+                //     //console.log(file, response);
+                    
+                //     if (file.previewElement) {
+                //       return file.previewElement.classList.add("dz-success");
+                //     }
+                // },
+                // removedfile: function(file) {
+                //     console.log('removedfile', file);
+                    
+                //     // let _ref;
+                    
+                //     // if (file.previewElement) {
+                //     //   if ((_ref = file.previewElement) != null) {
+                //     //     _ref.parentNode.removeChild(file.previewElement);
+                //     //   }
+                //     // }
+                //     // return this._updateMaxFilesReachedClass();
+                // },
+                // maxfilesexceeded : function(file) {
+                //   console.log(file);
+                // },
+                // // canceled: (args) => {
+                // //   console.log(args);
+                // // }
+            }
         })
         
+        */
+        
+        //Dropzone.autoDiscover = true;
+        let k = new Dropzone("#dropzoneUpload", { 
+            url: '/file/post',
+            addRemoveLinks: true,
+            maxFilesize: 1, //in MB
+            //maxFiles: 2,
+            // maxfilesexceeded : function(){
+            //     alert("MAX_FILES_REACHED////");
+            // },
+            init: function () {
+                let ins = this;
+                this.on("success", function(fileArray, response) {
+                        console.log("Success", fileArray, response);
+                });
+                this.on("maxfilesreached", function(fileArray, response) {
+                        console.log("MAX_FILES_REACHED", fileArray, response);
+                });
+                this.on("maxfilesexceeded", function(fileArray, response) {
+                        console.log("MAX_FILES_REACHED", fileArray, response);
+                });
+                this.on("filetoobig", function(fileArray) {
+                        console.log("File too big", fileArray);
+                        console.log(ins.getAcceptedFiles().length);
+                });
+                this.on("removedfile", function(fileArray) {
+                        console.log("Removed file", fileArray);
+                        console.log(ins.getAcceptedFiles().length);
+                });
+            }
+        });
         
     }
     
