@@ -27,6 +27,8 @@ export class CreateUser extends Page{
         this.selectedSender = undefined;
         this.senderName = undefined;
         
+        this.dropZoneInstance;
+        
         if(params.hasOwnProperty('emailListId')){
             //console.log(params.userId);    
             this.emailList._id = params.emailListId;
@@ -74,77 +76,40 @@ export class CreateUser extends Page{
         	$(this.senderEmailCombo).selectpicker();
     	 });
     	 
-    	 /*
-    	$(this.dropzoneUpload).dropzone({
+    	$(this.dropzoneUpload).dropzone({ 
+            dictDefaultMessage: 'Drop files to attach',
             url: '/file/post',
             addRemoveLinks: true,
-            maxFilesize: 1, //in MB
-            //acceptedFiles: 'image/*,application/pdf,.psd'
-            init: function() {
-                 let instance = this;
-                 instance.on("maxfilesreached", function(file) {
-                        alert("MAX_FILES_REACHED");
-                 });
-                 instance.on("maxfilesexceeded", function(file) {
-                            alert("MAX_FILES_EXCEEDED");
-                 });
-                // success: (file, response) => {  //this is response from 'file/post'
-                //     //console.log(file, response);
-                    
-                //     if (file.previewElement) {
-                //       return file.previewElement.classList.add("dz-success");
-                //     }
-                // },
-                // removedfile: function(file) {
-                //     console.log('removedfile', file);
-                    
-                //     // let _ref;
-                    
-                //     // if (file.previewElement) {
-                //     //   if ((_ref = file.previewElement) != null) {
-                //     //     _ref.parentNode.removeChild(file.previewElement);
-                //     //   }
-                //     // }
-                //     // return this._updateMaxFilesReachedClass();
-                // },
-                // maxfilesexceeded : function(file) {
-                //   console.log(file);
-                // },
-                // // canceled: (args) => {
-                // //   console.log(args);
-                // // }
-            }
-        })
-        
-        */
-        
-        //Dropzone.autoDiscover = true;
-        let k = new Dropzone("#dropzoneUpload", { 
-            url: '/file/post',
-            addRemoveLinks: true,
-            maxFilesize: 1, //in MB
+            //maxFilesize: 1, //in MB
+            totalMaxUploadSize: 5,//25,
             //maxFiles: 2,
-            // maxfilesexceeded : function(){
-            //     alert("MAX_FILES_REACHED////");
-            // },
             init: function () {
-                let ins = this;
+                self.dropZoneInstance = this;
                 this.on("success", function(fileArray, response) {
-                        console.log("Success", fileArray, response);
+                        console.log("Success", fileArray);
+                        //console.log("Success", fileArray, response);
+                        //console.log(self.dropZoneInstance.getAcceptedFiles().length);
                 });
-                this.on("maxfilesreached", function(fileArray, response) {
-                        console.log("MAX_FILES_REACHED", fileArray, response);
+                this.on("maxfilesreached", function(fileArray) {
+                        //console.log("MAX_FILES_REACHED", fileArray);
                 });
                 this.on("maxfilesexceeded", function(fileArray, response) {
-                        console.log("MAX_FILES_REACHED", fileArray, response);
+                        //console.log("MAX_FILES_REACHED", fileArray, response);
                 });
                 this.on("filetoobig", function(fileArray) {
-                        console.log("File too big", fileArray);
-                        console.log(ins.getAcceptedFiles().length);
+                        //console.log("File too big", fileArray);
+                        //console.log(self.dropZoneInstance.getAcceptedFiles().length);
                 });
                 this.on("removedfile", function(fileArray) {
-                        console.log("Removed file", fileArray);
-                        console.log(ins.getAcceptedFiles().length);
+                        //console.log("Removed file", fileArray);
+                        //console.log(self.dropZoneInstance.getAcceptedFiles().length);
+                });
+                this.on("totalmaxuploadsizeexceeded", function(file, totalUploaded, uploadLimit){
+                    //console.log("totalmaxuploadsizeexceeded", file, totalUploaded, uploadLimit);
+                });
+                this.on("error", function(file, message) {
+                        //console.log("Error", file);
+                        //console.log(self.dropZoneInstance.getRejectedFiles().length);
                 });
             }
         });
@@ -152,30 +117,34 @@ export class CreateUser extends Page{
     }
     
     click_applyChanges(){
+        let self = this;
+        console.log( self.dropZoneInstance.getAcceptedFiles() );
+        
         return this.controller.validate()
          .then(result => {
+            
              
-             if(result.valid) {
-                  let hideFn = this.showProgress('Loading role...');
+            //  if(result.valid) {
+            //       let hideFn = this.showProgress('Loading role...');
                   
-                return this.db.sendEmail({
-            from : this.username,
-            password: this.password,
-            list : this.emailList.list,
-            subject : this.emailList.subject,
-            bodyhtml : $(this.txtsubject).val()
-        })
-                .then((result) => {
-                    console.log('success', result);
-                    hideFn();
-                    this.showSuccess('Email sent successfully');
-                    //this.router.navigate('emaillists');
-                },(err) => {
-                    hideFn();
-                    console.log(err);
-                    this.showError();
-                });      
-             }
+            //     return this.db.sendEmail({
+            //         from : this.username,
+            //         password: this.password,
+            //         list : this.emailList.list,
+            //         subject : this.emailList.subject,
+            //         bodyhtml : $(this.txtsubject).val()
+            //     })
+            //             .then((result) => {
+            //                 console.log('success', result);
+            //                 hideFn();
+            //                 this.showSuccess('Email sent successfully');
+            //                 //this.router.navigate('emaillists');
+            //             },(err) => {
+            //                 hideFn();
+            //                 console.log(err);
+            //                 this.showError();
+            //             });      
+            //  }
          });
         
         
