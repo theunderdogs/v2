@@ -80,7 +80,7 @@ export class CreateUser extends Page{
             dictDefaultMessage: 'Drop files to attach',
             url: '/file/post',
             addRemoveLinks: true,
-            //maxFilesize: 1, //in MB
+            maxFilesize: 1, //in MB
             totalMaxUploadSize: 5,//25,
             //maxFiles: 2,
             init: function () {
