@@ -86,8 +86,9 @@ export class CreateUser extends Page{
             init: function () {
                 self.dropZoneInstance = this;
                 this.on("success", function(fileArray, response) {
-                        console.log("Success", fileArray);
-                        //console.log("Success", fileArray, response);
+                        //console.log("Success", fileArray);
+                        //debugger;
+                        console.log("Success", fileArray, $.parseJSON(response));
                         //console.log(self.dropZoneInstance.getAcceptedFiles().length);
                 });
                 this.on("maxfilesreached", function(fileArray) {
@@ -106,6 +107,11 @@ export class CreateUser extends Page{
                 });
                 this.on("totalmaxuploadsizeexceeded", function(file, totalUploaded, uploadLimit){
                     //console.log("totalmaxuploadsizeexceeded", file, totalUploaded, uploadLimit);
+                });
+                this.on("sending", function(file, xhr, data){
+                    if(file.fullPath){
+                        data.append("fullPath", file.fullPath);
+                    }
                 });
                 this.on("error", function(file, message) {
                         //console.log("Error", file);

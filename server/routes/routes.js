@@ -170,8 +170,10 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
           console.log(nfile);
           
           res.writeHead(200, {'content-type': 'text/plain'});
-          res.write('received upload:\n\n');
-          res.end(util.inspect({fields: fields, files: files}));
+          //res.write('received upload:\n\n');
+          //res.end(util.inspect({fields: fields, files: files}));
+          res.end(JSON.stringify({path: files.file.path, size: files.file.size, name: files.file.name}));
+          //res.end();
         });
     
         form.on('end', function(){
