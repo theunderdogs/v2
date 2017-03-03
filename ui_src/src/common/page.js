@@ -10,6 +10,7 @@ import {
   ValidationController,
   ValidationRules
 } from 'aurelia-validation';
+import _ from 'lodash';
 //import {uiHelper} from 'common/uihelper';
 
 @inject(TaskQueue, Aurelia, TemplatingEngine, BindingEngine, Router, ValidationControllerFactory, services)
@@ -23,7 +24,32 @@ export class Page{
         this.controllerFactory = controllerFactory;
         this.validationRules = ValidationRules;
         this.db = db;
+        
+        this.init();
     }   
+    
+    init(){
+        this.validationRules.customRule(
+          'emailList',
+          (value, obj) =>  { 
+              if(value === undefined)
+              return false;
+              
+              var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+              
+              var emails = _.uniqBy(value.split(';')), flag = true;
+              emails.forEach((mail) => {
+                    if(!re.test(mail.trim()) ){
+                        flag = false;
+                        return true; //break loop
+                    }
+              });
+              
+              return flag;
+            },
+          `One or more email addresses are not property formatted` 
+        );
+    }
 
     onPageRenderComplete(){
     	//aurelia.start().then(() => aurelia.setRoot('app', document.app));

@@ -5,7 +5,8 @@ import 'vendors:summernote/dist/summernote.css!'
 import 'summernote'
 import 'bootstrap-select'
 import Dropzone from 'dropzone'
-import _ from 'lodash'
+import swal from 'sweet-alert'
+//import 'vendors:bower_components/sweetalert2/dist/sweetalert2.min.css!';
 
 export class CreateUser extends Page{
     constructor(...rest) {   
@@ -35,38 +36,22 @@ export class CreateUser extends Page{
             this.emailList._id = params.emailListId;
         }
         
-        this.validationRules.customRule(
-          'emailList',
-          (value, obj) =>  { 
-              var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-              
-              var emails = _.uniqBy(value.split(';')), flag = true;
-              emails.forEach((mail) => {
-                    if(!re.test(mail.trim()) ){
-                        flag = false;
-                        return true; //break loop
-                    }
-              });
-              
-              return flag;
-            },
-          `One or more email addresses are not property formatted` 
-        );
-
-        
         this.validationRules
           .ensure(a => a.list)
             .required()
             .withMessage('Please enter comma-separated email addresses')
             .satisfiesRule('emailList')
-        //   .ensure(a => a.username)
-        //     .required()
-        //     .withMessage('Please enter your email address')
-          //.ensure(a => a.password)
-        //    .required()
-         //   .withMessage('Please enter password for your email')
           .on(this.emailList);
         
+        this.validationRules
+          .ensure(a => a.selectedSender)
+            .required()
+            .withMessage('Please select an email')
+          .ensure(a => a.senderName)
+            .required()
+            .when(a => a.selectedSender !== undefined)
+            .withMessage('Please enter sender\'s name')
+        .on(this);
         
         return Promise.all([this.db.getEmailListById(this.emailList._id), this.db.getSendersEmails()])
         .then((data) => {
@@ -144,61 +129,68 @@ export class CreateUser extends Page{
     }
     
     click_applyChanges(){
+        swal.init();
+        
         let self = this;
         ///console.log( self.dropZoneInstance.getAcceptedFiles() );
         
         return this.controller.validate()
          .then(result => {
             console.log('result.valid', result.valid)
-             
-            //  if(result.valid) {
-            //       let hideFn = this.showProgress('Loading role...');
-                  
-            //     return this.db.sendEmail({
-            //         from : this.username,
-            //         password: this.password,
-            //         list : this.emailList.list,
-            //         subject : this.emailList.subject,
-            //         bodyhtml : $(this.txtsubject).val()
-            //     })
-            //             .then((result) => {
-            //                 console.log('success', result);
-            //                 hideFn();
-            //                 this.showSuccess('Email sent successfully');
-            //                 //this.router.navigate('emaillists');
-            //             },(err) => {
-            //                 hideFn();
-            //                 console.log(err);
-            //                 this.showError();
-            //             });      
-            //  }
+            
+            if(result.valid) {
+                let message;
+                
+                if(!this.emailList.subject) {
+                    message = 'Do you want send email without subject?';    
+                } else if(!this.emailList.bodyhtml) {
+                    message = 'Do you want send email with empty body?';
+                }
+                
+                if(message) {
+                    swal({   
+                        title: "Are you sure?",   
+                        text: message,   
+                        type: "warning",   
+                        showCancelButton: true,   
+                        confirmButtonText: "Yes",
+                    }).then(function(result){
+                        console.log(result);
+                        return self.sendEmail();
+                    })
+                    .catch(function(result){
+                        console.log('cancelled ', result);
+                    });
+                } else {
+                    return self.sendEmail();
+                }
+            }
          });
-        
-        
-        // //console.log(this.user);
-        
-        // return this.controller.validate()
-        // .then(result => {
-        //     if(result.valid) {
-        //         let list = JSON.parse(JSON.stringify(this.emailList));
-                
-        //         console.log('user to be saved', list);
-                
-        //         return this.db.saveEmailList(list)
-        //         .then((result) => {
-        //             console.log('success', result);
-        //             //hideFn();
-        //             this.showSuccess('List ' + (this.editEmaillist ? 'updated' : 'added') + ' successfully');
-        //             this.router.navigate('emaillists');
-        //         },(err) => {
-        //             hideFn();
-        //             console.log(err);
-        //             this.showError();
-        //         });        
-        //     } else {
-        //         hideFn();
-        //     }
-        // });
+    }
+    
+    sendEmail(){
+        //console.log( this.dropZoneInstance.getAcceptedFiles().map( f => f.serverPath ) );
+   
+        let hideFn = this.showProgress('Sending email...');
+          
+        return this.db.sendEmail({
+            senderEmail: this.selectedSender.user,
+            senderName: this.senderName,
+            list : this.emailList.list,
+            subject : this.emailList.subject,
+            bodyhtml : this.emailList.bodyhtml,
+            attachments: this.dropZoneInstance.getAcceptedFiles().map( f => f.serverPath )
+        })
+        .then((result) => {
+            console.log('success', result);
+            hideFn();
+            this.showSuccess('Email sent successfully');
+            //this.router.navigate('emaillists');
+        },(err) => {
+            hideFn();
+            console.log(err);
+            this.showError();
+        });
     }
     
     change_selectedSender(){

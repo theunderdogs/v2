@@ -28,8 +28,13 @@ export class CreateUser extends Page{
           .ensure(a => a.name)
             .required()
             .withMessage('Please enter name for the email list')
-          .on(this.emailList);
-        
+          .ensure(a => a.list)
+            .required()
+            .withMessage('Please enter comma-separated email addresses')
+            .satisfiesRule('emailList')
+            .when(a => a.list !== undefined)
+          .on(this.emailList)
+          
         if(this.editEmaillist){
             return this.db.getEmailListById(this.emailList._id)
             .then((data) => {

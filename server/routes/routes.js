@@ -1,7 +1,7 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
 
-module.exports = function(express, app, passport, config, mongoose, formidable, bodyParser, _, fs, util, os){
-    
+module.exports = function(express, app, passport, config, mongoose, formidable, bodyParser, _, fs, util, os, nodemailer){
+    //var nodemailer = require('nodemailer');
     var router = express.Router();
     var jsonParser = bodyParser.json();
     var userApi =  require( process.cwd() + '/api/user_api');
@@ -167,7 +167,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
           fname = generateFilename(files.file.name);
           //nfile = os.tmpDir() + '/' + fname;
           nfile = process.cwd() + '/token/' + fname;
-          console.log(nfile);
+          //console.log(nfile);
           
           res.writeHead(200, {'content-type': 'text/plain'});
           //res.write('received upload:\n\n');
@@ -190,26 +190,46 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
     router.post('/sendEmail', securePages, jsonParser ,(req, res, next) => {
         console.log(req.body);
         
+        var mail = _.filter(config.gmail, function(c) { 
+            console.log(c.user, req.body.senderEmail);
+            return c.user == req.body.senderEmail; 
+         });
+         
+         console.log(mail);
+         
+        if(mail.length == 0)
+            res.status(500).send('Sender\'s address was not found in system '); 
         
+        // create reusable transporter object using the default SMTP transport
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: mail[0].user,
+                pass: mail[0].pass
+            }
+        });
         
-        var send = require('gmail-send')({
-          user: req.body.from,               // Your GMail account used to send emails
-          pass: req.body.password,             // Application-specific password
-          to:   req.body.list,      // Send back to yourself
-          // from:   '"User" <user@gmail.com>'  // from: by default equals to user
-          // replyTo:'user@gmail.com'           // replyTo: by default undefined
-          subject: req.body.subject,
-          text:    'hey'//req.body.bodyhtml
-          // html:    '<b>html text text</b>'
-        })();
-            
-        res.json(true);
-        // send({}, function(err, resj){ 
-        //     if(err)    
-        //         res.status(500).send(err);
-        //     else 
-        //         res.json(true);
-        // });    
+        // setup email data with unicode symbols
+        var mailOptions = {
+            from: req.body.senderName, // sender address
+            to: req.body.list, // list of receivers
+            subject: req.body.subject, // Subject line
+            //text: 'Hello world ?', // plain text body
+            html: req.body.bodyhtml, // html body
+            // attachments: [{   // file on disk as an attachment
+            //     filename: 'testmail2.txt',
+            //     path: __dirname + '/testmail2.js' // stream this file
+            // }]
+        };
+        
+        // send mail with defined transport object
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                res.status(500).send('Something went wrong while sending email'); 
+            }
+            res.json({ messageId: info.messageId, response: info.response });
+        });
+        
     });
     
     router.get('/logout', (req, res, next) => {
