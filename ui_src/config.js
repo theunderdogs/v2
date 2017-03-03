@@ -232,6 +232,7 @@ System.config({
     "css": "node_modules:systemjs-plugin-css/css.js",
     "autonumeric": "vendors:autoNumeric-2.0.7/dist/autoNumeric",
     "summernote": "vendors:summernote/dist/summernote-updated.min",
-    "dropzone": "vendors:bower_components/dropzone/dist/dropzone"
+    "dropzone": "vendors:bower_components/dropzone/dist/dropzone",
+    "lodash": "vendors:lodash/lodash.min"
   }
 });
