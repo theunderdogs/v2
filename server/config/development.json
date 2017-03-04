@@ -17,5 +17,6 @@
       "pass": "rmvsrtlpmpuzemkx",
       "from": "\"Kiran Deore 👻\" <mail@kiran.com>"
     }],
+    "attachment_directory": "tmp_attachments", 
     "useCache": true
 }

@@ -165,18 +165,22 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         form.parse(req, function(err, fields, files) {
           tmpFile = files.file.path;
           fname = generateFilename(files.file.name);
+          
+          //var ext = fname.split('.')[fname.split('.').length - 1];
+          
           //nfile = os.tmpDir() + '/' + fname;
-          nfile = process.cwd() + '/token/' + fname;
-          //console.log(nfile);
+          nfile = process.cwd() + '/' + config.attachment_directory + '/' + fname;
+          console.log(nfile);
           
           res.writeHead(200, {'content-type': 'text/plain'});
           //res.write('received upload:\n\n');
           //res.end(util.inspect({fields: fields, files: files}));
-          res.end(JSON.stringify({path: files.file.path, size: files.file.size, name: files.file.name}));
+          res.end(JSON.stringify({path: nfile, size: files.file.size, name: files.file.name}));
           //res.end();
         });
     
         form.on('end', function(){
+            // move the file
             fs.rename(tmpFile, nfile, function(){
                 
             })
@@ -188,7 +192,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
     });
     
     router.post('/sendEmail', securePages, jsonParser ,(req, res, next) => {
-        console.log(req.body);
+        //console.log(req.body);
         
         var mail = _.filter(config.gmail, function(c) { 
             console.log(c.user, req.body.senderEmail);
@@ -199,6 +203,12 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
          
         if(mail.length == 0)
             res.status(500).send('Sender\'s address was not found in system '); 
+            
+        // if(req.body.attachments.length > 0){
+        //     req.body.attachments.forEach(function(attachment){
+                
+        //     });
+        // }
         
         // create reusable transporter object using the default SMTP transport
         var transporter = nodemailer.createTransport({
@@ -216,7 +226,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
             subject: req.body.subject, // Subject line
             //text: 'Hello world ?', // plain text body
             html: req.body.bodyhtml, // html body
-            // attachments: [{   // file on disk as an attachment
+            attachments: req.body.attachments //[{   // file on disk as an attachment
             //     filename: 'testmail2.txt',
             //     path: __dirname + '/testmail2.js' // stream this file
             // }]
@@ -224,10 +234,14 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         
         // send mail with defined transport object
         transporter.sendMail(mailOptions, (error, info) => {
+            console.log('error', error);
+            console.log('info', info);
             if (error) {
                 res.status(500).send('Something went wrong while sending email'); 
             }
-            res.json({ messageId: info.messageId, response: info.response });
+            
+            //res.json({ messageId: info.messageId, response: info.response });
+            res.json(info);
         });
         
     });
