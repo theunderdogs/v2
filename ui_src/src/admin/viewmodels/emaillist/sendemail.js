@@ -86,8 +86,8 @@ export class CreateUser extends Page{
             dictDefaultMessage: 'Drop files to attach',
             url: '/file/post',
             addRemoveLinks: true,
-            maxFilesize: 1, //in MB
-            totalMaxUploadSize: 5,//25,
+            maxFilesize: 25, //in MB
+            totalMaxUploadSize: 25,//25,
             //maxFiles: 2,
             init: function () {
                 self.dropZoneInstance = this;
@@ -179,7 +179,9 @@ export class CreateUser extends Page{
             list : this.emailList.list,
             subject : this.emailList.subject,
             bodyhtml : this.emailList.bodyhtml,
-            attachments: this.dropZoneInstance.getAcceptedFiles().map( f => f.serverPath )
+            attachments: this.dropZoneInstance.getAcceptedFiles().map( f => { 
+                return { path: f.serverPath, filename: f.fileName }; 
+            } )
         })
         .then((result) => {
             console.log('success', result);
