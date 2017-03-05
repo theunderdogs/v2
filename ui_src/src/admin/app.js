@@ -22,7 +22,9 @@ export class App {
     	{ route: ['createuser'], name: 'createuser', moduleId: 'admin/viewmodels/users/createuser', nav: false, title: 'Create user' },
 			{ route: ['emaillists'], name: 'emaillists', moduleId: 'admin/viewmodels/emaillist/index', nav: false, title: 'Manage email lists' },
 			{ route: ['createemaillist'], name: 'createemaillist', moduleId: 'admin/viewmodels/emaillist/createemaillist', nav: false, title: 'Create email lists' },    	
-    	{ route: ['sendemail'], name: 'sendemail', moduleId: 'admin/viewmodels/emaillist/sendemail', nav: false, title: 'Send email' }
+    	{ route: ['sendemail'], name: 'sendemail', moduleId: 'admin/viewmodels/emaillist/sendemail', nav: false, title: 'Send email' },
+    	{ route: ['about'], name: 'about', moduleId: 'admin/viewmodels/about/index', nav: false, title: 'Manage \'About Us\' Page' },
+    	{ route: ['createabout'], name: 'createabout', moduleId: 'admin/viewmodels/about/createabout', nav: false, title: 'Create \'About Us\' Page' }
     	//optional paramerters
     	//{ route: ['', '_=_', 'createuser/:userid?'], name: 'createuser', moduleId: 'admin/viewmodels/users/createuser', nav: false, title: 'Create user' }
     ]);

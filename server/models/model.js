@@ -1,10 +1,11 @@
 'use strict';
 
-var mongoose;
-var UserModel,
+var mongoose,
+    UserModel,
     RoleModel,
     PermissionModel,
-    EmailListModel;
+    EmailListModel,
+    AboutModel;
 
 module.exports = function (setup_mongoose) {
     if (setup_mongoose) {
@@ -118,6 +119,40 @@ module.exports = function (setup_mongoose) {
     
     EmailListModel = mongoose.model('emailList', emailListSchema);
     
+    /* About Us Model */
+    
+    let aboutSchema = new mongoose.Schema({
+        name: {
+            type: String,
+            required: [true, 'Name for this version is required']
+        },
+        content: {
+            type: String
+        },
+        createdBy: {
+            type: mongoose.Schema.ObjectId,
+            ref: 'user',
+            required: [true, 'user is not set']
+        },
+        active: { 
+            type: Boolean,
+            default: false,
+            required: [true, 'status for role is not set']
+        },
+        dateAdded: { type: Date, default: Date.now }
+    });
+    
+    // aboutSchema.statics.setActive = function(id, cb) {
+    //     this.findById(id)
+    //         .then(() => {
+                
+    //         });
+    // };
+    
+    aboutSchema.index({ name: 1 }, { unique: true }); // schema level
+    
+    AboutModel = mongoose.model('about', aboutSchema);
+    
     /*
     //populate master data
     return PermissionModel.insertMany([
@@ -201,6 +236,8 @@ module.exports.getModel = (name) => {
         return PermissionModel;
       case 'emailList':
         return EmailListModel;
+      case 'about':
+        return AboutModel;
       default:
         console.log('Model not found');
         break;

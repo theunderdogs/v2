@@ -1,0 +1,52 @@
+<template>
+    <div class="block-header">
+        <h2>Manage 'About Us' page</h2>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h2>About Page Editor
+                <small>You can create new abput us page or edit existing versions of page.
+                </small>
+            </h2>
+        </div>
+        
+       
+        <div class="card-body card-padding">
+            <div class="row">
+                <div class="col-sm-5 col-xs-12 m-t-10">
+                    <!--<p class="f-500 m-b-15 c-black">Roles</p>-->
+                
+                    <!--<select class="selectpicker" ref="rolesCombo" value.bind="selectedRole" change.delegate="change_selectedRole()" data-live-search="true" title="Select a role">-->
+                    <!--    <option repeat.for="role of roleList" model.bind="role">${role.name}</option>-->
+                    <!--</select>-->
+                
+                </div>
+                <div class="col-sm-2 col-xs-12 m-t-10 pull-left">
+                    <!--<label class="checkbox checkbox-inline m-t-10" if.bind="tdata">-->
+                    <!--    <input type="checkbox" checked.bind="tdata.enable">-->
+                    <!--    <i class="input-helper"></i>-->
+                    <!--    Active-->
+                    <!--</label>-->
+                </div>
+                <div class="col-sm-5 col-xs-12 m-b-25 pull-right">
+                    <button class="btn btn-primary btn-icon-text waves-effect pull-right m-l-20" click.delegate="click_createWriteUp()"><i class="zmdi zmdi-plus"></i>
+                                    Create New Write-Up
+                    </button>
+                    
+                    <!--<button class="btn btn-success btn-icon-text waves-effect pull-right" if.bind="selectedRole" click.delegate="click_applyChanges()"><i class="zmdi zmdi-floppy"></i>-->
+                    <!--                Apply Changes-->
+                    <!--</button>-->
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive" ref="dynamicDom">
+                    </div>                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+</template>
