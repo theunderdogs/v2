@@ -187,7 +187,7 @@ export class CreateUser extends Page{
             console.log('success', result);
             hideFn();
             this.showSuccess('Email sent successfully');
-            //this.router.navigate('emaillists');
+            this.router.navigate('emaillists');
         },(err) => {
             hideFn();
             console.log(err);
