@@ -246,6 +246,36 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         
     });
     
+    router.post('/saveAboutus', securePages, jsonParser ,(req, res, next) => {
+        //console.log(req.user.user);
+        req.body.createdBy = req.user.user._id;
+        //console.log(req.body);
+        userApi.saveAboutus(req.body)
+        .then(() => {
+           res.json(true);
+        }, (err) => {
+           res.status(500).send(err); 
+        });
+    });
+    
+    router.get('/getAbouts', securePages, (req, res, next) => {
+       userApi.getAbouts()
+       .then((abouts) => {
+           res.json(abouts);
+       }, (err) => {
+           res.status(500).send(err);
+       })
+    });
+    
+    router.get('/getAboutById/:id', securePages, (req, res, next) => {
+       userApi.getAboutById(req.params.id)
+       .then((about) => {
+           res.json(about);
+       }, (err) => {
+           res.status(500).send(err);
+       })
+    });
+    
     router.get('/logout', (req, res, next) => {
         req.logout();
         res.redirect('/login');

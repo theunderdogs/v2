@@ -14,6 +14,8 @@ const tableHtml = '<table ref="dtable" class="table table-striped">' +
                                         '<th></th>' +
                                         '<th></th>' +
                                         '<th></th>' +
+                                        '<th></th>' +
+                                        '<th></th>' +
                                     '</tr>' + 
                                 '</thead>' +
                             '</table>';
@@ -27,28 +29,29 @@ export class RoleManagement extends Page{
     
     activate(){
         let self = this;
-        this.roleList = [];
+        this.aboutList = [];
         this.tdata;
         
-        // return this.db.getroles()
-        // .then(( data ) => {
-        //   if(data && data.length > 0){
-        //     self.roleList = data;
-        //   }
-        // });
+        return this.db.getAbouts()
+        .then(( data ) => {
+          if(data && data.length > 0){
+            self.aboutList = data;
+            console.log(self.aboutList);
+          }
+        });
     }
 
     attached(){
-        //let self = this;
-    //	 this.onPageRenderComplete();
+        let self = this;
+        this.onPageRenderComplete();
     	 
-    //	 this.renderDatatable();
+    	this.renderDatatable();
     }
-    /*
+    
     renderDatatable() {
         let promises = [];
         
-        $(this.dynamicDom).html(this.tableHtml);
+        $(this.dynamicDom).html(tableHtml);
             
         let tablePromise = new Promise((resolve, reject) => {
             if(!this.dynamicDom.querySelectorAll('.au-target').length) {
@@ -63,39 +66,47 @@ export class RoleManagement extends Page{
             }
         }).then(() => {
            $(this.dtable).DataTable({
-                data: this.roleList,
+                data: this.aboutList,
                 paging: false,
                 ordering: true,
                 info: false,
                 searching: true,
                 columns: [{
-                    title: 'Name',
+                    title: 'Version Name',
                     data: 'name'
                 }, {
+                    title: 'Content',
+                    data: 'content'
+                }, {
                     title: 'Active',
-                    data: 'enable'
-                }, { //edit button
-                    title: 'Action',
-                    data: 'name',
-                    ordering: false
+                    data: 'active'
+                }, { 
+                    title: 'Created By',
+                    data: 'createdBy.realName',
                 }, { 
                     title: 'Created On',
                     data: 'dateAdded',
+                    ordering: false
+                }, { //edit button
+                    title: 'Action',
+                    data: 'active',
                     ordering: false
                 }],
                 createdRow: (row, data, index) => {
                     let cells = $(row).find('td');
                     
-                    // cells.eq(3).html(data.isAdmin ? '<mark>Yes</mark>': 'No');
-                    cells.eq(2).html('<button class="btn btn-primary btn-icon-text waves-effect" click.delegate="click_createRole(\'' + data._id + '\')"><i class="zmdi zmdi-border-color"></i> Edit</button>');
+                    if(data.content)
+                        cells.eq(1).html(data.content.length > 20 ? data.content.substring(0,20) : data.content + '...');
+                    
+                    cells.eq(5).html('<button class="btn btn-primary btn-icon-text waves-effect" click.delegate="click_createWriteUp(\'' + data._id + '\')"><i class="zmdi zmdi-border-color"></i> Edit</button>');
                     
                     let _date = moment(data.dateAdded);
-                    cells.eq(3).html(_date.format('MM') + '/' + _date.format('DD') + '/' + _date.format('YYYY'));
+                    cells.eq(4).html(_date.format('MM') + '/' + _date.format('DD') + '/' + _date.format('YYYY'));
                     
                     promises.push(new Promise((resolve, reject) => {
-                        if(!cells.eq(2)[0].querySelectorAll('.au-target').length) {
+                        if(!cells.eq(5)[0].querySelectorAll('.au-target').length) {
                             this.templatingEngine.enhance({
-                                element: cells.eq(2)[0],
+                                element: cells.eq(5)[0],
                                 bindingContext: this
                             });
                             
@@ -115,7 +126,7 @@ export class RoleManagement extends Page{
         
         return Promise.all(promises);
     }
-    */
+    
     
     click_createWriteUp(id){
         let urlDetail;

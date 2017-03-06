@@ -4,7 +4,7 @@
 //new DBRef
 //http://stackoverflow.com/questions/15923788/mongodb-construct-dbref-with-string-or-objectid
 
-var mongoose, path, UserModel, RoleModel, PermissionModel, EmailListModel;
+var mongoose, path, UserModel, RoleModel, PermissionModel, EmailListModel, AboutModel;
 var checkInitialization = () => {
     if (!mongoose && !path) {
         throw new Error("Can't use constructor until mongoose and path are properly initalized");
@@ -22,6 +22,7 @@ module.exports = (setup_mongoose, setup_path) => {
         RoleModel = require(path.join( process.cwd(), '/models/model')).getModel('role');
         PermissionModel = require(path.join( process.cwd(), '/models/model')).getModel('permission');
         EmailListModel = require(path.join( process.cwd(), '/models/model')).getModel('emailList');
+        AboutModel = require(path.join( process.cwd(), '/models/model')).getModel('about');
     }
     
     return module.exports;
@@ -149,5 +150,53 @@ module.exports.saveEmailList = (emailList) => {
     } else {
       //save
       return EmailListModel.create(emailList);
+    }
+};
+
+module.exports.getAbouts = () => {
+    checkInitialization();
+    
+    return AboutModel
+            .find()
+            .populate('createdBy')
+            .exec();
+};
+
+module.exports.getAboutById = (id) => {
+    checkInitialization();
+    
+    return AboutModel
+            .findOne({ _id: id })
+            //.populate('createdBy')
+            .exec();
+};
+
+module.exports.saveAboutus = (about) => {
+    checkInitialization();
+    
+    if(about._id){
+      //update
+    //   return AboutModel
+    //         .findById(about._id)
+    //         .then((e) => {
+    //             e.name = about.name;
+    //             e.content = about.content;
+    //             e.active = about.active;
+                
+    //             return e.save();
+    //         })
+      
+      return AboutModel.findByIdAndUpdate(
+          about._id,
+          {$set: {
+                name: about.name,
+                content: about.content,
+                active: about.active
+            }
+          },
+          {new: true});
+    } else {
+      //save
+      return AboutModel.create(about);
     }
 };

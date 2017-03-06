@@ -1,0 +1,65 @@
+<template>
+    <div class="block-header">
+        <h2>Create New Write-Up for 'About Us' page</h2>
+    </div>
+    
+    <div class="card">
+        <!--<div class="card-header">-->
+        <!--    <h2>Roles-->
+        <!--        <small>You can assign/remove permissions for a given role or even add a new role on this screen.-->
+        <!--        </small>-->
+        <!--    </h2>-->
+        <!--</div>-->
+        
+       
+        <div class="card-body card-padding">
+            <div class="row">
+                <div class="col-sm-5 m-b-25">
+                    <!--<p class="f-500 m-b-15 c-black">Roles</p>-->
+                
+                    <div class="form-group fg-line">
+                        <!--<label>Role name:</label>-->
+                        <input type="text" class="form-control input-sm" placeholder="Enter name for this version of page Ex. Halloween update" value.bind="about.name & validate">
+                    </div>
+                
+                </div>
+                <div class="col-sm-2 m-b-25 pull-left">
+                    <label class="checkbox checkbox-inline m-t-10">
+                        <input type="checkbox" checked.bind="about.active">
+                        <i class="input-helper"></i>
+                        Active
+                    </label>
+                </div>
+                <div class="col-sm-5 m-t-20">
+                    
+                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="fg-line">
+                            <textarea class="form-control" rows="20" placeholder="Enter content here that you want to be displayed on 'About Us' page" value.bind="about.content & validate"></textarea>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-xs-12 m-t-30">
+                    <button class="btn btn-success btn-icon-text waves-effect pull-right m-l-20" click.delegate="click_applyChanges()"><i class="zmdi zmdi-floppy"></i>
+                                    Save Changes
+                    </button>
+                    
+                    <button class="btn btn-success bgm-orange btn-icon-text waves-effect pull-right m-l-20" click.delegate="click_applyChanges()"><i class="zmdi zmdi-globe"></i>
+                                    Preview
+                    </button>
+                    
+                    <button class="btn btn-default waves-effect pull-right" click.delegate="click_goback()"><i class="zmdi zmdi-arrow-back"></i></button>
+                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+</template>

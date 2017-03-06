@@ -67,8 +67,22 @@ export const services = {
     },
     getSendersEmails: () => {
         return $.get( host + '/getSendersEmails')
+    },
+    saveAboutus: (about) => {
+        return $.ajax({
+                url: host + '/saveAboutus', 
+			    type: 'POST',
+			    data: JSON.stringify(about),
+			    //dataType: 'json',
+			    contentType: 'application/json'
+			  });
+    },
+    getAbouts : () => {    
+        return $.get( host + '/getAbouts')
+    },
+    getAboutById: (id) => {
+        return $.get( host + '/getAboutById/' + id)
     }
-    
 }
 
 // export function squarex() {
