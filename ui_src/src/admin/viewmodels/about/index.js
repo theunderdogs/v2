@@ -95,8 +95,11 @@ export class RoleManagement extends Page{
                 createdRow: (row, data, index) => {
                     let cells = $(row).find('td');
                     
-                    if(data.content)
-                        cells.eq(1).html(data.content.length > 20 ? data.content.substring(0,20) : data.content + '...');
+                    if(data.content){
+                        let content = data.content.length > 20 ? data.content.substring(0,20) + '...' : data.content;
+                        
+                        cells.eq(1).html(content.replace('<', '&lt;'));
+                    }
                     
                     cells.eq(5).html('<button class="btn btn-primary btn-icon-text waves-effect" click.delegate="click_createWriteUp(\'' + data._id + '\')"><i class="zmdi zmdi-border-color"></i> Edit</button>');
                     

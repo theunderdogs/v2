@@ -15,6 +15,7 @@ export class CreateRole extends Page{
     }   
     
     activate(params){
+        this.showPreview = false;
         this.editMode = false;
         
         this.about = {
@@ -193,6 +194,11 @@ export class CreateRole extends Page{
     
     click_goback() {
         this.router.navigate('about');
+    }
+    
+    click_preview() {
+        this.showPreview = !this.showPreview;
+        $(this.dynamicDom).html(this.about.content);
     }
     
     getViewStrategy() {
