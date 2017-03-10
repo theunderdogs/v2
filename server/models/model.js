@@ -5,7 +5,8 @@ var mongoose,
     RoleModel,
     PermissionModel,
     EmailListModel,
-    AboutModel;
+    AboutModel,
+    ActiveAboutModel;
 
 module.exports = function (setup_mongoose) {
     if (setup_mongoose) {
@@ -134,24 +135,34 @@ module.exports = function (setup_mongoose) {
             ref: 'user',
             required: [true, 'user is not set']
         },
-        active: { 
-            type: Boolean,
-            default: false,
-            required: [true, 'status for role is not set']
-        },
+        // active: { 
+        //     type: Boolean,
+        //     default: false,
+        //     required: [true, 'status for role is not set']
+        // },
         dateAdded: { type: Date, default: Date.now }
     });
-    
-    // aboutSchema.statics.setActive = function(id, cb) {
-    //     this.findById(id)
-    //         .then(() => {
-                
-    //         });
-    // };
     
     aboutSchema.index({ name: 1 }, { unique: true }); // schema level
     
     AboutModel = mongoose.model('about', aboutSchema);
+    
+    /* Active About Us Model */
+    let activeAboutSchema = new mongoose.Schema({
+        name: {
+            type: String,
+            required: [true, 'Name of page is not set']
+        },
+        aboutId: {
+            type: mongoose.Schema.ObjectId,
+            ref: 'about',
+            required: [true, 'about is not set']
+        }
+    });
+    
+    activeAboutSchema.index({ name: 1 }, { unique: true }); // schema level
+    
+    ActiveAboutModel = mongoose.model('activeAbout', activeAboutSchema);
     
     /*
     //populate master data
@@ -238,6 +249,8 @@ module.exports.getModel = (name) => {
         return EmailListModel;
       case 'about':
         return AboutModel;
+      case 'activeAbout':
+        return ActiveAboutModel;
       default:
         console.log('Model not found');
         break;

@@ -4,7 +4,7 @@
 //new DBRef
 //http://stackoverflow.com/questions/15923788/mongodb-construct-dbref-with-string-or-objectid
 
-var mongoose, path, UserModel, RoleModel, PermissionModel, EmailListModel, AboutModel;
+var mongoose, path, UserModel, RoleModel, PermissionModel, EmailListModel, AboutModel, ActiveAboutModel;
 var checkInitialization = () => {
     if (!mongoose && !path) {
         throw new Error("Can't use constructor until mongoose and path are properly initalized");
@@ -23,6 +23,7 @@ module.exports = (setup_mongoose, setup_path) => {
         PermissionModel = require(path.join( process.cwd(), '/models/model')).getModel('permission');
         EmailListModel = require(path.join( process.cwd(), '/models/model')).getModel('emailList');
         AboutModel = require(path.join( process.cwd(), '/models/model')).getModel('about');
+        ActiveAboutModel = require(path.join( process.cwd(), '/models/model')).getModel('activeAbout');
     }
     
     return module.exports;
@@ -175,28 +176,38 @@ module.exports.saveAboutus = (about) => {
     checkInitialization();
     
     if(about._id){
-      //update
-    //   return AboutModel
-    //         .findById(about._id)
-    //         .then((e) => {
-    //             e.name = about.name;
-    //             e.content = about.content;
-    //             e.active = about.active;
-                
-    //             return e.save();
-    //         })
-      
+     //update    
       return AboutModel.findByIdAndUpdate(
           about._id,
           {$set: {
                 name: about.name,
-                content: about.content,
-                active: about.active
+                content: about.content//,
+                //active: about.active
             }
           },
-          {new: true});
+          {new: true})
+          .then((about) => {
+              if(about.active) {
+                  return ActiveAboutModel.findOneAndUpdate({
+                        name: 'AboutUsPage'
+                    }, {
+                        $set: { aboutId: about._id  }
+                    }, {upsert: true, 'new': true});
+              }
+          }, (err) => {
+              return Promise.reject(err);
+          });
     } else {
       //save
       return AboutModel.create(about);
     }
+};
+
+module.exports.getActiveAboutById = () => {
+    checkInitialization();
+    
+    return AboutModel
+            .findOne({ name: 'AboutUsPage' })
+            //.populate('createdBy')
+            .exec();
 };

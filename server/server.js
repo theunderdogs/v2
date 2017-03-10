@@ -15,7 +15,7 @@ var express = require('express'),
     _ = require('lodash'),
     util = require('util'),
     os = require('os'),
-    nodemailer = '';//require('nodemailer');
+    nodemailer = require('nodemailer');
 
 var env = process.env.NODE_ENV || 'development';
 
