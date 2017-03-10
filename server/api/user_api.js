@@ -192,7 +192,8 @@ module.exports.saveAboutus = (about) => {
       //save
       p = AboutModel.create({
           name: about.name,
-          content: about.content
+          content: about.content,
+          createdBy: about.createdBy
       });
     }
     
