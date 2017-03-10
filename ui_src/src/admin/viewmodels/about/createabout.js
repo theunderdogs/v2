@@ -35,12 +35,19 @@ export class CreateRole extends Page{
             this.about._id = params.id;
             this.editMode = true;
             
-            return this.db.getAboutById(this.about._id)
-                .then((data) => {
-                    this.about._id = data._id;
-                    this.about.content = data.content;
-                    this.about.active = data.active;
-                    this.about.name = data.name;
+            return Promise.all( [this.db.getAboutById(this.about._id), this.db.getActiveAboutById() ])
+                .then((results) => {
+                    let _about = results[0], activeAbout = results[1];
+                    this.about._id = _about._id;
+                    this.about.content = _about.content;
+                    
+                    if(!activeAbout)
+                        this.about.active = false;
+                    else {
+                        this.about.active = activeAbout.aboutId == this.about._id;
+                    }
+                        
+                    this.about.name = _about.name;
                 }, (error) => {
                     console.log(error);
                 });

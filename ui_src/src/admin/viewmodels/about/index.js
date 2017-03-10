@@ -32,10 +32,20 @@ export class RoleManagement extends Page{
         this.aboutList = [];
         this.tdata;
         
-        return this.db.getAbouts()
-        .then(( data ) => {
-          if(data && data.length > 0){
-            self.aboutList = data;
+        return Promise.all([ this.db.getAbouts(), this.db.getActiveAboutById()])
+        .then(( results ) => {
+          let abouts = results[0], activeAbout = results[1];
+          
+          if(abouts && abouts.length > 0){
+            abouts.forEach((about) => {
+                if(!activeAbout)
+                    about.active = false;
+                else {
+                    about.active = about._id == activeAbout.aboutId;
+                }
+            });  
+              
+            self.aboutList = abouts;
             console.log(self.aboutList);
           }
         });

@@ -276,6 +276,15 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        })
     });
     
+    router.get('/getActiveAboutById', securePages, (req, res, next) => {
+       userApi.getActiveAboutById()
+       .then((about) => {
+           res.json(about);
+       }, (err) => {
+           res.status(500).send(err);
+       })
+    });
+    
     router.get('/logout', (req, res, next) => {
         req.logout();
         res.redirect('/login');

@@ -82,6 +82,9 @@ export const services = {
     },
     getAboutById: (id) => {
         return $.get( host + '/getAboutById/' + id)
+    },
+    getActiveAboutById: () => {
+        return $.get( host + '/getActiveAboutById')
     }
 }
 

@@ -175,9 +175,11 @@ module.exports.getAboutById = (id) => {
 module.exports.saveAboutus = (about) => {
     checkInitialization();
     
+    var p;
+    
     if(about._id){
      //update    
-      return AboutModel.findByIdAndUpdate(
+      p = AboutModel.findByIdAndUpdate(
           about._id,
           {$set: {
                 name: about.name,
@@ -185,28 +187,38 @@ module.exports.saveAboutus = (about) => {
                 //active: about.active
             }
           },
-          {new: true})
-          .then((about) => {
-              if(about.active) {
-                  return ActiveAboutModel.findOneAndUpdate({
-                        name: 'AboutUsPage'
-                    }, {
-                        $set: { aboutId: about._id  }
-                    }, {upsert: true, 'new': true});
-              }
-          }, (err) => {
-              return Promise.reject(err);
-          });
+          {new: true});
     } else {
       //save
-      return AboutModel.create(about);
+      p = AboutModel.create({
+          name: about.name,
+          content: about.content
+      });
     }
+    
+    return Promise.all([p, module.exports.getActiveAboutById() ])
+            .then((results) => {
+                var _about = results[0], activeAbout = results[1];
+                
+                if(activeAbout && _about._id.equals(activeAbout.aboutId) && !about.active){
+                    //delete the table
+                    return ActiveAboutModel.remove({ name: 'AboutUsPage' });
+                } else if(about.active) {
+                  return ActiveAboutModel.findOneAndUpdate({
+                            name: 'AboutUsPage'
+                        }, {
+                            $set: { aboutId: _about._id  }
+                        }, {upsert: true, 'new': true});
+                }
+            }, (err) => {
+              return Promise.reject(err);
+          })
 };
 
 module.exports.getActiveAboutById = () => {
     checkInitialization();
     
-    return AboutModel
+    return ActiveAboutModel
             .findOne({ name: 'AboutUsPage' })
             //.populate('createdBy')
             .exec();
