@@ -85,6 +85,30 @@ export const services = {
     },
     getActiveAboutById: () => {
         return $.get( host + '/getActiveAboutById')
+    },
+    getActiveAboutToDisplay: () => {
+        return $.get( host + '/getActiveAboutToDisplay')
+    },
+    saveContactTemplate: (template) => {
+        return $.ajax({
+                url: host + '/saveContactTemplate', 
+			    type: 'POST',
+			    data: JSON.stringify(template),
+			    //dataType: 'json',
+			    contentType: 'application/json'
+			  });
+    },
+    getContactTemplates : () => {    
+        return $.get( host + '/getContactTemplates')
+    },
+    getContactTemplateById: (id) => {
+        return $.get( host + '/getContactTemplateById/' + id)
+    },
+    getActiveContactTemplate: () => {
+        return $.get( host + '/getActiveContactTemplate')
+    },
+    getActiveContactTemplateToDisplay: () => {
+        return $.get( host + '/getActiveContactTemplateToDisplay')
     }
 }
 

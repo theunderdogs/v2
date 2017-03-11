@@ -4,7 +4,17 @@
 //new DBRef
 //http://stackoverflow.com/questions/15923788/mongodb-construct-dbref-with-string-or-objectid
 
-var mongoose, path, UserModel, RoleModel, PermissionModel, EmailListModel, AboutModel, ActiveAboutModel;
+var mongoose, 
+path, 
+UserModel, 
+RoleModel, 
+PermissionModel, 
+EmailListModel, 
+AboutModel, 
+ActiveAboutModel, 
+ContactTemplateModel, 
+ActiveContactTemplateModel;
+
 var checkInitialization = () => {
     if (!mongoose && !path) {
         throw new Error("Can't use constructor until mongoose and path are properly initalized");
@@ -24,6 +34,8 @@ module.exports = (setup_mongoose, setup_path) => {
         EmailListModel = require(path.join( process.cwd(), '/models/model')).getModel('emailList');
         AboutModel = require(path.join( process.cwd(), '/models/model')).getModel('about');
         ActiveAboutModel = require(path.join( process.cwd(), '/models/model')).getModel('activeAbout');
+        ContactTemplateModel = require(path.join( process.cwd(), '/models/model')).getModel('contactTemplate');
+        ActiveContactTemplateModel = require(path.join( process.cwd(), '/models/model')).getModel('activeContactTemplate');
     }
     
     return module.exports;
@@ -223,4 +235,101 @@ module.exports.getActiveAboutById = () => {
             .findOne({ name: 'AboutUsPage' })
             //.populate('createdBy')
             .exec();
+};
+
+module.exports.getActiveAboutToDisplay = () => {
+    checkInitialization();
+
+    return module.exports.getActiveAboutById()
+            .then((activeAbout) => {
+                if(activeAbout)
+                    return module.exports.getAboutById(activeAbout.aboutId)
+                else return null
+            }, (err) => {
+                return Promise.reject(err);
+            });
+};
+
+
+module.exports.getContactTemplates = () => {
+    checkInitialization();
+    
+    return ContactTemplateModel
+            .find()
+            .populate('createdBy')
+            .exec();
+};
+
+module.exports.getContactTemplateById = (id) => {
+    checkInitialization();
+    
+    return ContactTemplateModel
+            .findOne({ _id: id })
+            //.populate('createdBy')
+            .exec();
+};
+
+module.exports.saveContactTemplate = (saveTemplate) => {
+    checkInitialization();
+    
+    var p;
+    
+    if(saveTemplate._id){
+     //update    
+      p = ContactTemplateModel.findByIdAndUpdate(
+          saveTemplate._id,
+          {$set: {
+                name: saveTemplate.name,
+                content: saveTemplate.content//,
+                //active: about.active
+            }
+          },
+          {new: true});
+    } else {
+      //save
+      p = ContactTemplateModel.create({
+          name: saveTemplate.name,
+          content: saveTemplate.content,
+          createdBy: saveTemplate.createdBy
+      });
+    }
+    
+    return Promise.all([p, module.exports.getActiveContactTemplate() ])
+            .then((results) => {
+                var _template = results[0], activeContactTemplate = results[1];
+                
+                if(activeContactTemplate && _template._id.equals(activeContactTemplate.templateId) && !saveTemplate.active){
+                    //delete the table
+                    return ActiveContactTemplateModel.remove({ name: 'ContactTemplate' });
+                } else if(saveTemplate.active) {
+                  return ActiveContactTemplateModel.findOneAndUpdate({
+                            name: 'ContactTemplate'
+                        }, {
+                            $set: { templateId: _template._id  }
+                        }, {upsert: true, 'new': true});
+                }
+            }, (err) => {
+              return Promise.reject(err);
+          })
+};
+
+module.exports.getActiveContactTemplate = () => {
+    checkInitialization();
+    
+    return ActiveContactTemplateModel
+            .findOne({ name: 'ContactTemplate' })
+            .exec();
+};
+
+module.exports.getActiveContactTemplateToDisplay = () => {
+    checkInitialization();
+
+    return module.exports.getActiveContactTemplate()
+            .then((activeTemplate) => {
+                if(activeTemplate)
+                    return module.exports.getContactTemplateById(activeTemplate.templateId)
+                else return null
+            }, (err) => {
+                return Promise.reject(err);
+            });
 };

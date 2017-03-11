@@ -1,0 +1,117 @@
+<template>
+    
+    <div class="row">
+        <div class="col-sm-6">
+            <!--<compose view="common/calendarWidget/index.html" view-model="common/calendarWidget/index" model.bind="calendarModel"></compose>   -->
+            
+            <div class="card picture-list">
+                <div class="card-header bgm-cyan">
+                    <!-- Please refer the Colors page in User Interface for more color classes -->
+                    <h2>Donate
+                        <small>You can make donations online</small>
+                    </h2>
+                </div>
+
+                <div class="pl-body">
+                    <div class="col-xs-3">
+                        <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=S6P5TAVDX7L4S" target="_blank">
+                            <img src="assets/img/paypal.jpg" alt="Paypal">
+                        </a>
+                    </div>
+
+                    <div class="col-xs-3">
+                        <a href="https://www.amazon.com/gp/registry/wishlist/1645T80XBMO2I/ref=cm_sw_su_w" target="_blank">
+                            <img src="assets/img/amazonsmile.jpg" alt="Amazon Smile">
+                        </a>
+                    </div>
+                    
+                </div>
+                <!--<div class="card-body card-padding">-->
+                <!--    Cras leo sem, egestas a accumsan eget, euismod at nunc. Praesent vel mi blandit, tempus-->
+                <!--    ex gravida, accumsan dui. Sed sed aliquam augue. Nullam vel suscipit purus, eu facilisis-->
+                <!--    ante. Mauris nec commodo felis. Donec eget felis et sem scelerisque euismod eget sit-->
+                <!--    amet nunc.-->
+                <!--</div>-->
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+           <div class="card">
+               <div class="card-body card-padding">
+                   <div class="row">
+                       <div class="col-sm-8">
+                            <form id="paypal_form" style="align-content: center; text-align: center;" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="paypal">    
+                                <input type="hidden" name="cmd" value="_donations">
+                                <input type="hidden" name="business" value="theunderdogsrescue@gmail.com">
+                                <input type="hidden" name="lc" value="US">
+                                <input type="hidden" name="item_name" value="Donation to Underdogs Rescue inc.">
+                                <input type="hidden" name="no_note" value="0">
+                                <input type="hidden" name="cn" value="Include a note with your donation.">
+                                <input type="hidden" name="no_shipping" value="0">
+                                <input type="hidden" name="currency_code" value="USD">
+                                <input type="hidden" name="hosted_button_id" value="K78MNSUB5VEU4">
+                            	<input type="hidden" name="on0" value="Donation amount">
+                                <input ref="txtdonationAmt" type="text" class="form-control input-sm m-b-10" name="amount" placeholder="00.00">
+                            </form>
+                       </div>
+                       <div class="col-sm-4">
+                           <button class="btn btn-primary btn-block waves-effect" onclick="$('#paypal_form').submit(); return false;">Donate</button>
+                       </div>
+                   </div>
+               </div>
+           </div>
+           
+           <div class="card">
+                <div class="card-header bgm-orange">
+                    <!-- Please refer the Colors page in User Interface for more color classes -->
+                    <h2>Make Monthly Donations
+                        <!--<small>Nam at dui sed lacus lacinia lobortis</small>-->
+                    </h2>
+                </div>
+
+                <div class="card-body card-padding">
+                   <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+                       <div class="row">
+                            <div class="col-sm-8 col-xs-12 m-t-10 form-group">
+                                <!--<select ref="rolesCombo" value.bind="user.role" change.delegate="change_selectedRole()" title="Select a role">-->
+                                <!--    <option repeat.for="role of roleList" model.bind="role._id" value.bind="role._id">${role.name}</option>-->
+                                <!--</select>-->
+                                
+                                <input type="hidden" name="cmd" value="_s-xclick">
+    	                        <input type="hidden" name="hosted_button_id" value="TZ2MS4HGCTF3W">
+    	                        <input type="hidden" name="on0" value="Recurring donation amount">
+    	                        <input type="hidden" name="currency_code" value="USD">
+                                <select ref="monthlyCombo" name="os0">
+                                    <option repeat.for="item of monthlyList" model.bind="item" value.bind="item.val">${item.title}</option>
+            					</select>
+                            </div>
+                            
+                            <div class="col-sm-4">
+                               <button class="btn btn-primary btn-block waves-effect" name="submit">Donate</button>
+                           </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+           
+           
+           <div class="card">
+               <div class="card-header">
+                   <h2>If you prefer the good ol' ways, you can also send a check to:</h2>
+               </div>
+               <div class="card-body card-padding">
+                   <div class="pmo-block pmo-contact">
+                       <ul>
+                           <li>
+                               <i class="zmdi zmdi-pin"></i>
+                               <address class="m-b-0 ng-binding">The Underdogs Rescue Inc.<br>P.O. Box 816<br>Choctaw, OK, 73020</address>
+                           </li>
+                       </ul>
+                   </div>
+               </div>
+           </div>
+        </div>
+    </div>
+
+        
+</template>

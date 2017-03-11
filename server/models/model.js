@@ -6,7 +6,9 @@ var mongoose,
     PermissionModel,
     EmailListModel,
     AboutModel,
-    ActiveAboutModel;
+    ActiveAboutModel,
+    ContactTemplateModel,
+    ActiveContactTemplateModel;
 
 module.exports = function (setup_mongoose) {
     if (setup_mongoose) {
@@ -135,11 +137,6 @@ module.exports = function (setup_mongoose) {
             ref: 'user',
             required: [true, 'user is not set']
         },
-        // active: { 
-        //     type: Boolean,
-        //     default: false,
-        //     required: [true, 'status for role is not set']
-        // },
         dateAdded: { type: Date, default: Date.now }
     });
     
@@ -163,6 +160,45 @@ module.exports = function (setup_mongoose) {
     activeAboutSchema.index({ name: 1 }, { unique: true }); // schema level
     
     ActiveAboutModel = mongoose.model('activeAbout', activeAboutSchema);
+    
+    /* Contact template Model */
+    
+    let contactTemplateSchema = new mongoose.Schema({
+        name: {
+            type: String,
+            required: [true, 'Name for this version is required']
+        },
+        content: {
+            type: String
+        },
+        createdBy: {
+            type: mongoose.Schema.ObjectId,
+            ref: 'user',
+            required: [true, 'user is not set']
+        },
+        dateAdded: { type: Date, default: Date.now }
+    });
+    
+    contactTemplateSchema.index({ name: 1 }, { unique: true }); // schema level
+    
+    ContactTemplateModel = mongoose.model('contactTemplate', contactTemplateSchema);
+    
+    /* Active Contact template Model */
+    let activeContactTemplateSchema = new mongoose.Schema({
+        name: {
+            type: String,
+            required: [true, 'Name of template is not set']
+        },
+        templateId: {
+            type: mongoose.Schema.ObjectId,
+            ref: 'contactTemplate',
+            required: [true, 'Template id is not set']
+        }
+    });
+    
+    activeContactTemplateSchema.index({ name: 1 }, { unique: true }); // schema level
+    
+    ActiveContactTemplateModel = mongoose.model('activeContactTemplate', activeContactTemplateSchema);
     
     /*
     //populate master data
@@ -251,6 +287,10 @@ module.exports.getModel = (name) => {
         return AboutModel;
       case 'activeAbout':
         return ActiveAboutModel;
+      case 'contactTemplate':
+        return ContactTemplateModel;
+      case 'activeContactTemplate':
+        return ActiveContactTemplateModel;
       default:
         console.log('Model not found');
         break;

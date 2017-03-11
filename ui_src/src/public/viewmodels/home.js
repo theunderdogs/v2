@@ -2,7 +2,7 @@ import {Page} from 'common/page';
 import 'bootstrap-select';
 import 'autonumeric';
 
-export class CreateUser extends Page{
+export class Home extends Page{
     constructor(...rest) {   
         super(...rest);
     }  

@@ -10,7 +10,9 @@ export class App {
   configureRouter(config, router) {
     config.title = 'Aurelia';
     config.map([
-      { route: [''], name: 'home', moduleId: 'public/viewmodels/home', nav: false, title: 'Welcome' }
+      { route: [''], name: 'home', moduleId: 'public/viewmodels/home', nav: false, title: 'Welcome' },
+      { route: ['about'], name: 'about', moduleId: 'public/viewmodels/about', nav: false, title: 'About Us' },
+      { route: ['donate'], name: 'donate', moduleId: 'public/viewmodels/donate', nav: false, title: 'Donate' }
     	
     	//optional paramerters
     	//{ route: ['', '_=_', 'createuser/:userid?'], name: 'createuser', moduleId: 'admin/viewmodels/users/createuser', nav: false, title: 'Create user' }

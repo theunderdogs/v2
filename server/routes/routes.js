@@ -285,9 +285,70 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        })
     });
     
+    router.get('/getActiveAboutToDisplay', (req, res, next) => {
+       userApi.getActiveAboutToDisplay()
+       .then((about) => {
+           res.json(about);
+       }, (err) => {
+           res.status(500).send(err);
+       })
+    });
+    
     router.get('/logout', (req, res, next) => {
         req.logout();
         res.redirect('/login');
+    });
+    
+    
+    
+    
+        
+    router.post('/saveContactTemplate', securePages, jsonParser ,(req, res, next) => {
+        //console.log(req.user.user);
+        req.body.createdBy = req.user.user._id;
+        //console.log(req.body);
+        userApi.saveContactTemplate(req.body)
+        .then(() => {
+           res.json(true);
+        }, (err) => {
+           res.status(500).send(err); 
+        });
+    });
+    
+    router.get('/getContactTemplates', securePages, (req, res, next) => {
+       userApi.getContactTemplates()
+       .then((templates) => {
+           res.json(templates);
+       }, (err) => {
+           res.status(500).send(err);
+       })
+    });
+    
+    router.get('/getContactTemplateById/:id', securePages, (req, res, next) => {
+       userApi.getContactTemplateById(req.params.id)
+       .then((template) => {
+           res.json(template);
+       }, (err) => {
+           res.status(500).send(err);
+       })
+    });
+    
+    router.get('/getActiveContactTemplate', securePages, (req, res, next) => {
+       userApi.getActiveContactTemplate()
+       .then((activeTemplate) => {
+           res.json(activeTemplate);
+       }, (err) => {
+           res.status(500).send(err);
+       })
+    });
+    
+    router.get('/getActiveContactTemplateToDisplay', (req, res, next) => {
+       userApi.getActiveContactTemplateToDisplay()
+       .then((templateToDisplay) => {
+           res.json(templateToDisplay);
+       }, (err) => {
+           res.status(500).send(err);
+       })
     });
     
     /*
