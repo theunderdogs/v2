@@ -16,6 +16,8 @@ const tableHtml = '<table ref="dtable" class="table table-striped">' +
                                         '<th></th>' +
                                         '<th></th>' +
                                         '<th></th>' +
+                                        '<th></th>' +
+                                        '<th></th>' +
                                     '</tr>' + 
                                 '</thead>' +
                             '</table>';
@@ -97,9 +99,16 @@ export class ContactTemplateManagement extends Page{
                     title: 'Created On',
                     data: 'dateAdded',
                     ordering: false
+                }, { 
+                    title: 'Updated By',
+                    data: 'updatedBy.realName', //5
+                }, { 
+                    title: 'Updated On',
+                    data: 'dateUpdated',        //6
+                    ordering: false
                 }, { //edit button
-                    title: 'Action',
-                    data: 'active',
+                    title: 'Action',            //7  
+                    data: 'dateAdded',
                     ordering: false
                 }],
                 createdRow: (row, data, index) => {
@@ -111,15 +120,18 @@ export class ContactTemplateManagement extends Page{
                         cells.eq(1).html(content.replace('<', '&lt;'));
                     }
                     
-                    cells.eq(5).html('<button class="btn btn-primary btn-icon-text waves-effect" click.delegate="click_createWriteUp(\'' + data._id + '\')"><i class="zmdi zmdi-border-color"></i> Edit</button>');
+                    cells.eq(7).html('<button class="btn btn-primary btn-icon-text waves-effect" click.delegate="click_createWriteUp(\'' + data._id + '\')"><i class="zmdi zmdi-border-color"></i> Edit</button>');
                     
                     let _date = moment(data.dateAdded);
                     cells.eq(4).html(_date.format('MM') + '/' + _date.format('DD') + '/' + _date.format('YYYY'));
                     
+                    let _dateUpdate = moment(data.dateUpdated);
+                    cells.eq(6).html(_dateUpdate.format('MM') + '/' + _dateUpdate.format('DD') + '/' + _dateUpdate.format('YYYY'));
+                    
                     promises.push(new Promise((resolve, reject) => {
-                        if(!cells.eq(5)[0].querySelectorAll('.au-target').length) {
+                        if(!cells.eq(7)[0].querySelectorAll('.au-target').length) {
                             this.templatingEngine.enhance({
-                                element: cells.eq(5)[0],
+                                element: cells.eq(7)[0],
                                 bindingContext: this
                             });
                             
@@ -145,9 +157,9 @@ export class ContactTemplateManagement extends Page{
         let urlDetail;
         
         if(id){
-            urlDetail = this.router.generate('createabout', {id});
+            urlDetail = this.router.generate('createcontacttemplate', {id});
         }else {
-            urlDetail = 'createabout';
+            urlDetail = 'createcontacttemplate';
         }
             
         this.router.navigate(urlDetail);

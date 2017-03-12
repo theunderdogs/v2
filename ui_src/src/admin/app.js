@@ -27,7 +27,7 @@ export class App {
     	{ route: ['createabout'], name: 'createabout', moduleId: 'admin/viewmodels/about/createabout', nav: false, title: 'Create \'About Us\' Page' },
     	
     	{ route: ['contacttemplate'], name: 'contacttemplate', moduleId: 'admin/viewmodels/contacttemplate/index', nav: false, title: 'Manage \'Contact Info\' Page' },
-    	//{ route: ['createabout'], name: 'createabout', moduleId: 'admin/viewmodels/about/createabout', nav: false, title: 'Create \'About Us\' Page' }
+    	{ route: ['createcontacttemplate'], name: 'createcontacttemplate', moduleId: 'admin/viewmodels/contacttemplate/createcontacttemplate', nav: false, title: 'Create \'Contact\' Template' }
     	//optional paramerters
     	//{ route: ['', '_=_', 'createuser/:userid?'], name: 'createuser', moduleId: 'admin/viewmodels/users/createuser', nav: false, title: 'Create user' }
     ]);

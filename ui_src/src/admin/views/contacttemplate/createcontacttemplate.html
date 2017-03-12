@@ -20,13 +20,13 @@
                     
                         <div class="form-group fg-line">
                             <!--<label>Role name:</label>-->
-                            <input type="text" class="form-control input-sm" placeholder="Enter name for this version of page Ex. Halloween update" value.bind="about.name & validate">
+                            <input type="text" class="form-control input-sm" placeholder="Enter name for this version of page Ex. Contact v1" value.bind="contacttemplate.name & validate">
                         </div>
                     
                     </div>
                     <div class="col-sm-2 m-b-25 pull-left">
                         <label class="checkbox checkbox-inline m-t-10">
-                            <input type="checkbox" checked.bind="about.active">
+                            <input type="checkbox" checked.bind="contacttemplate.active">
                             <i class="input-helper"></i>
                             Active
                         </label>
@@ -40,7 +40,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <div class="fg-line">
-                                <textarea class="form-control" rows="20" placeholder="Enter content here that you want to be displayed on 'About Us' page" value.bind="about.content & validate"></textarea>
+                                <textarea class="form-control" rows="20" placeholder="Enter template's HTML here" value.bind="contacttemplate.content & validate"></textarea>
                             </div>
                         </div>                    
                     </div>

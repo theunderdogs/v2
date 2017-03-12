@@ -172,6 +172,7 @@ module.exports.getAbouts = () => {
     return AboutModel
             .find()
             .populate('createdBy')
+            .populate('updatedBy')
             .exec();
 };
 
@@ -195,8 +196,8 @@ module.exports.saveAboutus = (about) => {
           about._id,
           {$set: {
                 name: about.name,
-                content: about.content//,
-                //active: about.active
+                content: about.content,
+                updatedBy: about.updatedBy
             }
           },
           {new: true});
@@ -205,7 +206,8 @@ module.exports.saveAboutus = (about) => {
       p = AboutModel.create({
           name: about.name,
           content: about.content,
-          createdBy: about.createdBy
+          createdBy: about.createdBy,
+          updatedBy: about.updatedBy
       });
     }
     
@@ -257,6 +259,7 @@ module.exports.getContactTemplates = () => {
     return ContactTemplateModel
             .find()
             .populate('createdBy')
+            .populate('updatedBy')
             .exec();
 };
 
@@ -280,8 +283,8 @@ module.exports.saveContactTemplate = (saveTemplate) => {
           saveTemplate._id,
           {$set: {
                 name: saveTemplate.name,
-                content: saveTemplate.content//,
-                //active: about.active
+                content: saveTemplate.content,
+                updatedBy: saveTemplate.updatedBy
             }
           },
           {new: true});
@@ -290,7 +293,8 @@ module.exports.saveContactTemplate = (saveTemplate) => {
       p = ContactTemplateModel.create({
           name: saveTemplate.name,
           content: saveTemplate.content,
-          createdBy: saveTemplate.createdBy
+          createdBy: saveTemplate.createdBy,
+          updatedBy: saveTemplate.updatedBy
       });
     }
     

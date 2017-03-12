@@ -4,7 +4,6 @@ import {Page} from 'common/page';
 //import 'vendors:bower_components/bootstrap-select/dist/css/bootstrap-select.css!'
 import 'datatables'
 import 'bootstrap-select'
-import optionHtml from 'admin/views/roles/options.html!text';
 import {BootstrapFormRenderer} from 'admin/viewmodels/users/createusererror';
 
 export class CreateRole extends Page{
@@ -18,7 +17,7 @@ export class CreateRole extends Page{
         this.showPreview = false;
         this.editMode = false;
         
-        this.about = {
+        this.contacttemplate = {
             name: undefined,
             active : false,
             content: undefined
@@ -28,134 +27,41 @@ export class CreateRole extends Page{
           .ensure(a => a.name)
             .required()
             .withMessage('Please enter name for this version')
-          .on(this.about);
+          .on(this.contacttemplate);
         
         if(params.hasOwnProperty('id')){
             //console.log(params.userId);    
-            this.about._id = params.id;
+            this.contacttemplate._id = params.id;
             this.editMode = true;
             
-            return Promise.all( [this.db.getAboutById(this.about._id), this.db.getActiveAboutById() ])
+            return Promise.all( [this.db.getContactTemplateById(this.contacttemplate._id), this.db.getActiveContactTemplate() ])
                 .then((results) => {
-                    let _about = results[0], activeAbout = results[1];
-                    this.about._id = _about._id;
-                    this.about.content = _about.content;
+                    let _contacttemplate = results[0], activeAbout = results[1];
+                    this.contacttemplate._id = _contacttemplate._id;
+                    this.contacttemplate.content = _contacttemplate.content;
                     
                     if(!activeAbout)
-                        this.about.active = false;
+                        this.contacttemplate.active = false;
                     else {
-                        this.about.active = activeAbout.aboutId == this.about._id;
+                        this.contacttemplate.active = activeAbout.templateId == this.contacttemplate._id;
                     }
                         
-                    this.about.name = _about.name;
+                    this.contacttemplate.name = _contacttemplate.name;
                 }, (error) => {
                     console.log(error);
                 });
         }
-        
-        // return Promise.all( this.editRole? [this.db.getPermissions(), this.db.getPermissionsByRoleId(this.role._id)] : [this.db.getPermissions()])
-        // .then(( data ) => {
-        //   //console.log('roles', data[0] );
-        //   //console.log('permissions', data[1] );
-          
-        //   if(!this.editRole){
-        //       if(data[0]){
-        //           data[0].forEach((per) => {
-        //             this.role.permissions.push({ value: undefined, item: per });    
-        //           });
-        //       }
-        //   } else {
-        //       this.role = data[1];
-        //       data[0].forEach((permission) => {
-        //         let match = false;
-        //         this.role.permissions.forEach((userPermission) => {
-        //             if(userPermission.item._id == permission._id){
-        //                 match = true;
-        //             }
-        //         });
-                
-        //         if(!match) {
-        //             this.role.permissions.push({ value: undefined, item: permission });
-        //         }
-        //     });
-        //   }
-        // });
     }
     
     attached(){
         //console.log('ROle...', this.role);
         
         //let self = this;
-    	 //this.onPageRenderComplete();
+    	 this.onPageRenderComplete();
     	 
     	 //this.renderDatatable();
     }
-    /*
-    renderDatatable() {
-        console.log('table data', this.role.permissions);
-        
-        $(this.dynamicDom).html(this.tableHtml);
-            
-        return new Promise((resolve, reject) => {
-                if(!this.dynamicDom.querySelectorAll('.au-target').length) {
-                    this.templatingEngine.enhance({
-                        element: this.dynamicDom,
-                        bindingContext: this
-                    });
-                    
-                    resolve();
-                } else {
-                    reject();
-                }
-        })
-        .then(() => {
-            let promises = [];
-            
-            $(this.dtable).DataTable({
-                data: this.role.permissions,
-                paging: false,
-                ordering: false,
-                info: false,
-                searching: true,
-                columns: [{
-                    title: 'Name',
-                    data: 'item.name'
-                }, {
-                    title: 'Description',
-                    data: 'item.description'
-                }, {
-                    title: 'Actions',
-                    data: 'item.name'
-                }],
-                createdRow: (row, data, index) => {
-                    //console.log('cell data', data);
-                    $(row).find('td').css('vertical-align', 'middle');
-                    let $cell = $(row).find('td').eq(2);
-                    
-                    $cell.html(optionHtml);
-                    
-                    promises.push(new Promise((resolve, reject) => {
-                        if(!$cell[0].querySelectorAll('.au-target').length) {
-                            this.templatingEngine.enhance({
-                                element: $cell[0],
-                                bindingContext: data
-                            });
-                            
-                            resolve();
-                        } else {
-                            reject();
-                        }
-                    }));
-                },
-                initComplete: (settings, json) => {
-                    
-                }
-            });
-            
-            return promises;
-        });
-    }
-    */
+   
     click_applyChanges(){
         // //console.log(this.role);
         
@@ -168,25 +74,13 @@ export class CreateRole extends Page{
         return this.controller.validate()
          .then(result => {
              if(result.valid) {
-        //         let indexesToDelete = [];
-        //         this.role.permissions.forEach((permission) => {
-        //             if(permission.value == undefined) {
-        //                 indexesToDelete.push(this.role.permissions.indexOf(permission));
-        //             }
-        //         });
-                
-        //         for(let i = indexesToDelete.length - 1; i >=0; i--) {
-        //             this.role.permissions.splice(indexesToDelete[i] , 1);
-        //         }
-                
-        //         console.log('newrole to be saved', this.role);
             
-                return this.db.saveAboutus(this.about)
-                .then((about) => {
-                    console.log('success', about);
+                return this.db.saveContactTemplate(this.contacttemplate)
+                .then((contacttemplate) => {
+                    console.log('success', contacttemplate);
                     hideFn();
                     this.showSuccess('Saved successfully');
-                    this.router.navigate('about');
+                    this.router.navigate('contacttemplate');
                 },(err) => {
                     hideFn();
                     console.log(err);
@@ -200,15 +94,15 @@ export class CreateRole extends Page{
     }
     
     click_goback() {
-        this.router.navigate('about');
+        this.router.navigate('contacttemplate');
     }
     
     click_preview() {
         this.showPreview = !this.showPreview;
-        $(this.dynamicDom).html(this.about.content);
+        $(this.dynamicDom).html(this.contacttemplate.content);
     }
     
     getViewStrategy() {
-        return 'admin/views/about/createabout.html';
+        return 'admin/views/contacttemplate/createcontacttemplate.html';
     }
 }

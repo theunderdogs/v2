@@ -12,7 +12,7 @@ export class AboutUs extends Page{
         
         return this.db.getActiveAboutToDisplay()
         .then((about) => {
-            if(about)
+            if(about && about.content)
                 this.content = about.content;    
         });
     }

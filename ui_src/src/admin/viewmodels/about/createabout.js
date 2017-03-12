@@ -4,7 +4,7 @@ import {Page} from 'common/page';
 //import 'vendors:bower_components/bootstrap-select/dist/css/bootstrap-select.css!'
 import 'datatables'
 import 'bootstrap-select'
-import optionHtml from 'admin/views/roles/options.html!text';
+//import optionHtml from 'admin/views/roles/options.html!text';
 import {BootstrapFormRenderer} from 'admin/viewmodels/users/createusererror';
 
 export class CreateRole extends Page{
@@ -86,7 +86,7 @@ export class CreateRole extends Page{
         //console.log('ROle...', this.role);
         
         //let self = this;
-    	 //this.onPageRenderComplete();
+    	this.onPageRenderComplete();
     	 
     	 //this.renderDatatable();
     }

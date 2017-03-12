@@ -247,9 +247,11 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
     });
     
     router.post('/saveAboutus', securePages, jsonParser ,(req, res, next) => {
-        //console.log(req.user.user);
-        req.body.createdBy = req.user.user._id;
-        //console.log(req.body);
+        if(!req.body._id)
+            req.body.createdBy = req.user.user._id;
+        
+        req.body.updatedBy = req.user.user._id;
+        
         userApi.saveAboutus(req.body)
         .then(() => {
            res.json(true);
@@ -304,8 +306,11 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
     
         
     router.post('/saveContactTemplate', securePages, jsonParser ,(req, res, next) => {
-        //console.log(req.user.user);
-        req.body.createdBy = req.user.user._id;
+        if(!req.body._id)
+            req.body.createdBy = req.user.user._id;
+        
+        req.body.updatedBy = req.user.user._id;
+            
         //console.log(req.body);
         userApi.saveContactTemplate(req.body)
         .then(() => {

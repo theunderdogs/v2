@@ -135,8 +135,14 @@ module.exports = function (setup_mongoose) {
         createdBy: {
             type: mongoose.Schema.ObjectId,
             ref: 'user',
-            required: [true, 'user is not set']
+            required: [true, 'created user is not set']
         },
+        updatedBy: {
+            type: mongoose.Schema.ObjectId,
+            ref: 'user',
+            required: [true, 'updated user is not set']
+        },
+        dateUpdated: { type: Date, default: Date.now },
         dateAdded: { type: Date, default: Date.now }
     });
     
@@ -174,8 +180,14 @@ module.exports = function (setup_mongoose) {
         createdBy: {
             type: mongoose.Schema.ObjectId,
             ref: 'user',
-            required: [true, 'user is not set']
+            required: [true, 'created user is not set']
         },
+        updatedBy: {
+            type: mongoose.Schema.ObjectId,
+            ref: 'user',
+            required: [true, 'updated user is not set']
+        },
+        dateUpdated: { type: Date, default: Date.now },
         dateAdded: { type: Date, default: Date.now }
     });
     
