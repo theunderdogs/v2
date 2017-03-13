@@ -5,34 +5,52 @@
     </div>
     
     <div class="card">
+        <div class="card-header"><!--ch-alt-->
+            <h2>Add a new question
+                <!--<small>Pellentesque ac lectus sed elit dictum vehicula</small>-->
+            </h2>
+        </div>
+
+        <div class="card-body card-padding">
+            <div class="form-group fg-float m-b-30">
+                <div class="fg-line">
+                    <input type="email" class="form-control input-sm">
+                    <label class="fg-label">Enter a new question</label>
+                </div>
+            </div>
+
+            <div class="form-group fg-float">
+                <div class="fg-line">
+                    <textarea class="form-control auto-size input-sm" style="overflow: hidden; word-wrap: break-word; height: 43px;"></textarea>
+                    <label class="fg-label">Enter answer for the new question</label>
+                </div>
+            </div>
+
+            <button class="btn btn-success btn-icon-text waves-effect">
+                <i class="zmdi zmdi-floppy"></i> Add
+            </button>
+            <button class="btn btn-link waves-effect">Cancel</button>
+        </div>
+    </div>
+    
+    <div class="card">
         <div class="card-header">
-            <h2>FAQ Editor
-                <small>You can create/edit/order questions on this page
+            <h2>Existing Questions & Answers
+                <small>You can arrange the order by simply dragging them up/down
                 </small>
             </h2>
         </div>
         
        
-        <div class="card-body card-padding">
-            <div class="row">
-                <div class="col-sm-5 col-xs-12 m-t-10">
-                    <!--<p class="f-500 m-b-15 c-black">Roles</p>-->
-                </div>
-                <div class="col-sm-2 col-xs-12 m-t-10 pull-left">
-                    
-                </div>
-                <div class="col-sm-5 col-xs-12 m-b-25 pull-right">
-                    <button class="btn btn-primary btn-icon-text waves-effect pull-right m-l-20" click.delegate="click_createnewlist()"><i class="zmdi zmdi-plus"></i>
-                            Create New List
-                    </button>
-                </div>
-            </div>
+        <div class="card-body card-padding" ref="questionSection">
+           
             
-            <div class="row">
-                <div class="col-md-12" ref="questionSection">
+            
+            <div class="row" >
+                <div class="col-md-12" >
                     
                     <ul ref="sortable" style="list-style-type: none;">
-                      <li class="ui-state-default" style="border: 0">
+                      <li class="ui-state-default" data-item-id="1" style="border: 0">
                           <div class="card">
                                 <div class="card-header bgm-orange m-b-20">
                                     <div class="row">
@@ -72,7 +90,7 @@
                 
                       </li>
                       
-                      <li class="ui-state-default" style="border: 0">
+                      <li class="ui-state-default" data-item-id="2" style="border: 0">
                         <div class="card">
                             <div class="card-header bgm-cyan m-b-20">
                                 <h2>Some Title

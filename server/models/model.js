@@ -8,7 +8,9 @@ var mongoose,
     AboutModel,
     ActiveAboutModel,
     ContactTemplateModel,
-    ActiveContactTemplateModel;
+    ActiveContactTemplateModel,
+    FAQModel,
+    FAQOrderModel;
 
 module.exports = function (setup_mongoose) {
     if (setup_mongoose) {
@@ -212,6 +214,54 @@ module.exports = function (setup_mongoose) {
     
     ActiveContactTemplateModel = mongoose.model('activeContactTemplate', activeContactTemplateSchema);
     
+    /* faq Model */
+    
+    let faqSchema = new mongoose.Schema({
+        question: {
+            type: String,
+            required: [true, 'Question is required']
+        },
+        answer: {
+            type: String,
+            required: [true, 'Answer is required']
+        },
+        createdBy: {
+            type: mongoose.Schema.ObjectId,
+            ref: 'user',
+            required: [true, 'created user is not set']
+        },
+        updatedBy: {
+            type: mongoose.Schema.ObjectId,
+            ref: 'user',
+            required: [true, 'updated user is not set']
+        },
+        dateUpdated: { type: Date, default: Date.now },
+        dateAdded: { type: Date, default: Date.now }
+    });
+    
+    faqSchema.index({ question: 1 }, { unique: true }); // schema level
+    
+    FAQModel = mongoose.model('faq', faqSchema);
+    
+    /* faq order Model */
+    let faqOrderSchema = new mongoose.Schema({
+        name: {
+            type: String,
+            required: [true, 'Page name is not set']
+        },
+        questionOrder: [
+            {
+                type: mongoose.Schema.ObjectId,
+                ref: 'faqSchema',
+                required: [true, 'faq order is not set']
+            }
+        ]
+    });
+    
+    faqOrderSchema.index({ name: 1 }, { unique: true }); // schema level
+    
+    FAQOrderModel = mongoose.model('faqOrder', faqOrderSchema);
+    
     /*
     //populate master data
     return PermissionModel.insertMany([
@@ -303,6 +353,10 @@ module.exports.getModel = (name) => {
         return ContactTemplateModel;
       case 'activeContactTemplate':
         return ActiveContactTemplateModel;
+      case 'faq':
+        return FAQModel;
+      case 'faqOrder':
+        return FAQOrderModel;
       default:
         console.log('Model not found');
         break;

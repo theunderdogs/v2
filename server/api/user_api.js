@@ -13,7 +13,9 @@ EmailListModel,
 AboutModel, 
 ActiveAboutModel, 
 ContactTemplateModel, 
-ActiveContactTemplateModel;
+ActiveContactTemplateModel,
+FAQModel,
+FAQOrderModel;
 
 var checkInitialization = () => {
     if (!mongoose && !path) {
@@ -36,6 +38,8 @@ module.exports = (setup_mongoose, setup_path) => {
         ActiveAboutModel = require(path.join( process.cwd(), '/models/model')).getModel('activeAbout');
         ContactTemplateModel = require(path.join( process.cwd(), '/models/model')).getModel('contactTemplate');
         ActiveContactTemplateModel = require(path.join( process.cwd(), '/models/model')).getModel('activeContactTemplate');
+        FAQModel = require(path.join( process.cwd(), '/models/model')).getModel('faq');
+        FAQOrderModel = require(path.join( process.cwd(), '/models/model')).getModel('faqOrder');
     }
     
     return module.exports;
