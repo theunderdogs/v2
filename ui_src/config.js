@@ -233,6 +233,10 @@ System.config({
     "autonumeric": "vendors:autoNumeric-2.0.7/dist/autoNumeric",
     "summernote": "vendors:summernote/dist/summernote-updated.min",
     "dropzone": "vendors:bower_components/dropzone/dist/dropzone",
-    "lodash": "vendors:lodash/lodash.min"
+    "lodash": "vendors:lodash/lodash.min",
+    "jquery-ui": "vendors:jquery-ui/jquery-ui",
+    "vendors:jquery-ui/jquery-ui": {
+      "jquery": "npm:jquery@2.2.4"
+    },
   }
 });

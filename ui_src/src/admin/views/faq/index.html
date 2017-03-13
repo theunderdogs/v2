@@ -1,0 +1,107 @@
+<template>
+    <div class="block-header">
+        <h2>Manage 'FAQ' page</h2>
+
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h2>FAQ Editor
+                <small>You can create/edit/order questions on this page
+                </small>
+            </h2>
+        </div>
+        
+       
+        <div class="card-body card-padding">
+            <div class="row">
+                <div class="col-sm-5 col-xs-12 m-t-10">
+                    <!--<p class="f-500 m-b-15 c-black">Roles</p>-->
+                </div>
+                <div class="col-sm-2 col-xs-12 m-t-10 pull-left">
+                    
+                </div>
+                <div class="col-sm-5 col-xs-12 m-b-25 pull-right">
+                    <button class="btn btn-primary btn-icon-text waves-effect pull-right m-l-20" click.delegate="click_createnewlist()"><i class="zmdi zmdi-plus"></i>
+                            Create New List
+                    </button>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12" ref="questionSection">
+                    
+                    <ul ref="sortable" style="list-style-type: none;">
+                      <li class="ui-state-default" style="border: 0">
+                          <div class="card">
+                                <div class="card-header bgm-orange m-b-20">
+                                    <div class="row">
+                                        <div class="col-md-11 col-xs-11 col-sm-11">
+                                            <h2>What kind of dog should I get?
+                                                <small>Added by: Meike Parker, Date Added: 01/02/2017, Modified by: Meike Parker, Date Updated: 01/02/2017</small>
+                                            </h2>
+                                        </div>
+                                    
+                                        <ul class="actions actions-alt">
+                                            <li>
+                                                <a href="">
+                                                    <i class="zmdi zmdi-edit"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="">
+                                                    <i class="zmdi zmdi-delete"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    
+                                    </div>
+                                    <!--<button class="btn bgm-blue btn-float waves-effect"><i class="zmdi zmdi-mail-send"></i></button>-->
+                                </div>
+        
+                                <div class="card-body card-padding">
+                                    Cras leo sem, egestas a accumsan eget, euismod at nunc. Praesent vel mi blandit,
+                                    tempus ex gravida, accumsan dui. Sed sed aliquam augue. Nullam vel suscipit purus,
+                                    eu facilisis ante. Mauris nec commodo felis. Cras leo sem, egestas a accumsan eget, euismod at nunc. Praesent vel mi blandit,
+                                    tempus ex gravida, accumsan dui. Sed sed aliquam augue. Nullam vel suscipit purus,
+                                    eu facilisis ante. Mauris nec commodo felis. Cras leo sem, egestas a accumsan eget, euismod at nunc. Praesent vel mi blandit,
+                                    tempus ex gravida, accumsan dui. Sed sed aliquam augue. Nullam vel suscipit purus,
+                                    eu facilisis ante. Mauris nec commodo felis. 
+                                </div>
+                            </div>
+                
+                      </li>
+                      
+                      <li class="ui-state-default" style="border: 0">
+                        <div class="card">
+                            <div class="card-header bgm-cyan m-b-20">
+                                <h2>Some Title
+                                    <!--<small>Phasellus condimentum ipsum id auctor</small>-->
+                                </h2>
+                                
+                                <button class="btn bgm-blue btn-float waves-effect"><i class="zmdi zmdi-mail-send"></i></button>
+                            </div>
+    
+                            <div class="card-body card-padding">
+                                Cras leo sem, egestas a accumsan eget, euismod at nunc. Praesent vel mi blandit,
+                                tempus ex gravida, accumsan dui. Sed sed aliquam augue. Nullam vel suscipit purus,
+                                eu facilisis ante. Mauris nec commodo felis.
+                            </div>
+                        </div>
+                      
+                      </li>
+                    </ul>
+            
+                    <!--<div class="table-responsive" ref="dynamicDom">-->
+                    <!--</div>                    -->
+                    
+                    
+                    
+                
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+</template>
