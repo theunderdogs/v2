@@ -238,5 +238,10 @@ System.config({
     "vendors:jquery-ui/jquery-ui": {
       "jquery": "npm:jquery@2.2.4"
     },
+    "jquery-ui-touch-punch": "vendors:jquery-ui-touch-punch/jquery.ui.touch-punch.min",
+    "vendors:jquery-ui-touch-punch/jquery.ui.touch-punch.min" : {
+      "jquery": "npm:jquery@2.2.4",
+      "jquery-ui": "vendors:jquery-ui/jquery-ui"
+    }
   }
 });
