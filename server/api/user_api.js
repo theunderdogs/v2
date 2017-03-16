@@ -341,3 +341,24 @@ module.exports.getActiveContactTemplateToDisplay = () => {
                 return Promise.reject(err);
             });
 };
+
+
+module.exports.getQuestions = () => {
+    checkInitialization();
+    
+    return FAQModel
+            .find()
+            .populate('createdBy')
+            .populate('updatedBy')
+            .exec();
+};
+
+module.exports.getQuestionById = (id) => {
+    checkInitialization();
+    
+    return FAQModel
+            .findOne({ _id: id })
+            //.populate('createdBy')
+            //.populate('updatedBy')
+            .exec();
+};

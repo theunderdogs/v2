@@ -21,7 +21,10 @@ export class Faq extends Page{
           revert: true,
           axis: 'y',
           //containment: $(self.questionSection)
-          handle: $('.card-header')
+          handle: $('.card-header'),
+          stop: function( event, ui ) {
+              console.log('stopped');
+          }
         });
         
         $(this.questionSection).find('ul, li').disableSelection();
