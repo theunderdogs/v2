@@ -201,7 +201,8 @@ module.exports.saveAboutus = (about) => {
           {$set: {
                 name: about.name,
                 content: about.content,
-                updatedBy: about.updatedBy
+                updatedBy: about.updatedBy,
+                dateUpdated: Date.Now
             }
           },
           {new: true});
@@ -288,7 +289,8 @@ module.exports.saveContactTemplate = (saveTemplate) => {
           {$set: {
                 name: saveTemplate.name,
                 content: saveTemplate.content,
-                updatedBy: saveTemplate.updatedBy
+                updatedBy: saveTemplate.updatedBy,
+                dateUpdated: Date.Now
             }
           },
           {new: true});
@@ -361,4 +363,46 @@ module.exports.getQuestionById = (id) => {
             //.populate('createdBy')
             //.populate('updatedBy')
             .exec();
+};
+
+module.exports.saveQuestion = (question) => {
+    checkInitialization();
+    
+    if(question._id){
+      //update
+      return FAQModel.findOneAndUpdate({
+                            id: question._id
+                        }, {
+                            $set: { question: question.question,
+                                    answer: question.answer,
+                                    updatedBy: question.updatedBy,
+                                    dateUpdated: Date.Now
+                            }
+                        }, {upsert: false, 'new': true})
+                        
+    } else {
+      //save
+      return FAQModel.create(question);
+    }
+};
+
+module.exports.getQuestionOrder = () => {
+    checkInitialization();
+    
+    return FAQOrderModel
+            .findOne({ name: 'QuestionOrder' })
+            .exec();
+};
+
+module.exports.saveQuestionOrder = (qOrder) => {
+    checkInitialization();
+    
+    return FAQOrderModel
+            .findOneAndUpdate({
+                    name: 'QuestionOrder'
+                }, {
+                    $set: { 
+                        questionOrder: qOrder
+                    }
+                }, {upsert: true, 'new': true});
 };
