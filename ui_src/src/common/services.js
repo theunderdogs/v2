@@ -109,6 +109,15 @@ export const services = {
     },
     getActiveContactTemplateToDisplay: () => {
         return $.get( host + '/getActiveContactTemplateToDisplay')
+    },
+    saveQuestion: (question) => {
+        return $.ajax({
+                url: host + '/saveQuestion', 
+			    type: 'POST',
+			    data: JSON.stringify(question),
+			    //dataType: 'json',
+			    contentType: 'application/json'
+			  });
     }
 }
 

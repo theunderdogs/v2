@@ -296,15 +296,6 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        })
     });
     
-    router.get('/logout', (req, res, next) => {
-        req.logout();
-        res.redirect('/login');
-    });
-    
-    
-    
-    
-        
     router.post('/saveContactTemplate', securePages, jsonParser ,(req, res, next) => {
         if(!req.body._id)
             req.body.createdBy = req.user.user._id;
@@ -355,6 +346,50 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
            res.status(500).send(err);
        })
     });
+    
+    //------------------------
+    
+    router.get('/getQuestions', securePages, (req, res, next) => {
+        userApi.getQuestions()
+        .then((questions) => {
+			//res.send(200, roles);
+			res.json(questions);
+		}, (err) => {
+			res.send(err);
+		});
+        //res.send('Setting favourite color!');
+    });
+    
+    router.get('/getQuestionById/:id', securePages, (req, res, next) => {
+       userApi.getQuestionById(req.params.id)
+       .then((question) => {
+           res.json(question);
+       }, (err) => {
+           res.status(500).send(err);
+       })
+    });
+    
+    router.post('/saveQuestion', securePages, jsonParser ,(req, res, next) => {
+        if(!req.body._id)
+            req.body.createdBy = req.user.user._id;
+        
+        req.body.updatedBy = req.user.user._id;
+            
+        //console.log(req.body);
+        userApi.saveQuestion(req.body)
+        .then(() => {
+           res.json(true);
+        }, (err) => {
+           res.status(500).send(err); 
+        });
+    });
+    
+    router.get('/logout', (req, res, next) => {
+        req.logout();
+        res.redirect('/login');
+    });
+    
+    
     
     /*
     router.get('/per', (req, res, next) => {

@@ -202,7 +202,7 @@ module.exports.saveAboutus = (about) => {
                 name: about.name,
                 content: about.content,
                 updatedBy: about.updatedBy,
-                dateUpdated: Date.Now
+                dateUpdated: new Date().toISOString()
             }
           },
           {new: true});
@@ -290,7 +290,7 @@ module.exports.saveContactTemplate = (saveTemplate) => {
                 name: saveTemplate.name,
                 content: saveTemplate.content,
                 updatedBy: saveTemplate.updatedBy,
-                dateUpdated: Date.Now
+                dateUpdated: new Date().toISOString()
             }
           },
           {new: true});
@@ -376,9 +376,28 @@ module.exports.saveQuestion = (question) => {
                             $set: { question: question.question,
                                     answer: question.answer,
                                     updatedBy: question.updatedBy,
-                                    dateUpdated: Date.Now
+                                    dateUpdated: new Date().toISOString()
                             }
                         }, {upsert: false, 'new': true})
+                        .then((savedQuestion) => {
+                            return module.exports.getQuestionOrder()
+                                    .then((qOrder) => {
+                                        if(qOrder) {
+                                            //update
+                                            if(qOrder.indexOf(savedQuestion._id) > -1){
+                                                //index already exists
+                                                return Promise.reject('Question is already in order');
+                                            }
+                                            
+                                            return module.exports.saveQuestionOrder([ savedQuestion._id ].concat(qOrder));
+                                        } else {
+                                            //insert
+                                            return module.exports.saveQuestionOrder([ savedQuestion._id ])
+                                        }
+                                    });
+                        }, (err) => {
+                            return Promise.reject(err);                        
+                        });
                         
     } else {
       //save
