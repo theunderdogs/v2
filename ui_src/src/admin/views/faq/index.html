@@ -13,23 +13,23 @@
 
         <div class="card-body card-padding">
             <div class="form-group fg-float m-b-30">
-                <div class="fg-line">
-                    <input type="text" value.bind="newEntry.question" class="form-control input-sm">
+                <div class="fg-line" ref="newQuestionDOM">
+                    <input type="text" value.bind="newEntry.question & validate" class="form-control input-sm">
                     <label class="fg-label">Enter a new question</label>
                 </div>
             </div>
 
             <div class="form-group fg-float">
-                <div class="fg-line">
-                    <textarea class="form-control auto-size input-sm" style="overflow: hidden; word-wrap: break-word; height: 43px;" value.bind="newEntry.answer"></textarea>
+                <div class="fg-line" ref="newAnswerDOM">
+                    <textarea class="form-control auto-size input-sm" style="overflow: hidden; word-wrap: break-word; height: 43px;" value.bind="newEntry.answer & validate"></textarea>
                     <label class="fg-label">Enter answer for the new question</label>
                 </div>
             </div>
 
             <button class="btn btn-success btn-icon-text waves-effect" click.delegate="click_add()">
-                <i class="zmdi zmdi-floppy"></i> Add
+                <i class="zmdi zmdi-floppy"></i>${ newEntry._id !== undefined ? 'Save Changes' : 'Confirm Add' }
             </button>
-            <button class="btn btn-link waves-effect">Cancel</button>
+            <button class="btn btn-link waves-effect" click.delegate="click_cancel()">Cancel</button>
         </div>
     </div>
     
@@ -59,12 +59,12 @@
                                     
                                         <ul class="actions actions-alt">
                                             <li>
-                                                <a href="">
+                                                <a click.delegate="click_edit(ques._id)">
                                                     <i class="zmdi zmdi-edit"></i>
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="">
+                                                <a click.delegate="click_delete(ques._id)">
                                                     <i class="zmdi zmdi-delete"></i>
                                                 </a>
                                             </li>

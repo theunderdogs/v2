@@ -133,7 +133,10 @@ export const services = {
 			    //dataType: 'json',
 			    contentType: 'application/json'
 			  });
-    }
+    },
+    getQuestionById: (id) => {
+        return $.get( host + '/getQuestionById/' + id)
+    },
 }
 
 // export function squarex() {

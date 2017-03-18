@@ -4,6 +4,7 @@ import 'autonumeric';
 import 'jquery-ui';
 import 'jquery-ui-touch-punch';
 import _ from 'lodash';
+import moment from 'moment'
 import {BootstrapFormRenderer} from 'admin/viewmodels/users/createusererror';
 
 export class Faq extends Page{
@@ -43,6 +44,13 @@ export class Faq extends Page{
                 
                 if(oder){
                     this.questionList = _.sortBy(qList, function(item){
+                        
+                        let _date = moment(item.dateAdded);
+                        item.dateAdded = _date.format('MM') + '/' + _date.format('DD') + '/' + _date.format('YYYY');
+                    
+                        _date = moment(item.dateUpdated);
+                        item.dateUpdated = _date.format('MM') + '/' + _date.format('DD') + '/' + _date.format('YYYY');
+                        
                       return oder.indexOf(item._id)
                     });
                 } else this.questionList = qList;
@@ -95,6 +103,10 @@ export class Faq extends Page{
         .then(result => {
             if(result.valid) {
                 
+                if(this.newEntry._id == undefined){
+                    delete this.newEntry['_id']
+                }
+                
                 return this.db.saveQuestion(this.newEntry)
                 .then((res) => {
                     console.log('success', res);
@@ -112,6 +124,40 @@ export class Faq extends Page{
                 hideFn();
             }
         });
+    }
+    
+    click_edit(id) {
+        let hideFn = this.showProgress('Loading question...');
+        
+        return this.db.getQuestionById(id)
+            .then((q) => {
+               this.newEntry.question = q.question;
+               this.newEntry.answer = q.answer;
+               this.newEntry._id = q._id;
+            
+               $( this.newQuestionDOM).addClass('fg-toggled');
+               $(this.newAnswerDOM).addClass('fg-toggled');
+               
+               hideFn();
+               return false; 
+            }, (error) => {
+                hideFn();
+                this.showError();
+            });
+    }
+    
+    click_delete(id){
+        
+        return false;
+    }
+    
+    click_cancel(){
+        this.newEntry.question = undefined;
+        this.newEntry.answer = undefined;
+        this.newEntry._id = undefined;
+        
+        $( this.newQuestionDOM).removeClass('fg-toggled');
+        $(this.newAnswerDOM).removeClass('fg-toggled');
     }
     
     getViewStrategy() {
