@@ -368,9 +368,11 @@ module.exports.getQuestionById = (id) => {
 module.exports.saveQuestion = (question) => {
     checkInitialization();
     
+    var p;
+    
     if(question._id){
-      //update
-      return FAQModel.findOneAndUpdate({
+        //update
+        p = FAQModel.findOneAndUpdate({
                             id: question._id
                         }, {
                             $set: { question: question.question,
@@ -378,31 +380,32 @@ module.exports.saveQuestion = (question) => {
                                     updatedBy: question.updatedBy,
                                     dateUpdated: new Date().toISOString()
                             }
-                        }, {upsert: false, 'new': true})
-                        .then((savedQuestion) => {
-                            return module.exports.getQuestionOrder()
-                                    .then((qOrder) => {
-                                        if(qOrder) {
-                                            //update
-                                            if(qOrder.indexOf(savedQuestion._id) > -1){
-                                                //index already exists
-                                                return Promise.reject('Question is already in order');
-                                            }
-                                            
-                                            return module.exports.saveQuestionOrder([ savedQuestion._id ].concat(qOrder));
-                                        } else {
-                                            //insert
-                                            return module.exports.saveQuestionOrder([ savedQuestion._id ])
-                                        }
-                                    });
-                        }, (err) => {
-                            return Promise.reject(err);                        
-                        });
+                        }, {upsert: false, 'new': true});
                         
     } else {
-      //save
-      return FAQModel.create(question);
+        //save
+        p = FAQModel.create(question);
     }
+    
+    return p.then((savedQuestion) => {
+            return module.exports.getQuestionOrder()
+                    .then((qOrder) => {
+                        if(qOrder && qOrder.questionOrder) {
+                            //update
+                            if(qOrder.questionOrder.indexOf(savedQuestion._id) > -1){
+                                //index already exists
+                                return Promise.reject('Question is already in order');
+                            }
+                            
+                            return module.exports.saveQuestionOrder([ savedQuestion._id ].concat(qOrder.questionOrder));
+                        } else {
+                            //insert
+                            return module.exports.saveQuestionOrder([ savedQuestion._id ])
+                        }
+                    });
+        }, (err) => {
+            return Promise.reject(err);                        
+        });
 };
 
 module.exports.getQuestionOrder = () => {

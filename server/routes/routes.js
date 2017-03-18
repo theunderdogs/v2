@@ -384,6 +384,39 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         });
     });
     
+    router.get('/getQuestionOrder', securePages, (req, res, next) => {
+        userApi.getQuestionOrder()
+        .then((qOrder) => {
+			//res.send(200, roles);
+			res.json(qOrder);
+		}, (err) => {
+			res.send(err);
+		});
+        //res.send('Setting favourite color!');
+    });
+    
+    router.get('/getQuestions', securePages, (req, res, next) => {
+        userApi.getQuestions()
+        .then((questions) => {
+			//res.send(200, roles);
+			res.json(questions);
+		}, (err) => {
+			res.send(err);
+		});
+        //res.send('Setting favourite color!');
+    });
+    
+    
+    router.post('/saveQuestionOrder', securePages, jsonParser ,(req, res, next) => {
+        //console.log(req.body);
+        userApi.saveQuestionOrder(req.body)
+        .then(() => {
+           res.json(true);
+        }, (err) => {
+           res.status(500).send(err); 
+        });
+    });
+    
     router.get('/logout', (req, res, next) => {
         req.logout();
         res.redirect('/login');

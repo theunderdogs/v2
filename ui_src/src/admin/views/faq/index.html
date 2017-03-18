@@ -14,26 +14,26 @@
         <div class="card-body card-padding">
             <div class="form-group fg-float m-b-30">
                 <div class="fg-line">
-                    <input type="email" class="form-control input-sm">
+                    <input type="text" value.bind="newEntry.question" class="form-control input-sm">
                     <label class="fg-label">Enter a new question</label>
                 </div>
             </div>
 
             <div class="form-group fg-float">
                 <div class="fg-line">
-                    <textarea class="form-control auto-size input-sm" style="overflow: hidden; word-wrap: break-word; height: 43px;"></textarea>
+                    <textarea class="form-control auto-size input-sm" style="overflow: hidden; word-wrap: break-word; height: 43px;" value.bind="newEntry.answer"></textarea>
                     <label class="fg-label">Enter answer for the new question</label>
                 </div>
             </div>
 
-            <button class="btn btn-success btn-icon-text waves-effect">
+            <button class="btn btn-success btn-icon-text waves-effect" click.delegate="click_add()">
                 <i class="zmdi zmdi-floppy"></i> Add
             </button>
             <button class="btn btn-link waves-effect">Cancel</button>
         </div>
     </div>
     
-    <div class="card">
+    <div class="card" if.bind="questionList.length > 0">
         <div class="card-header">
             <h2>Existing Questions & Answers
                 <small>You can arrange the order by simply dragging them up/down
@@ -43,20 +43,17 @@
         
        
         <div class="card-body card-padding" ref="questionSection">
-           
-            
-            
-            <div class="row" >
+            <div class="row">
                 <div class="col-md-12" >
                     
                     <ul ref="sortable" style="list-style-type: none;">
-                      <li class="ui-state-default" data-item-id="1" style="border: 0">
-                          <div class="card">
+                      <li class="ui-state-default" data-item-id="1" style="border: 0" repeat.for="ques of questionList">
+                          <div class="card" data-id.bind="ques._id">
                                 <div class="card-header bgm-orange m-b-20">
                                     <div class="row">
                                         <div class="col-md-11 col-xs-11 col-sm-11">
-                                            <h2>What kind of dog should I get?
-                                                <small>Added by: Meike Parker, Date Added: 01/02/2017, Modified by: Meike Parker, Date Updated: 01/02/2017</small>
+                                            <h2>${ques.question}
+                                                <small>Added by: ${ques.createdBy.realName}, Date Added: ${ques.dateAdded}, Modified by: ${ques.updatedBy.realName}, Date Updated: ${ques.dateUpdated}</small>
                                             </h2>
                                         </div>
                                     
@@ -78,35 +75,10 @@
                                 </div>
         
                                 <div class="card-body card-padding">
-                                    Cras leo sem, egestas a accumsan eget, euismod at nunc. Praesent vel mi blandit,
-                                    tempus ex gravida, accumsan dui. Sed sed aliquam augue. Nullam vel suscipit purus,
-                                    eu facilisis ante. Mauris nec commodo felis. Cras leo sem, egestas a accumsan eget, euismod at nunc. Praesent vel mi blandit,
-                                    tempus ex gravida, accumsan dui. Sed sed aliquam augue. Nullam vel suscipit purus,
-                                    eu facilisis ante. Mauris nec commodo felis. Cras leo sem, egestas a accumsan eget, euismod at nunc. Praesent vel mi blandit,
-                                    tempus ex gravida, accumsan dui. Sed sed aliquam augue. Nullam vel suscipit purus,
-                                    eu facilisis ante. Mauris nec commodo felis. 
+                                    ${ques.answer}
                                 </div>
                             </div>
                 
-                      </li>
-                      
-                      <li class="ui-state-default" data-item-id="2" style="border: 0">
-                        <div class="card">
-                            <div class="card-header bgm-cyan m-b-20">
-                                <h2>Some Title
-                                    <!--<small>Phasellus condimentum ipsum id auctor</small>-->
-                                </h2>
-                                
-                                <button class="btn bgm-blue btn-float waves-effect"><i class="zmdi zmdi-mail-send"></i></button>
-                            </div>
-    
-                            <div class="card-body card-padding">
-                                Cras leo sem, egestas a accumsan eget, euismod at nunc. Praesent vel mi blandit,
-                                tempus ex gravida, accumsan dui. Sed sed aliquam augue. Nullam vel suscipit purus,
-                                eu facilisis ante. Mauris nec commodo felis.
-                            </div>
-                        </div>
-                      
                       </li>
                     </ul>
             

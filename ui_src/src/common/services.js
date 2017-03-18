@@ -118,6 +118,21 @@ export const services = {
 			    //dataType: 'json',
 			    contentType: 'application/json'
 			  });
+    },
+    getQuestionOrder: () => {
+        return $.get( host + '/getQuestionOrder')
+    },
+    getQuestions: () => {
+        return $.get( host + '/getQuestions')
+    },
+    saveQuestionOrder: (_order) => {
+        return $.ajax({
+                url: host + '/saveQuestionOrder', 
+			    type: 'POST',
+			    data: JSON.stringify(_order),
+			    //dataType: 'json',
+			    contentType: 'application/json'
+			  });
     }
 }
 
