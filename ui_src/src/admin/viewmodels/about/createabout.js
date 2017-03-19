@@ -157,30 +157,11 @@ export class CreateRole extends Page{
     }
     */
     click_applyChanges(){
-        // //console.log(this.role);
-        
-        // //obj = JSON.parse(JSON.stringify(o));
-        
-        let hideFn = this.showProgress('Saving changes...');
-        
-        // // var newObject = $.extend(true, {}, this.tdata);
-        
         return this.controller.validate()
          .then(result => {
              if(result.valid) {
-        //         let indexesToDelete = [];
-        //         this.role.permissions.forEach((permission) => {
-        //             if(permission.value == undefined) {
-        //                 indexesToDelete.push(this.role.permissions.indexOf(permission));
-        //             }
-        //         });
-                
-        //         for(let i = indexesToDelete.length - 1; i >=0; i--) {
-        //             this.role.permissions.splice(indexesToDelete[i] , 1);
-        //         }
-                
-        //         console.log('newrole to be saved', this.role);
-            
+                let hideFn = this.showProgress('Saving changes...');
+        
                 return this.db.saveAboutus(this.about)
                 .then((about) => {
                     console.log('success', about);
@@ -193,7 +174,7 @@ export class CreateRole extends Page{
                     this.showError();
                 });
              } else {
-                 hideFn();
+                 //hideFn();
                  //this.showError();
              }
         });

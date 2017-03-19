@@ -5,6 +5,8 @@ import 'bootstrap-growl';
 import {Router} from 'aurelia-router';
 import { TaskQueue, inject, Aurelia, noView, TemplatingEngine, BindingEngine, computedFrom } from 'aurelia-framework';
 import {services} from 'common/services';
+import {functions} from 'common/functions';
+
 import {
   ValidationControllerFactory,
   ValidationController,
@@ -13,9 +15,9 @@ import {
 import _ from 'lodash';
 //import {uiHelper} from 'common/uihelper';
 
-@inject(TaskQueue, Aurelia, TemplatingEngine, BindingEngine, Router, ValidationControllerFactory, services)
+@inject(TaskQueue, Aurelia, TemplatingEngine, BindingEngine, Router, ValidationControllerFactory, services, functions)
 export class Page{
-	constructor(taskQueue, aurelia, templatingEngine, bindingEngine, router, controllerFactory, db) {   
+	constructor(taskQueue, aurelia, templatingEngine, bindingEngine, router, controllerFactory, db, fn) {   
         this.taskQueue = taskQueue;
         this.aurelia = aurelia;
         this.templatingEngine = templatingEngine;    
@@ -24,9 +26,18 @@ export class Page{
         this.controllerFactory = controllerFactory;
         this.validationRules = ValidationRules;
         this.db = db;
+        this.fn = fn;
         
         this.init();
     }   
+    
+    getRandomColor() {
+        let colors = ['lightblue', 'bluegray', 'cyan', 'teal', 'green', 'orange', 'blue', 'purple'];
+        
+        //random number between 1 to 8
+        
+        return colors[Math.floor((Math.random() * 8) + 1) - 1];
+    }
     
     init(){
         this.validationRules.customRule(

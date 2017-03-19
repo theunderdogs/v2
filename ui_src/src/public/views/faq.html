@@ -1,0 +1,39 @@
+<template>
+    
+    <!--<div class="block-header">-->
+    <!--    <h2>Manage Email Lists</h2>-->
+    <!--</div>-->
+    
+    <div class="row">
+        <div class="card">
+            <div class="card-header">
+                <h2>MOST COMMONLY ASKED QUESTIONS BY POTENTIAL OWNERS, VOLUNTEERS AND OTHER PET RELATED QUESTIONS
+                    <small>Feel free to email us at theunderdogsrescue@gmail.com</small>
+                </h2>
+            </div>
+            
+            <div class="card-body card-padding">
+                <div class="panel-group" role="tablist" aria-multiselectable="true">
+                    <div class="panel panel-collapse" repeat.for="ques of questionList">
+                        <div class="panel-heading" role="tab" id="headingOne">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="${'#' + $index}"
+                                   aria-expanded="true" aria-controls="${$index}">
+                                    ${ques.question}
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="${$index}" class="collapse in" role="tabpanel"
+                             aria-labelledby="headingOne">
+                            <div class="panel-body">
+                                ${ques.answer}
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+        
+</template>

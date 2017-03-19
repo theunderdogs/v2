@@ -1,4 +1,9 @@
 'use strict';
+
+//nvm alias default 7.5.0
+
+console.log("Node Version: " + process.version)
+
 var express = require('express'),
     app = express(),
     path = require('path'),
@@ -15,7 +20,7 @@ var express = require('express'),
     _ = require('lodash'),
     util = require('util'),
     os = require('os'),
-    nodemailer = '';//require('nodemailer');
+    nodemailer = require('nodemailer');
 
 var env = process.env.NODE_ENV || 'development';
 

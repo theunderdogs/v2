@@ -137,6 +137,15 @@ export const services = {
     getQuestionById: (id) => {
         return $.get( host + '/getQuestionById/' + id)
     },
+    deleteQuestion: (id) => {
+        return $.ajax({
+                url: host + '/deleteQuestion', 
+			    type: 'POST',
+			    data: JSON.stringify(id),
+			    //dataType: 'json',
+			    contentType: 'application/json'
+			  });
+    }
 }
 
 // export function squarex() {

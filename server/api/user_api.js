@@ -368,12 +368,10 @@ module.exports.getQuestionById = (id) => {
 module.exports.saveQuestion = (question) => {
     checkInitialization();
     
-    var p;
-    
     if(question._id){
         //update
-        p = FAQModel.findOneAndUpdate({
-                            id: question._id
+        return FAQModel.findOneAndUpdate({
+                            _id: question._id
                         }, {
                             $set: { question: question.question,
                                     answer: question.answer,
@@ -384,28 +382,62 @@ module.exports.saveQuestion = (question) => {
                         
     } else {
         //save
-        p = FAQModel.create(question);
-    }
-    
-    return p.then((savedQuestion) => {
+        return FAQModel.create(question)
+        .then((savedQuestion) => {
             return module.exports.getQuestionOrder()
                     .then((qOrder) => {
-                        if(qOrder && qOrder.questionOrder) {
-                            //update
-                            if(qOrder.questionOrder.indexOf(savedQuestion._id) > -1){
-                                //index already exists
-                                return Promise.reject('Question is already in order');
+                            if(qOrder && qOrder.questionOrder) {
+                                //update
+                                if(qOrder.questionOrder.indexOf(savedQuestion._id.toString()) > -1){
+                                    //index already exists
+                                    return Promise.reject('Question is already in order');
+                                }
+                                
+                                return module.exports.saveQuestionOrder([ savedQuestion._id ].concat(qOrder.questionOrder));
+                            } else {
+                                //insert
+                                return module.exports.saveQuestionOrder([ savedQuestion._id ])
                             }
-                            
-                            return module.exports.saveQuestionOrder([ savedQuestion._id ].concat(qOrder.questionOrder));
-                        } else {
-                            //insert
-                            return module.exports.saveQuestionOrder([ savedQuestion._id ])
-                        }
+                        }, (err) => {
+                                return Promise.reject(err);                        
+                            }
+                        );
+                    }, (err) => {
+                        return Promise.reject(err);                        
                     });
-        }, (err) => {
-            return Promise.reject(err);                        
-        });
+    }
+};
+
+module.exports.deleteQuestion = (id) => {
+    checkInitialization();
+    
+    return FAQModel
+            .find({ _id: id })
+            .remove()
+            .then(() => {
+                return module.exports.getQuestionOrder()
+            }, (err) => {
+                return Promise.reject(err)
+            })
+            .then((oder) => {
+                var stringOder = [], newOder = [];
+                
+                if(oder && oder.questionOrder) {
+                    for(var i = 0; i < oder.questionOrder.length; i++) {
+                        stringOder.push(oder.questionOrder[i].toString());
+                    }
+                    
+                    if(stringOder.indexOf(id) > -1 ) {
+                        stringOder.splice(stringOder.indexOf(id), 1);
+                    }
+                    
+                    return module.exports.saveQuestionOrder(stringOder);
+                }
+                else return true;
+            }, 
+            (err) => {
+                return Promise.reject(err)    
+            })
 };
 
 module.exports.getQuestionOrder = () => {

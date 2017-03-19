@@ -63,18 +63,11 @@ export class CreateRole extends Page{
     }
    
     click_applyChanges(){
-        // //console.log(this.role);
-        
-        // //obj = JSON.parse(JSON.stringify(o));
-        
-        let hideFn = this.showProgress('Saving changes...');
-        
-        // // var newObject = $.extend(true, {}, this.tdata);
-        
         return this.controller.validate()
          .then(result => {
              if(result.valid) {
-            
+                let hideFn = this.showProgress('Saving changes...');
+                    
                 return this.db.saveContactTemplate(this.contacttemplate)
                 .then((contacttemplate) => {
                     console.log('success', contacttemplate);
@@ -87,7 +80,7 @@ export class CreateRole extends Page{
                     this.showError();
                 });
              } else {
-                 hideFn();
+                 //hideFn();
                  //this.showError();
              }
         });

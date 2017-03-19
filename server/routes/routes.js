@@ -349,7 +349,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
     
     //------------------------
     
-    router.get('/getQuestions', securePages, (req, res, next) => {
+    router.get('/getQuestions', (req, res, next) => {
         userApi.getQuestions()
         .then((questions) => {
 			//res.send(200, roles);
@@ -384,7 +384,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         });
     });
     
-    router.get('/getQuestionOrder', securePages, (req, res, next) => {
+    router.get('/getQuestionOrder', (req, res, next) => {
         userApi.getQuestionOrder()
         .then((qOrder) => {
 			//res.send(200, roles);
@@ -422,7 +422,15 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         res.redirect('/login');
     });
     
-    
+    router.post('/deleteQuestion', securePages, jsonParser ,(req, res, next) => {
+        //console.log(req.body);
+        userApi.deleteQuestion(req.body.id)
+        .then(() => {
+           res.json(true);
+        }, (err) => {
+           res.status(500).send(err); 
+        });
+    });
     
     /*
     router.get('/per', (req, res, next) => {
