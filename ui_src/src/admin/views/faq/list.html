@@ -1,0 +1,35 @@
+<ul ref="sortable" style="list-style-type: none;">
+                      <li class="ui-state-default" data-item-id="1" style="border: 0" repeat.for="ques of questionList">
+                          <div class="card" data-id.bind="ques._id">
+                                <div class="card-header bgm-${ques.color} m-b-20">
+                                    <div class="row">
+                                        <div class="col-md-11 col-xs-11 col-sm-11">
+                                            <h2>${ques.question}
+                                                <small>Added by: ${ques.createdBy.realName}, Date Added: ${ques.dateAdded}, Modified by: ${ques.updatedBy.realName}, Date Updated: ${ques.dateUpdated}</small>
+                                            </h2>
+                                        </div>
+                                    
+                                        <ul class="actions actions-alt">
+                                            <li>
+                                                <a click.delegate="click_edit(ques._id)" style="cursor:pointer;">
+                                                    <i class="zmdi zmdi-edit"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a click.delegate="click_delete(ques._id)" style="cursor:pointer;">
+                                                    <i class="zmdi zmdi-delete"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    
+                                    </div>
+                                    <!--<button class="btn bgm-blue btn-float waves-effect"><i class="zmdi zmdi-mail-send"></i></button>-->
+                                </div>
+        
+                                <div class="card-body card-padding">
+                                    ${ques.answer}
+                                </div>
+                            </div>
+                
+                      </li>
+                    </ul>

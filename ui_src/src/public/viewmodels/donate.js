@@ -20,6 +20,7 @@ export class Donate extends Page{
                 
                 { val: 'Five', title: '$5.00 USD - monthly' },
                 { val: 'Ten', title: '$10.00 USD - monthly' },
+                { val: 'TwentyFive', title: '$25.00 USD - monthly' },
                 { val: 'Fifty', title: '$50.00 USD - monthly' },
                 { val: 'OneHundred', title: '$100.00 USD - monthly' },
                 { val: 'TwoHundred', title: '$200.00 USD - monthly' },

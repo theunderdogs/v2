@@ -7,6 +7,7 @@ import _ from 'lodash';
 import moment from 'moment'
 import {BootstrapFormRenderer} from 'admin/viewmodels/users/createusererror';
 import swal from 'sweet-alert'
+import listHTML from 'admin/views/faq/list.html!text';
 
 export class Faq extends Page{
     constructor(...rest) {   
@@ -68,10 +69,33 @@ export class Faq extends Page{
     attached(){
         let self = this;
         this.onPageRenderComplete();
-        this.initDraggable();
+        //this.initDraggable();
+        this.drawList();
+    }
+    
+    drawList() {
+        let self = this;
+        
+        $(this.dynamicDom).html(listHTML);
+        
+        return new Promise((resolve, reject) => {
+            if(!this.dynamicDom.querySelectorAll('.au-target').length) {
+                this.templatingEngine.enhance({
+                    element: this.dynamicDom,
+                    bindingContext: this
+                });
+                
+                resolve();
+            } else { 
+                reject();
+            }
+        }).then(() => {
+            this.initDraggable();
+        });
     }
     
     initDraggable(){
+        let self = this;
         $( this.sortable ).sortable({
           revert: true,
           axis: 'y',
@@ -80,24 +104,33 @@ export class Faq extends Page{
           stop: function( event, ui ) {
               let oder = [];
               console.log('stopped');
-              $( self.sortable ).find('.card').each(function() {
-                  oder.push($(this).attr('data-id'));
-              });  
-            
-             if(oder.length == 0) {
-                 return;
-             }
-            
-             let hideFn = self.showProgress('Saving order...');
               
-             return self.db.saveQuestionOrder(oder)
-                    .then(() => {
-                        hideFn();
-                        self.showSuccess('Order saved successfully');
-                    }, (err) => {
-                        hideFn();
-                        self.showError();
-                    });
+              self.taskQueue.queueMicroTask(() => {
+                  $( self.sortable ).find('.card').each(function() {
+                      oder.push($(this).attr('data-id'));
+                  });  
+                
+                 if(oder.length == 0) {
+                     return;
+                 }
+                
+                 let hideFn = self.showProgress('Saving order...');
+                  
+                 return self.db.saveQuestionOrder(oder)
+                        .then(() => {
+                            hideFn();
+                            self.showSuccess('Order saved successfully');
+                            return self.loadQuestionsAndOrder()
+                                    
+                        }, (err) => {
+                            hideFn();
+                            self.showError();
+                        })
+                        .then(() => {
+                            self.drawList();
+                            //self.initDraggable();
+                        });
+              });
           }
         });
         
@@ -132,7 +165,10 @@ export class Faq extends Page{
         
                     return this.loadQuestionsAndOrder()
                         .then(() => {
-                            this.initDraggable();
+                            // this.taskQueue.queueMicroTask(() => {
+                            //     this.initDraggable();
+                            // });
+                            this.drawList();
                         });
                 },(err) => {
                     hideFn();
@@ -178,19 +214,24 @@ export class Faq extends Page{
         }).then((result) => {
             this.click_cancel();
             let hideFn = this.showProgress('Deleting..');
-        
+            //let p = this.db.deleteQuestion({id});
+            //console.log(p);
             return this.db.deleteQuestion({id})
-            .then((result) => {
-                hideFn();
-                this.showSuccess();
-                return this.loadQuestionsAndOrder()
+                .then((res) => {
+                    console.log('exe');
+                    hideFn();
+                    this.showSuccess();
+                    return this.loadQuestionsAndOrder()
                         .then(() => {
-                            this.initDraggable();
-                        });
-            })
-            .catch((err) => {
-               this.showError(err); 
-            }); 
+                            self.drawList();
+                        })
+                });
+            // .then(() => {
+            //     this.initDraggable();
+            // })
+            // .catch((err) => {
+            //   this.showError(err); 
+            // }); 
         })
         .catch((result) => {
             console.log('cancelled ', result);
