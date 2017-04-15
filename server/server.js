@@ -20,7 +20,9 @@ var express = require('express'),
     _ = require('lodash'),
     util = require('util'),
     os = require('os'),
-    nodemailer = require('nodemailer');
+    nodemailer = require('nodemailer'),
+    store = require( process.cwd() + '/cache/store'),
+    cacheBuilder = require( process.cwd() + '/cache/cachebuilder');
 
 var env = process.env.NODE_ENV || 'development';
 
@@ -67,15 +69,27 @@ fs.readdirSync( process.cwd() + '/models').forEach(function(filename){
 //initialize api
 fs.readdirSync( process.cwd() + '/api').forEach(function(filename){
 	console.log('Initializing:', path.join( process.cwd() + '/api/' + filename ));
-	require( process.cwd() + '/api/' + filename)(mongoose, path);
+	
+	//master data is populated here
+	require( process.cwd() + '/api/' + filename)(mongoose, path); 
 });   
 
-//populate master data
+//build cache 
+//store.rolesPermissionMap = 
+cacheBuilder.buildRolesPermissionMap()
+.then((res) => {
+    store.rolesPermissionMap = res;
+})
+.then(() => {
+    console.log(Promise.resolve(store.rolesPermissionMap));
+    //populate master data at this line
+    
+    
+    require('./auth/passportAuth.js')(path, passport, FacebookStrategy, config, mongoose);
+    require('./routes/routes.js')(express, app, passport, config, mongoose, formidable, bodyParser, _, fs, util, os, nodemailer);
+    
+    server.listen(app.get('port'), () => {
+       console.log('server started on ', app.get('host') + ':' + app.get('port')); 
+    });    
+}); 
 
-
-require('./auth/passportAuth.js')(path, passport, FacebookStrategy, config, mongoose);
-require('./routes/routes.js')(express, app, passport, config, mongoose, formidable, bodyParser, _, fs, util, os, nodemailer);
-
-server.listen(app.get('port'), () => {
-   console.log('server started on ', app.get('host') + ':' + app.get('port')); 
-});
