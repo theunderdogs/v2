@@ -22,9 +22,8 @@ var express = require('express'),
     os = require('os'),
     nodemailer = require('nodemailer'),
     store = require( process.cwd() + '/cache/store'),
-    cacheBuilder = require( process.cwd() + '/cache/cachebuilder');
-
-var env = process.env.NODE_ENV || 'development';
+    cacheBuilder = require( process.cwd() + '/cache/cachebuilder')(_),
+    env = process.env.NODE_ENV || 'development';
 
 app.set('views', path.join( __dirname + '/../', 'ui_src'));
 //console.log(app.get('views'));
@@ -81,7 +80,7 @@ cacheBuilder.buildRolesPermissionMap()
     store.rolesPermissionMap = res;
 })
 .then(() => {
-    console.log(Promise.resolve(store.rolesPermissionMap));
+    console.log(store.rolesPermissionMap[0].permissions[0]);
     //populate master data at this line
     
     
