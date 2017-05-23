@@ -1,4 +1,4 @@
-module.exports = function(path, passport, FacebookStrategy, config, mongoose) {
+module.exports = function(path, passport, FacebookStrategy, config, mongoose, _, permissionMap) {
     
     var UserModel = require(path.join( process.cwd(), '/models/model')).getModel('user');
     
@@ -27,6 +27,16 @@ module.exports = function(path, passport, FacebookStrategy, config, mongoose) {
         
         UserModel.findOne({'facebookId': profile.id}, (err, user) => {
             if(user){
+                //console.log(permissionMap)
+                
+                // var userPermissions =  _.filter(permissionMap, (r) => { 
+                //     if(user.isAdmin) return true
+                //     else if(user.role) return r.name === user.role.name;     
+                //     else return false
+                //  });
+                 
+                //  console.log(userPermissions)
+                
                 done(null, { user, profile});
             } else {
                 console.log('No user present');
