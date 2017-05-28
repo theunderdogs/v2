@@ -20,27 +20,34 @@ module.exports = function(path, passport, FacebookStrategy, config, mongoose, _,
         clientID: config.fb.appID,
         clientSecret: config.fb.appSecret,
         callbackURL: config.fb.callbackURL,
-        profileFields: ['id', 'displayName', 'photos']
+        profileFields: ['id', 'displayName', 'photos']  //you can comment this like to get the full profile object
     }, (accessToken, refreshToken, profile, done) => {
         //check if the user exists in mongoDB
-        console.log(profile.id, profile.displayName);
+        //console.log(profile);
         
-        UserModel.findOne({'facebookId': profile.id}, (err, user) => {
-            if(user){
+        UserModel.findOne({'facebookId': profile.id})
+            .populate('role')
+            .exec()
+            .then((user) => {
+                if(user){
                 //console.log(permissionMap)
+                    //  console.log(userPermissions)
+                    if(user.isAdmin)
+                        done(null, { user, profile });
                 
-                // var userPermissions =  _.filter(permissionMap, (r) => { 
-                //     if(user.isAdmin) return true
-                //     else if(user.role) return r.name === user.role.name;     
-                //     else return false
-                //  });
-                 
-                //  console.log(userPermissions)
-                
-                done(null, { user, profile});
-            } else {
-                console.log('No user present');
-            }
-        })
+                    else {
+                        var userPermissions =  _.filter(permissionMap, (r) => { 
+                            return r.name === user.role.name;     
+                         });
+                     
+                        done(null, {user, profile, userPermissions }) 
+                    }
+                } else {
+                    console.log('No user present');
+                }
+            })
+            .catch((err) => {
+                console.log('Login failed')
+            })
     }));
 }

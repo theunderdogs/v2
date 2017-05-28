@@ -25,10 +25,12 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
     });
     
     router.get('/admin', securePages, (req, res, next) => {
+        console.log('in admin', JSON.stringify(req.user.userPermissions))
         res.render('admin', { host: config.host, 
             profilePic: encodeURI(req.user.profile.photos[0].value),  
             profileName: req.user.profile.displayName ,
-            year: new Date().getFullYear() 
+            year: new Date().getFullYear(),
+            permissions: JSON.stringify(req.user.userPermissions)
         });
     });
     
