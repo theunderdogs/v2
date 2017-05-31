@@ -13,6 +13,8 @@ module.exports = (underscore) => {
     return module.exports;
 }
 
+module.exports.permissionMap = undefined;
+
 module.exports.buildRolesPermissionMap = () => {
     checkInitialization();
     
@@ -28,7 +30,9 @@ module.exports.buildRolesPermissionMap = () => {
                 p.push( userApi.getPermissionsByRoleId(id) );
             });
             
-            return Promise.all(p);
-            
+            return Promise.all(p)
+                    .then((res) => {
+                        module.exports.permissionMap = res
+                    });
         });
 }

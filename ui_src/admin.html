@@ -24,8 +24,10 @@
       <link href="assets/css/app_2.min.css" rel="stylesheet">
       
       <script>
-        window.permissions = '{{{ permissions  }}}'
-        console.log(JSON.parse(window.permissions))
+        window.permissions = '{{{ permissions  }}}' ? JSON.parse('{{{ permissions  }}}') : null;
+        window.user = JSON.parse('{{{user}}}')
+        console.log('permissions', window.permissions)
+        console.log('user', window.user)
         window.entryPage = 'admin';
         window.host = '{{ host  }}';
         window.profileName = '{{ profileName }}';

@@ -38,7 +38,7 @@ module.exports = function(path, passport, FacebookStrategy, config, mongoose, _,
                     else {
                         var userPermissions =  _.filter(permissionMap, (r) => { 
                             return r.name === user.role.name;     
-                         });
+                         })[0];
                      
                         done(null, {user, profile, userPermissions }) 
                     }

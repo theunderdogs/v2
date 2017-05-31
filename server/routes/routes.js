@@ -1,6 +1,6 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
 
-module.exports = function(express, app, passport, config, mongoose, formidable, bodyParser, _, fs, util, os, nodemailer){
+module.exports = function(express, app, passport, config, mongoose, formidable, bodyParser, _, fs, util, os, nodemailer, permissionMap){
     //var nodemailer = require('nodemailer');
     var router = express.Router();
     var jsonParser = bodyParser.json();
@@ -25,12 +25,14 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
     });
     
     router.get('/admin', securePages, (req, res, next) => {
-        console.log('in admin', JSON.stringify(req.user.userPermissions))
+        console.log('is admin', JSON.stringify(req.user.userPermissions))
+        console.log('user', req.user.user)
         res.render('admin', { host: config.host, 
             profilePic: encodeURI(req.user.profile.photos[0].value),  
             profileName: req.user.profile.displayName ,
             year: new Date().getFullYear(),
-            permissions: JSON.stringify(req.user.userPermissions)
+            user: JSON.stringify(req.user.user),
+            permissions: req.user.isAdmin ? null : JSON.stringify(req.user.userPermissions)
         });
     });
     
@@ -136,7 +138,18 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        })
     });
     
-    router.post('/saveEmailList', securePages, jsonParser ,(req, res, next) => {
+    router.post('/saveEmailList', securePages, jsonParser , (req, res, next) => {
+        if(req.body._id && !req.user.user.isAdmin){
+          var userPermissions =  _.filter(permissionMap, (r) => { 
+                            return r.name === req.user.user.role.name;     
+                         })[0];
+            
+            console.log('inside saveEmailList', userPermissions)             
+          //if(userPermissions.permissions)
+        } else {
+           next()
+        }
+    }, (req, res, next) => {
         console.log(req.user.user);
         req.body.createdBy = req.user.user._id;
         console.log(req.body);
