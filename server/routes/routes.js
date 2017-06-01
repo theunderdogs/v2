@@ -25,8 +25,8 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
     });
     
     router.get('/admin', securePages, (req, res, next) => {
-        console.log('is admin', JSON.stringify(req.user.userPermissions))
-        console.log('user', req.user.user)
+        //console.log('is admin', JSON.stringify(req.user.userPermissions))
+        //console.log('user', req.user.user)
         res.render('admin', { host: config.host, 
             profilePic: encodeURI(req.user.profile.photos[0].value),  
             profileName: req.user.profile.displayName ,
@@ -144,8 +144,31 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
                             return r.name === req.user.user.role.name;     
                          })[0];
             
-            console.log('inside saveEmailList', userPermissions)             
-          //if(userPermissions.permissions)
+            //console.log('inside saveEmailList', userPermissions)             
+            
+            if(!userPermissions.permissions || userPermissions.permissions.length == 0) {
+                res.status(401).send('You don\'t have permission to perform this actions')
+            } else {
+                var permissionToCheck;
+                
+                userPermissions.permissions.some((per) => {
+                    console.log('per', per.item.name, per.value)
+                    if(per.item.name == 'CANEDITEMAILLIST') {
+                        permissionToCheck = per;
+                        return true;
+                    }
+                })
+                
+                if(!permissionToCheck)
+                    res.status(401).send('You don\'t have permission to perform this actions')
+                    
+                if(permissionToCheck.value != 'yes') {
+                    console.log('permission exists but not true')
+                    res.status(401).send('You don\'t have permission to perform this actions')
+                } else {
+                    next()
+                }
+            } 
         } else {
            next()
         }
