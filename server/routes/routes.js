@@ -255,45 +255,59 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         if(mail.length == 0)
             res.status(500).send('Sender\'s address was not found in system '); 
             
-        // if(req.body.attachments.length > 0){
-        //     req.body.attachments.forEach(function(attachment){
+        if(req.body.attachments.length > 0){
+            req.body.attachments.forEach(function(attachment){
                 
-        //     });
-        // }
+            });
+        }
         
-        // create reusable transporter object using the default SMTP transport
-        var transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: mail[0].user,
-                pass: mail[0].pass
-            }
-        });
+        // // create reusable transporter object using the default SMTP transport
+        // var transporter = nodemailer.createTransport({
+        //     service: 'gmail',
+        //     auth: {
+        //         user: mail[0].user,
+        //         pass: mail[0].pass
+        //     }
+        // });
         
-        // setup email data with unicode symbols
-        var mailOptions = {
-            from: req.body.senderName, // sender address
-            to: req.body.list, // list of receivers
-            subject: req.body.subject, // Subject line
-            //text: 'Hello world ?', // plain text body
-            html: req.body.bodyhtml, // html body
-            attachments: req.body.attachments //[{   // file on disk as an attachment
-            //     filename: 'testmail2.txt',
-            //     path: __dirname + '/testmail2.js' // stream this file
-            // }]
-        };
+        // // setup email data with unicode symbols
+        // var mailOptions = {
+        //     from: req.body.senderName, // sender address
+        //     to: req.body.list, // list of receivers
+        //     subject: req.body.subject, // Subject line
+        //     //text: 'Hello world ?', // plain text body
+        //     html: req.body.bodyhtml, // html body
+        //     attachments: req.body.attachments //[{   // file on disk as an attachment
+        //     //     filename: 'testmail2.txt',
+        //     //     path: __dirname + '/testmail2.js' // stream this file
+        //     // }]
+        // };
         
-        // send mail with defined transport object
-        transporter.sendMail(mailOptions, (error, info) => {
-            console.log('error', error);
-            console.log('info', info);
-            if (error) {
-                res.status(500).send('Something went wrong while sending email'); 
-            }
+        // // send mail with defined transport object
+        // transporter.sendMail(mailOptions, (error, info) => {
+        //     console.log('error', error);
+        //     console.log('info', info);
+        //     if (error) {
+        //         res.status(500).send('Something went wrong while sending email'); 
+        //     }
             
-            //res.json({ messageId: info.messageId, response: info.response });
-            res.json(info);
-        });
+        //     //res.json({ messageId: info.messageId, response: info.response });
+        //     res.json(info);
+        // });
+        
+        console.log('* [example2] sending test email');
+         
+        var send = require('gmail-send')({
+          user: 'kirandeore@gmail.com',           // Your GMail account used to send emails 
+          pass: 'Iambapu1984',           // Application-specific password 
+          to:   'pumpedupdevs@gmail.com',           // Send to yourself 
+          subject: 'ping',
+          text:    'gmail-send example 2',   // Plain text 
+          files: _(req.body.attachments)
+                  .filter(c => c.path)
+                  .map('path')
+                  .value()
+        })();       
         
     });
     
