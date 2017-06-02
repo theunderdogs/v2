@@ -1,4 +1,4 @@
-module.exports = function(path, passport, FacebookStrategy, config, mongoose, _, permissionMap) {
+module.exports = function(path, passport, FacebookStrategy, config, mongoose, _, cacheBuilder) {
     
     var UserModel = require(path.join( process.cwd(), '/models/model')).getModel('user');
     
@@ -30,13 +30,13 @@ module.exports = function(path, passport, FacebookStrategy, config, mongoose, _,
             .exec()
             .then((user) => {
                 if(user){
-                //console.log(permissionMap)
+                //console.log(cacheBuilder.permissionMap)
                     //  console.log(userPermissions)
                     if(user.isAdmin)
                         done(null, { user, profile });
                 
                     else {
-                        var userPermissions =  _.filter(permissionMap, (r) => { 
+                        var userPermissions =  _.filter(cacheBuilder.permissionMap, (r) => { 
                             return r.name === user.role.name;     
                          })[0];
                      

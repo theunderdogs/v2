@@ -1,6 +1,6 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
 
-module.exports = function(express, app, passport, config, mongoose, formidable, bodyParser, _, fs, util, os, nodemailer, permissionMap){
+module.exports = function(express, app, passport, config, mongoose, formidable, bodyParser, _, fs, util, os, nodemailer, cacheBuilder){
     //var nodemailer = require('nodemailer');
     var router = express.Router();
     var jsonParser = bodyParser.json();
@@ -12,6 +12,41 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
             res.redirect('/login')
         }
     };
+    var calculatePermissions = (req, permissionCode, validValue) => {
+        if(req.body._id && !req.user.user.isAdmin){
+          var userPermissions =  _.filter(cacheBuilder.permissionMap, (r) => { 
+                            return r.name === req.user.user.role.name;     
+                         })[0];
+            
+            //console.log('inside saveEmailList', userPermissions)             
+            
+            if(!userPermissions.permissions || userPermissions.permissions.length == 0) {
+                throw new Error('You don\'t have permission to perform this action') //res.status(401).send('You don\'t have permission to perform this actions')
+            } else {
+                var permissionToCheck;
+                
+                userPermissions.permissions.some((per) => {
+                    //console.log('per', per.item.name, per.value)
+                    if(per.item.name == permissionCode /*'CANEDITEMAILLIST' */) {
+                        permissionToCheck = per;
+                        return true;
+                    }
+                })
+                
+                if(!permissionToCheck)
+                    throw new Error('You don\'t have permission to perform this action') //res.status(401).send('You don\'t have permission to perform this actions')
+                    
+                if(permissionToCheck.value !== validValue /*'yes'*/) {
+                    console.log('permission exists but not true')
+                    throw new Error('You don\'t have permission to perform this action') //res.status(401).send('You don\'t have permission to perform this actions')
+                } else {
+                    return true //next()
+                }
+            } 
+        } else {
+           return true //next()
+        }
+    }
     
     router.get('/index', (req, res, next) => {
         //console.log('index route hit');
@@ -85,7 +120,10 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         console.log(req.body);
         userApi.saveRole(req.body)
         .then(() => {
-           res.json(true);
+           cacheBuilder.buildRolesPermissionMap()
+           .then(() => {
+            res.json(true);    
+           })
         }, (err) => {
            res.status(500).send(err); 
         });
@@ -139,39 +177,14 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
     });
     
     router.post('/saveEmailList', securePages, jsonParser , (req, res, next) => {
-        if(req.body._id && !req.user.user.isAdmin){
-          var userPermissions =  _.filter(permissionMap, (r) => { 
-                            return r.name === req.user.user.role.name;     
-                         })[0];
-            
-            //console.log('inside saveEmailList', userPermissions)             
-            
-            if(!userPermissions.permissions || userPermissions.permissions.length == 0) {
-                res.status(401).send('You don\'t have permission to perform this actions')
-            } else {
-                var permissionToCheck;
-                
-                userPermissions.permissions.some((per) => {
-                    console.log('per', per.item.name, per.value)
-                    if(per.item.name == 'CANEDITEMAILLIST') {
-                        permissionToCheck = per;
-                        return true;
-                    }
-                })
-                
-                if(!permissionToCheck)
-                    res.status(401).send('You don\'t have permission to perform this actions')
-                    
-                if(permissionToCheck.value != 'yes') {
-                    console.log('permission exists but not true')
-                    res.status(401).send('You don\'t have permission to perform this actions')
-                } else {
-                    next()
-                }
-            } 
-        } else {
-           next()
+        try{
+            if(calculatePermissions(req, 'CANEDITEMAILLIST', 'yes')){
+                next()
+            }
+        } catch(err) {
+            res.status(401).send(err)
         }
+        
     }, (req, res, next) => {
         console.log(req.user.user);
         req.body.createdBy = req.user.user._id;
