@@ -15,7 +15,10 @@ ActiveAboutModel,
 ContactTemplateModel, 
 ActiveContactTemplateModel,
 FAQModel,
-FAQOrderModel;
+FAQOrderModel,
+_,
+nodemailer,
+smtpTransport;
 
 var checkInitialization = () => {
     if (!mongoose && !path) {
@@ -23,9 +26,21 @@ var checkInitialization = () => {
     }
 };
 
-module.exports = (setup_mongoose, setup_path) => {
+module.exports = (setup_mongoose, setup_path, lodash, _nodemailer, _smtpTransport) => {
     if (setup_mongoose) {
         mongoose = setup_mongoose;
+    }
+    
+    if (_nodemailer) {
+        nodemailer = _nodemailer;
+    }
+    
+    if (_smtpTransport) {
+        smtpTransport = _smtpTransport;
+    }
+    
+    if(lodash) {
+        _ = lodash
     }
     
     if (setup_path) {
@@ -459,4 +474,76 @@ module.exports.saveQuestionOrder = (qOrder) => {
                         questionOrder: qOrder
                     }
                 }, {upsert: true, 'new': true});
+};
+
+module.exports.sendMail = (mailData) => {
+    checkInitialization();
+    //console.log('mailData', mailData)
+    
+    return new Promise((resolve, reject) => {
+        var transporter = nodemailer.createTransport(smtpTransport({
+                service: 'Gmail',
+                auth: {
+                user: mailData.username.user, //'kirandeore@gmail.com',
+                pass: mailData.password //'Iambapu1984'
+            }
+        }));
+        
+        transporter.verify(function(error, success) {
+           if (error) {
+                console.log('Failed to connect mail server', error)
+                reject('Failed to connect mail server')
+           }
+        }); 
+        
+        var mailOptions = {
+              //user: mailData.username.user, //'kirandeore@gmail.com',   // Your GMail account used to send emails 
+              //pass: mailData.password, //'Iambapu1984',  // Application-specific password 
+              to: mailData.list,  //'pumpedupdevs@gmail.com',  // Send to yourself 
+              subject: mailData.subject, //'ping',
+              from: mailData.senderName,
+              //text:    'gmail-send example 2',   // Plain text 
+              html: mailData.bodyhtml,
+              attachments: mailData.attachments
+          };
+        
+        //console.log('mailOptions', mailOptions)
+        
+        // send mail with defined transport object
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                reject('Something went wrong while sending email');
+                return;
+            }
+        
+            //res.json({ messageId: info.messageId, response: info.response });
+            resolve('success')
+        });
+        
+        
+        
+        
+    //   require('gmail-send')({
+    //       user: mailData.username.user, //'kirandeore@gmail.com',   // Your GMail account used to send emails 
+    //       pass: mailData.password, //'Iambapu1984',  // Application-specific password 
+    //       to: mailData.list,  //'pumpedupdevs@gmail.com',  // Send to yourself 
+    //       subject: mailData.subject, //'ping',
+    //       from: mailData.senderName,
+    //       //text:    'gmail-send example 2',   // Plain text 
+    //       html: mailData.bodyhtml,
+    //       files: _(mailData.attachments)
+    //               .filter(c => c.path)
+    //               .map('path')
+    //               .value()
+    //     },(err, res) => {
+    //         console.log('err', err, 'res', res)
+    //         if(err) {
+    //             console.log('rejecting....');
+    //             reject()   
+    //         } else {
+    //             console.log('resolving...');
+    //             resolve()
+    //         }
+    //     })();         
+    })
 };

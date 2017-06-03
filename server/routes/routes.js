@@ -1,6 +1,6 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
 
-module.exports = function(express, app, passport, config, mongoose, formidable, bodyParser, _, fs, util, os, nodemailer, cacheBuilder){
+module.exports = function(express, app, passport, config, mongoose, formidable, bodyParser, _, fs, util, os, cacheBuilder){
     //var nodemailer = require('nodemailer');
     var router = express.Router();
     var jsonParser = bodyParser.json();
@@ -21,7 +21,8 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
             //console.log('inside saveEmailList', userPermissions)             
             
             if(!userPermissions.permissions || userPermissions.permissions.length == 0) {
-                throw new Error('You don\'t have permission to perform this action') //res.status(401).send('You don\'t have permission to perform this actions')
+                console.log('permission array is empty')
+                return false //throw new Error('You don\'t have permission to perform this action') //res.status(401).send('You don\'t have permission to perform this actions')
             } else {
                 var permissionToCheck;
                 
@@ -33,12 +34,14 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
                     }
                 })
                 
-                if(!permissionToCheck)
-                    throw new Error('You don\'t have permission to perform this action') //res.status(401).send('You don\'t have permission to perform this actions')
-                    
+                if(!permissionToCheck) {
+                    console.log('permission array is not empty but permission does not exist')
+                    return false //throw new Error('You don\'t have permission to perform this action') //res.status(401).send('You don\'t have permission to perform this actions')
+                }
+                
                 if(permissionToCheck.value !== validValue /*'yes'*/) {
                     console.log('permission exists but not true')
-                    throw new Error('You don\'t have permission to perform this action') //res.status(401).send('You don\'t have permission to perform this actions')
+                    return false //throw new Error('You don\'t have permission to perform this action') //res.status(401).send('You don\'t have permission to perform this actions')
                 } else {
                     return true //next()
                 }
@@ -117,7 +120,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
     });
     
     router.post('/saveRole', securePages, jsonParser ,(req, res, next) => {
-        console.log(req.body);
+        //console.log(req.body);
         userApi.saveRole(req.body)
         .then(() => {
            cacheBuilder.buildRolesPermissionMap()
@@ -149,7 +152,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
     });
     
     router.post('/saveUser', securePages, jsonParser ,(req, res, next) => {
-        console.log(req.body);
+        //console.log(req.body);
         userApi.saveUser(req.body)
         .then(() => {
            res.json(true);
@@ -177,18 +180,19 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
     });
     
     router.post('/saveEmailList', securePages, jsonParser , (req, res, next) => {
-        try{
+        if(req.body._id) {
             if(calculatePermissions(req, 'CANEDITEMAILLIST', 'yes')){
                 next()
+            } else {
+                res.status(401).send('You dont have permission to perform this action')
             }
-        } catch(err) {
-            res.status(401).send(err)
+        } else {
+            next()
         }
-        
     }, (req, res, next) => {
-        console.log(req.user.user);
+        //console.log(req.user.user);
         req.body.createdBy = req.user.user._id;
-        console.log(req.body);
+        //console.log(req.body);
         userApi.saveEmailList(req.body)
         .then(() => {
            res.json(true);
@@ -221,7 +225,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
           
           //nfile = os.tmpDir() + '/' + fname;
           nfile = process.cwd() + '/' + config.attachment_directory + '/' + fname;
-          console.log(nfile);
+         // console.log(nfile);
           
           res.writeHead(200, {'content-type': 'text/plain'});
           //res.write('received upload:\n\n');
@@ -243,23 +247,33 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
     });
     
     router.post('/sendEmail', securePages, jsonParser ,(req, res, next) => {
-        //console.log(req.body);
         
+        //console.log(req.body);
         var mail = _.filter(config.gmail, function(c) { 
-            console.log(c.user, req.body.senderEmail);
+            //console.log(c.user, req.body.senderEmail);
             return c.user == req.body.senderEmail; 
          });
-         
-         console.log(mail);
-         
-        if(mail.length == 0)
-            res.status(500).send('Sender\'s address was not found in system '); 
+        
+        if(!mail || mail.length == 0)
+            res.status(500).send('Sender\'s adress doesn\'t exist in system');
+    
+        //console.log('mail : ', mail);
+        req.body.username = mail[0];
+        //req.body.password = 'Iambapu1984'; //req.body.password;
+        req.body.list = req.body.list.split(new RegExp(';', 'i')).join(',');
+        
+        userApi.sendMail(req.body)
+        .then(() => {
+          res.json(true);
+        }, (err) => {
+          res.status(500).send(err); 
+        });
             
-        if(req.body.attachments.length > 0){
-            req.body.attachments.forEach(function(attachment){
+        // if(req.body.attachments.length > 0){
+        //     req.body.attachments.forEach(function(attachment){
                 
-            });
-        }
+        //     });
+        // }
         
         // // create reusable transporter object using the default SMTP transport
         // var transporter = nodemailer.createTransport({
@@ -295,19 +309,19 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         //     res.json(info);
         // });
         
-        console.log('* [example2] sending test email');
+        //console.log('* [example2] sending test email');
          
-        var send = require('gmail-send')({
-          user: 'kirandeore@gmail.com',           // Your GMail account used to send emails 
-          pass: 'Iambapu1984',           // Application-specific password 
-          to:   'pumpedupdevs@gmail.com',           // Send to yourself 
-          subject: 'ping',
-          text:    'gmail-send example 2',   // Plain text 
-          files: _(req.body.attachments)
-                  .filter(c => c.path)
-                  .map('path')
-                  .value()
-        })();       
+        // var send = require('gmail-send')({
+        //   user: 'kirandeore@gmail.com',           // Your GMail account used to send emails 
+        //   pass: 'Iambapu1984',           // Application-specific password 
+        //   to:   'pumpedupdevs@gmail.com',           // Send to yourself 
+        //   subject: 'ping',
+        //   text:    'gmail-send example 2',   // Plain text 
+        //   files: _(req.body.attachments)
+        //           .filter(c => c.path)
+        //           .map('path')
+        //           .value()
+        // })();       
         
     });
     

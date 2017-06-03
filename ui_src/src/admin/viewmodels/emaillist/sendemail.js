@@ -22,12 +22,10 @@ export class CreateUser extends Page{
             list: undefined
         };
         
-        //this.username = undefined;
-        //this.password = undefined;
-        
         this.senderEmails = [];
         this.selectedSender = undefined;
         this.senderName = undefined;
+        this.password = undefined;
         
         this.dropZoneInstance;
         
@@ -162,19 +160,32 @@ export class CreateUser extends Page{
                         console.log('cancelled ', result);
                     });
                 } else {
-                    return self.sendEmail();
+                    //return self.sendEmail();
+                    self.openPasswordModal()
+                    return true
                 }
             }
          });
     }
     
-    sendEmail(){
+    openPasswordModal() {
+        let self = this;
+        
+        $(this.modalCredentials).on('shown.bs.modal', function (e) {
+           $(self.passwordField).focus()
+        })
+                    
+        $(this.modalCredentials).modal('show');
+    }
+    
+    click_sendEmail(){
         //console.log( this.dropZoneInstance.getAcceptedFiles().map( f => f.serverPath ) );
    
         let hideFn = this.showProgress('Sending email...');
           
         return this.db.sendEmail({
             senderEmail: this.selectedSender.user,
+            password: this.password,
             senderName: this.senderName,
             list : this.emailList.list,
             subject : this.emailList.subject,
@@ -187,6 +198,7 @@ export class CreateUser extends Page{
             console.log('success', result);
             hideFn();
             this.showSuccess('Email sent successfully');
+            $(this.modalCredentials).modal('hide');
             this.router.navigate('emaillists');
         },(err) => {
             hideFn();

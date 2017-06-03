@@ -21,6 +21,7 @@ var express = require('express'),
     util = require('util'),
     os = require('os'),
     nodemailer = require('nodemailer'),
+    smtpTransport = require('nodemailer-smtp-transport'),
     store = require( process.cwd() + '/cache/store'),
     cacheBuilder = require( process.cwd() + '/cache/cachebuilder')(_),
     env = process.env.NODE_ENV || 'development';
@@ -70,7 +71,7 @@ fs.readdirSync( process.cwd() + '/api').forEach(function(filename){
 	console.log('Initializing:', path.join( process.cwd() + '/api/' + filename ));
 	
 	//master data is populated here
-	require( process.cwd() + '/api/' + filename)(mongoose, path); 
+	require( process.cwd() + '/api/' + filename)(mongoose, path, _, nodemailer, smtpTransport); 
 });   
 
 //build cache 
@@ -86,7 +87,7 @@ cacheBuilder.buildRolesPermissionMap()
     
     
     require('./auth/passportAuth.js')(path, passport, FacebookStrategy, config, mongoose, _, cacheBuilder);
-    require('./routes/routes.js')(express, app, passport, config, mongoose, formidable, bodyParser, _, fs, util, os, nodemailer, cacheBuilder);
+    require('./routes/routes.js')(express, app, passport, config, mongoose, formidable, bodyParser, _, fs, util, os, cacheBuilder);
     
     server.listen(app.get('port'), () => {
        console.log('server started on ', app.get('host') + ':' + app.get('port')); 
