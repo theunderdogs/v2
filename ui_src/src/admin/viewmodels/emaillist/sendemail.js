@@ -5,7 +5,7 @@ import 'vendors:summernote/dist/summernote.css!'
 import 'summernote'
 import 'bootstrap-select'
 import Dropzone from 'dropzone'
-import swal from 'sweet-alert'
+//import swal from 'sweet-alert'
 //import 'vendors:bower_components/sweetalert2/dist/sweetalert2.min.css!';
 
 export class CreateUser extends Page{
@@ -127,7 +127,7 @@ export class CreateUser extends Page{
     }
     
     click_applyChanges(){
-        swal.init();
+        //swal.init();
         
         let self = this;
         ///console.log( self.dropZoneInstance.getAcceptedFiles() );
@@ -146,7 +146,7 @@ export class CreateUser extends Page{
                 }
                 
                 if(message) {
-                    swal({   
+                    this.swal({   
                         title: "Are you sure?",   
                         text: message,   
                         type: "warning",   

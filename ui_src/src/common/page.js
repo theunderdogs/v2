@@ -6,6 +6,7 @@ import {Router} from 'aurelia-router';
 import { TaskQueue, inject, Aurelia, noView, TemplatingEngine, BindingEngine, computedFrom } from 'aurelia-framework';
 import {services} from 'common/services';
 import {functions} from 'common/functions';
+import swal from 'sweet-alert';
 
 import {
   ValidationControllerFactory,
@@ -27,16 +28,21 @@ export class Page{
         this.validationRules = ValidationRules;
         this.db = db;
         this.fn = fn;
+        this.swal = swal;
         
         this.init();
     }   
     
-    getRandomColor() {
-        let colors = ['lightblue', 'bluegray', 'cyan', 'teal', 'green', 'orange', 'blue', 'purple'];
+    // getRandomColor() {
+    //     let colors = ['lightblue', 'bluegray', 'cyan', 'teal', 'green', 'orange', 'blue', 'purple'];
         
-        //random number between 1 to 8
+    //     //random number between 1 to 8
         
-        return colors[Math.floor((Math.random() * 8) + 1) - 1];
+    //     return colors[Math.floor((Math.random() * 8) + 1) - 1];
+    // }
+    
+    showUnauthorizedMessage () {
+        this.swal("You don\'t have sufficient rights to perform this action");
     }
     
     init(){
@@ -63,7 +69,10 @@ export class Page{
     }
 
     onPageRenderComplete(){
-    	//aurelia.start().then(() => aurelia.setRoot('app', document.app));
+        //console.log(this.router.currentInstruction.config.moduleId)
+        
+        this.swal.init()
+        //aurelia.start().then(() => aurelia.setRoot('app', document.app));
 
     	// A microtask can be queued anywhere, lets put it inside of attached
     	 this.taskQueue.queueMicroTask(() => {       

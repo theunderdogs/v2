@@ -262,6 +262,10 @@ module.exports = function (setup_mongoose) {
     
     FAQOrderModel = mongoose.model('faqOrder', faqOrderSchema);
     
+    return PermissionModel.insertMany([
+            
+        ]) 
+    
     /*
     //populate master data
     return PermissionModel.insertMany([
@@ -280,6 +284,47 @@ module.exports = function (setup_mongoose) {
             }), new PermissionModel({
                   name: 'CANEDITEMAILLIST',
             	  description: 'Can user edit email list?', 
+            	  acceptedValues: ['yes', 'no']
+            }),
+            new PermissionModel({
+                  name: 'CANCREATEROLE',
+            	  description: 'Can user create new roles?', 
+            	  acceptedValues: ['yes','no']
+            }),
+            new PermissionModel({
+                  name: 'CANEDITROLE',
+            	  description: 'Can user create new roles?', 
+            	  acceptedValues: ['yes','no']
+            }),
+            new PermissionModel({
+                  name: 'CANEDITUSER',
+            	  description: 'Can user edit information about other users?', 
+            	  acceptedValues: ['yes','no']
+            }),
+            new PermissionModel({
+                  name: 'CANCREATEEMAILLIST',
+            	  description: 'Can user create email list?', 
+            	  acceptedValues: ['yes','no']
+            }),
+            new PermissionModel({
+                  name: 'CANEDITABOUTUS',
+            	  description: 'Can user edit \'About Us\' page?', 
+            	  acceptedValues: ['yes','no']
+            }), new PermissionModel({
+                  name: 'CANEDITCONTACTINFO',
+            	  description: 'Can user edit \'Contact Us\' widget on main page?', 
+            	  acceptedValues: ['yes','no']
+            }), new PermissionModel({
+                  name: 'CANADDFAQ',
+            	  description: 'Can user add question to \'FAQ\' page?', 
+            	  acceptedValues: ['yes', 'no']
+            }), new PermissionModel({
+                  name: 'CANDELETEFAQ',
+            	  description: 'Can user delete question on \'FAQ\' page?', 
+            	  acceptedValues: ['yes', 'no']
+            }), new PermissionModel({
+                  name: 'CANEDITFAQ',
+            	  description: 'Can user edit question on \'FAQ\' page?', 
             	  acceptedValues: ['yes', 'no']
             })
         ]) 

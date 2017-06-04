@@ -6,7 +6,7 @@ import 'jquery-ui-touch-punch';
 import _ from 'lodash';
 import moment from 'moment'
 import {BootstrapFormRenderer} from 'admin/viewmodels/users/createusererror';
-import swal from 'sweet-alert'
+//mport swal from 'sweet-alert'
 import listHTML from 'admin/views/faq/list.html!text';
 
 export class Faq extends Page{
@@ -55,7 +55,7 @@ export class Faq extends Page{
                         _date = moment(item.dateUpdated);
                         item.dateUpdated = _date.format('MM') + '/' + _date.format('DD') + '/' + _date.format('YYYY');
                         
-                        item.color = self.fn.getRandomColor();;
+                        item.color = self.fn.getRandomColor();
                         
                       return oder.indexOf(item._id)
                     });
@@ -203,9 +203,10 @@ export class Faq extends Page{
     }
     
     click_delete(id){
-        swal.init();
+        //swal.init();
+        let self = this;
         
-        swal({   
+        this.swal({   
             title: "Confirm",   
             text: 'Are you sure you want to delete this question',   
             type: "warning",   

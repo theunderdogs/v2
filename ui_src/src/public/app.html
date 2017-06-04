@@ -237,10 +237,10 @@
 
             <nav class="ha-menu">
                 <ul>
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#donate">Donate</a></li>
-                    <li><a href="#faq">FAQ</a></li>
-                    <li><a href="#about">About Us</a></li>
+                    <li class.bind="router.currentInstruction.config.moduleId === 'public/viewmodels/home'? 'active' : ''"><a href="#">Home</a></li>
+                    <li class.bind="router.currentInstruction.config.moduleId === 'public/viewmodels/donate'? 'active' : ''"><a href="#donate">Donate</a></li>
+                    <li class.bind="router.currentInstruction.config.moduleId === 'public/viewmodels/faq'? 'active' : ''"><a href="#faq">FAQ</a></li>
+                    <li class.bind="router.currentInstruction.config.moduleId === 'public/viewmodels/about'? 'active' : ''"><a href="#about">About Us</a></li>
                     
                     <li class="waves-effect pull-right"><a href="#"><i class="zmdi zmdi-facebook-box zmdi-hc-fw myicons"></i></a></li>
                     <!--<li class="dropdown">-->
