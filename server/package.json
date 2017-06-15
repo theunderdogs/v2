@@ -22,6 +22,7 @@
     "nodemailer-smtp-transport": "^2.7.4",
     "passport": "^0.3.2",
     "passport-facebook": "^2.1.1",
+    "passport-facebook-token": "^3.3.0",
     "socket.io": "^1.7.2"
   },
   "devDependencies": {},

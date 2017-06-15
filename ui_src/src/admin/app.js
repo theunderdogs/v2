@@ -1,10 +1,12 @@
 import { TaskQueue, inject, Aurelia, noView } from 'aurelia-framework';
+import routes from 'common/routes.json!';
 
-@inject(TaskQueue)
+@inject(TaskQueue, Aurelia)
 export class App {
-  constructor(TaskQueue) {   
+  constructor(TaskQueue, aurelia) {   
     this.taskQueue = TaskQueue;
     this.profileName = window.profileName;
+    this.aurelia = aurelia;
     
     var elem = document.createElement('textarea');
 		elem.innerHTML = window.profilePic;
@@ -14,29 +16,46 @@ export class App {
   
   configureRouter(config, router) {
     config.title = 'The Underdogs Rescue Admin Control Panel';
-    config.map([
-      { route: ['addpet'], name: 'addpet', moduleId: 'admin/viewmodels/addpet', nav: false, title: 'Add a pet' },
-      { route: ['', '_=_', 'roles'], name: 'roles', moduleId: 'admin/viewmodels/roles/index', nav: false, title: 'Manage roles' },
-      { route: ['createrole'], name: 'createrole', moduleId: 'admin/viewmodels/roles/createrole', nav: false, title: 'Create role' },
-    	{ route: ['users'], name: 'users', moduleId: 'admin/viewmodels/users/index', nav: false, title: 'Manage users' },
-    	{ route: ['createuser'], name: 'createuser', moduleId: 'admin/viewmodels/users/createuser', nav: false, title: 'Create user' },
-			{ route: ['emaillists'], name: 'emaillists', moduleId: 'admin/viewmodels/emaillist/index', nav: false, title: 'Manage email lists' },
-			{ route: ['createemaillist'], name: 'createemaillist', moduleId: 'admin/viewmodels/emaillist/createemaillist', nav: false, title: 'Create email lists' },    	
-    	{ route: ['sendemail'], name: 'sendemail', moduleId: 'admin/viewmodels/emaillist/sendemail', nav: false, title: 'Send email' },
-    	{ route: ['about'], name: 'about', moduleId: 'admin/viewmodels/about/index', nav: false, title: 'Manage \'About Us\' Page' },
-    	{ route: ['createabout'], name: 'createabout', moduleId: 'admin/viewmodels/about/createabout', nav: false, title: 'Create \'About Us\' Page' },
-    	{ route: ['contacttemplate'], name: 'contacttemplate', moduleId: 'admin/viewmodels/contacttemplate/index', nav: false, title: 'Manage \'Contact Info\' Page' },
-    	{ route: ['createcontacttemplate'], name: 'createcontacttemplate', moduleId: 'admin/viewmodels/contacttemplate/createcontacttemplate', nav: false, title: 'Create \'Contact\' Template' },
-    	{ route: ['faq'], name: 'faq', moduleId: 'admin/viewmodels/faq/index', nav: false, title: 'Manage \'FAQ\' Page' }
-    	//optional paramerters
+    //config.options.root = ''
+    
+    config.map(routes.protected);
+    
+    //optional paramerters
     	//{ route: ['', '_=_', 'createuser/:userid?'], name: 'createuser', moduleId: 'admin/viewmodels/users/createuser', nav: false, title: 'Create user' }
-    ]);
+    
 
     this.router = router;
   }
 
   click_logout(){
-  	window.location.href = host + '/logout';
+  	let self = this
+  	$.ajaxSetup({ cache: true });
+	  $.getScript('//connect.facebook.net/en_US/sdk.js', function(){
+	  	FB.getLoginStatus(function(response) {
+	  		console.log('logout response', response)
+	        if (response && response.status === 'connected') {
+	            FB.logout(function(response) {
+	              console.log('logout', response)
+				  self.postLogout();
+	            });
+	        }
+	    });
+	  });
+	  
+	  self.postLogout();
+  }
+
+
+  postLogout() {
+  	  let self = this;
+  	  localStorage['accesstoken'] = null;
+	  self.router.navigate('')//, { replace: true, trigger: false });
+	  self.router.deactivate()
+	  self.router.reset();
+	  return self.aurelia.setRoot('public/publicapp')
+			.then(() => {
+				self.aurelia.root.viewModel.router.navigateToRoute('login');	
+			})
   }
 
   attached(){
@@ -181,4 +200,7 @@ export class App {
     });
      
   }
+
+	
+
 }

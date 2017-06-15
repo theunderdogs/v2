@@ -2,6 +2,9 @@
 
 //nvm alias default 7.5.0
 
+//watch video for facebook standrd login for unlimited users
+//https://developers.facebook.com/docs/marketing-api/access
+
 console.log("Node Version: " + process.version)
 
 var express = require('express'),
@@ -17,12 +20,12 @@ var express = require('express'),
     passport = require('passport'),
     bodyParser = require('body-parser'),
     FacebookStrategy = require('passport-facebook').Strategy,
+    FacebookTokenStrategy = require('passport-facebook-token'),
     _ = require('lodash'),
     util = require('util'),
     os = require('os'),
     nodemailer = require('nodemailer'),
     smtpTransport = require('nodemailer-smtp-transport'),
-    store = require( process.cwd() + '/cache/store'),
     cacheBuilder = require( process.cwd() + '/cache/cachebuilder')(_),
     env = process.env.NODE_ENV || 'development';
 
@@ -36,6 +39,25 @@ app.use(express.static(path.join(__dirname + '/../', 'ui_src')));
 app.use(cookieParser());
 app.set('port', config.port || process.env.PORT);
 app.set('host', config.host || process.env.IP);
+
+app.use(function (req, res, next) {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', config.addHeaderToDomain);
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,access_token');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    // Pass to next layer of middleware
+    next();
+}); 
 
 mongoose.Promise = global.Promise;
 
@@ -86,7 +108,7 @@ cacheBuilder.buildRolesPermissionMap()
     //populate master data at this line
     
     
-    require('./auth/passportAuth.js')(path, passport, FacebookStrategy, config, mongoose, _, cacheBuilder);
+    require('./auth/passportAuth.js')(path, passport, FacebookStrategy, FacebookTokenStrategy, config, mongoose, _, cacheBuilder);
     require('./routes/routes.js')(express, app, passport, config, mongoose, formidable, bodyParser, _, fs, util, os, cacheBuilder);
     
     server.listen(app.get('port'), () => {

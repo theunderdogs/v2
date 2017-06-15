@@ -6,12 +6,6 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <title>The Underdogs Rescue</title>
 
-      <script>
-        window.entryPage = 'public';
-        window.host = '{{ host  }}';
-        window.year = '{{ year }}';
-      </script>
-      
       <!-- Vendor CSS -->
       <link href= "assets/vendors/bower_components/fullcalendar/dist/fullcalendar.min.css" rel="stylesheet">
       <link href="assets/vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
@@ -21,10 +15,20 @@
 
       <link href="assets/vendors/bower_components/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
       <link href="assets/vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
+      
+      <!-- required by admin.html -->
+      <link href="assets/vendors/bower_components/dropzone/dist/min/dropzone.min.css" rel="stylesheet">
+      <link href="assets/vendors/bower_components/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">
+      <link href="assets/vendors/jquery-ui/jquery-ui.css" rel="stylesheet">
 
       <!-- CSS -->
       <link href="assets/css/app_1.min.css" rel="stylesheet">
       <link href="assets/css/app_2.min.css" rel="stylesheet">
+      
+      <script>
+        window.host = '{{ host  }}';
+        window.year = '{{ year }}';
+      </script>
   </head>
   <body aurelia-app="main">
     <!-- <div class="splash">

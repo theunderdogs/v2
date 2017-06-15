@@ -6,11 +6,22 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
     var jsonParser = bodyParser.json();
     var userApi =  require( process.cwd() + '/api/user_api');
     var securePages = (req, res, next) => {
-        if(req.isAuthenticated()){
-            next();
-        } else {
-            res.redirect('/login')
-        }
+        // if(req.isAuthenticated()){
+        //     return next();
+        // } 
+            
+        // res.redirect('/login')
+        
+         passport.authenticate('facebook-token', (err, userData, info) => {
+             if(userData) {
+                 req.user = userData
+                 return next()
+             } else {
+                 res.sendStatus(401)
+             }
+         })(req,res,next)
+        
+        //return req.user?  next() : res.sendStatus(401);
     };
     var calculatePermissions = (req, permissionCode, validValue) => {
         if(req.body._id && !req.user.user.isAdmin){
@@ -51,33 +62,49 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         }
     }
     
-    router.get('/index', (req, res, next) => {
+    router.post('/auth/facebook/token', 
+      jsonParser,
+      passport.authenticate('facebook-token'),
+      (req, res) => {
+          console.log('authenticated', req.user);
+        // do something with req.user
+        if(req.user) {
+            res.json({ host: config.host, 
+                profilePic: encodeURI(req.user.profile.photos[0].value),  
+                profileName: req.user.profile.displayName ,
+                //year: new Date().getFullYear(),
+                user: JSON.stringify(req.user.user),
+                permissions: req.user.isAdmin ? null : JSON.stringify(req.user.userPermissions)
+            })
+        } else res.sendStatus(401);
+      }
+    );
+    
+    router.get('/', (req, res, next) => {
         //console.log('index route hit');
-        res.render('home', { host: config.host, 
+        res.render('home', { 
+            host: config.host, 
             year: new Date().getFullYear() 
         });
     });
     
-    router.get('/login', (req, res, next) => {
-        res.render('login', { host: config.host });
-    });
+    // router.get('/admin', securePages, (req, res, next) => {
+    //     //console.log('is admin', JSON.stringify(req.user.userPermissions))
+    //     //console.log('user', req.user.user)
+    //     res.render('admin', { host: config.host, 
+    //         profilePic: encodeURI(req.user.profile.photos[0].value),  
+    //         profileName: req.user.profile.displayName ,
+    //         year: new Date().getFullYear(),
+    //         user: JSON.stringify(req.user.user),
+    //         permissions: req.user.isAdmin ? null : JSON.stringify(req.user.userPermissions)
+    //     });
+    // });
     
-    router.get('/admin', securePages, (req, res, next) => {
-        //console.log('is admin', JSON.stringify(req.user.userPermissions))
-        //console.log('user', req.user.user)
-        res.render('admin', { host: config.host, 
-            profilePic: encodeURI(req.user.profile.photos[0].value),  
-            profileName: req.user.profile.displayName ,
-            year: new Date().getFullYear(),
-            user: JSON.stringify(req.user.user),
-            permissions: req.user.isAdmin ? null : JSON.stringify(req.user.userPermissions)
-        });
-    });
-    
+    //this URL used when passport-facebook stragey is implemented
     router.get('/auth/facebook', passport.authenticate('facebook'));
     router.get('/auth/facebook/callback', passport.authenticate('facebook', {
         successRedirect: '/admin',
-        failureRedirect: '/login'
+        failureRedirect: '/index'
     }))
     
     router.get('/getUserByFacebookId/:facebookid', securePages, (req, res, next) => {
@@ -90,7 +117,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         //res.send('Setting favourite color!');
     });
     
-    router.get('/getroles', securePages, (req, res, next) => {
+    router.get('/getroles',  securePages, (req, res, next) => {
         userApi.getRoles()
         .then((roles) => {
 			//res.send(200, roles);
@@ -101,7 +128,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         //res.send('Setting favourite color!');
     });
     
-    router.get('/getPermissionsByRoleId/:roleid', securePages, (req, res, next) => {
+    router.get('/getPermissionsByRoleId/:roleid',  securePages, (req, res, next) => {
        userApi.getPermissionsByRoleId(req.params.roleid)
        .then((permissions) => {
            res.json(permissions);
@@ -110,7 +137,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        })
     });
     
-    router.get('/getPermissions', securePages, (req, res, next) => {
+    router.get('/getPermissions',  securePages, (req, res, next) => {
        userApi.getPermissions()
        .then((permissions) => {
            res.json(permissions);
@@ -119,7 +146,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        })
     });
     
-    router.post('/saveRole', securePages, jsonParser ,(req, res, next) => {
+    router.post('/saveRole',  securePages, jsonParser ,(req, res, next) => {
         //console.log(req.body);
         userApi.saveRole(req.body)
         .then(() => {
@@ -132,7 +159,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         });
     });
     
-    router.post('/createRole', securePages, jsonParser ,(req, res, next) => {
+    router.post('/createRole',  securePages, jsonParser ,(req, res, next) => {
         //console.log(req.body);
         userApi.saveRole(req.body)
         .then(() => {
@@ -142,7 +169,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         });
     });
     
-    router.get('/getUsers', securePages, (req, res, next) => {
+    router.get('/getUsers',  securePages, (req, res, next) => {
        userApi.getUsers()
        .then((users) => {
            res.json(users);
@@ -151,7 +178,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        })
     });
     
-    router.post('/saveUser', securePages, jsonParser ,(req, res, next) => {
+    router.post('/saveUser',  securePages, jsonParser ,(req, res, next) => {
         //console.log(req.body);
         userApi.saveUser(req.body)
         .then(() => {
@@ -161,7 +188,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         });
     });
     
-    router.get('/getEmailLists', securePages, (req, res, next) => {
+    router.get('/getEmailLists',  securePages, (req, res, next) => {
        userApi.getEmailLists()
        .then((lists) => {
            res.json(lists);
@@ -170,7 +197,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        })
     });
     
-    router.get('/getEmailListById/:id', securePages, (req, res, next) => {
+    router.get('/getEmailListById/:id',  securePages, (req, res, next) => {
        userApi.getEmailListById(req.params.id)
        .then((list) => {
            res.json(list);
@@ -179,7 +206,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        })
     });
     
-    router.post('/saveEmailList', securePages, jsonParser , (req, res, next) => {
+    router.post('/saveEmailList',  securePages, jsonParser , (req, res, next) => {
         if(req.body._id) {
             if(calculatePermissions(req, 'CANEDITEMAILLIST', 'yes')){
                 next()
@@ -201,7 +228,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         });
     });
     
-    router.post('/file/post', securePages, (req, res, next) => {
+    router.post('/file/post',  securePages, (req, res, next) => {
         var form = new formidable.IncomingForm();
         var tmpFile, nfile, fname;
         
@@ -242,11 +269,11 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         });
     });
     
-    router.get('/getSendersEmails', securePages, (req, res, next) => {
+    router.get('/getSendersEmails',  securePages, (req, res, next) => {
        res.json(config.gmail.map( credentials => ({ user: credentials.user, from: credentials.from }) )  );
     });
     
-    router.post('/sendEmail', securePages, jsonParser ,(req, res, next) => {
+    router.post('/sendEmail',  securePages, jsonParser ,(req, res, next) => {
         
         //console.log(req.body);
         var mail = _.filter(config.gmail, function(c) { 
@@ -325,7 +352,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         
     });
     
-    router.post('/saveAboutus', securePages, jsonParser ,(req, res, next) => {
+    router.post('/saveAboutus',  securePages, jsonParser ,(req, res, next) => {
         if(!req.body._id)
             req.body.createdBy = req.user.user._id;
         
@@ -339,7 +366,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         });
     });
     
-    router.get('/getAbouts', securePages, (req, res, next) => {
+    router.get('/getAbouts',  securePages, (req, res, next) => {
        userApi.getAbouts()
        .then((abouts) => {
            res.json(abouts);
@@ -348,7 +375,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        })
     });
     
-    router.get('/getAboutById/:id', securePages, (req, res, next) => {
+    router.get('/getAboutById/:id',  securePages, (req, res, next) => {
        userApi.getAboutById(req.params.id)
        .then((about) => {
            res.json(about);
@@ -357,7 +384,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        })
     });
     
-    router.get('/getActiveAboutById', securePages, (req, res, next) => {
+    router.get('/getActiveAboutById',  securePages, (req, res, next) => {
        userApi.getActiveAboutById()
        .then((about) => {
            res.json(about);
@@ -375,7 +402,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        })
     });
     
-    router.post('/saveContactTemplate', securePages, jsonParser ,(req, res, next) => {
+    router.post('/saveContactTemplate',  securePages, jsonParser ,(req, res, next) => {
         if(!req.body._id)
             req.body.createdBy = req.user.user._id;
         
@@ -390,7 +417,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         });
     });
     
-    router.get('/getContactTemplates', securePages, (req, res, next) => {
+    router.get('/getContactTemplates',  securePages, (req, res, next) => {
        userApi.getContactTemplates()
        .then((templates) => {
            res.json(templates);
@@ -399,7 +426,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        })
     });
     
-    router.get('/getContactTemplateById/:id', securePages, (req, res, next) => {
+    router.get('/getContactTemplateById/:id',  securePages, (req, res, next) => {
        userApi.getContactTemplateById(req.params.id)
        .then((template) => {
            res.json(template);
@@ -408,7 +435,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        })
     });
     
-    router.get('/getActiveContactTemplate', securePages, (req, res, next) => {
+    router.get('/getActiveContactTemplate',  securePages, (req, res, next) => {
        userApi.getActiveContactTemplate()
        .then((activeTemplate) => {
            res.json(activeTemplate);
@@ -439,7 +466,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         //res.send('Setting favourite color!');
     });
     
-    router.get('/getQuestionById/:id', securePages, (req, res, next) => {
+    router.get('/getQuestionById/:id',  securePages, (req, res, next) => {
        userApi.getQuestionById(req.params.id)
        .then((question) => {
            res.json(question);
@@ -448,7 +475,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        })
     });
     
-    router.post('/saveQuestion', securePages, jsonParser ,(req, res, next) => {
+    router.post('/saveQuestion',  securePages, jsonParser ,(req, res, next) => {
         if(!req.body._id)
             req.body.createdBy = req.user.user._id;
         
@@ -474,7 +501,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         //res.send('Setting favourite color!');
     });
     
-    router.get('/getQuestions', securePages, (req, res, next) => {
+    router.get('/getQuestions',  securePages, (req, res, next) => {
         userApi.getQuestions()
         .then((questions) => {
 			//res.send(200, roles);
@@ -486,7 +513,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
     });
     
     
-    router.post('/saveQuestionOrder', securePages, jsonParser ,(req, res, next) => {
+    router.post('/saveQuestionOrder',  securePages, jsonParser ,(req, res, next) => {
         //console.log(req.body);
         userApi.saveQuestionOrder(req.body)
         .then(() => {
@@ -496,12 +523,13 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         });
     });
     
-    router.get('/logout', (req, res, next) => {
-        req.logout();
-        res.redirect('/login');
-    });
+    // router.get('/logout', (req, res, next) => {
+    //     req.logout();
+    //     res.json('logged out')
+    //     //res.redirect('/login');
+    // });
     
-    router.post('/deleteQuestion', securePages, jsonParser ,(req, res, next) => {
+    router.post('/deleteQuestion',  securePages, jsonParser ,(req, res, next) => {
         //console.log(req.body);
         userApi.deleteQuestion(req.body.id)
         .then(() => {

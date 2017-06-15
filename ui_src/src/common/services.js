@@ -1,150 +1,117 @@
+const getR = (url) => $.ajax( {
+			          url,
+			          type: 'GET',
+			          headers: {
+					        access_token: JSON.parse(localStorage['accesstoken'] || null)
+					    }
+			      });
+
+const postR = (url, data) => $.ajax( {
+			          url,
+			          type: 'POST',
+			          data: JSON.stringify(data),
+			          contentType: 'application/json',
+			          headers: {
+					        access_token: JSON.parse(localStorage['accesstoken'] || null)
+					    }
+			      });
+
 export const services = {
+    authenticate : () => {
+        return $.ajax( {
+	          url: host + "/auth/facebook/token",
+	          type: 'POST',
+	          data: JSON.stringify({ access_token : JSON.parse(localStorage['accesstoken'] || null) }),
+    		  contentType: 'application/json'
+	      })
+    },
     getroles : () => {    
-        return $.get( host + '/getroles')
+        //return getR( host + '/getroles')
+        return getR( host + '/getroles')
     },
     getPermissionsByRoleId: (roleId) => {
-        return $.get( host + '/getPermissionsByRoleId/' + roleId)
+        return getR( host + '/getPermissionsByRoleId/' + roleId)
     },
     getPermissions: () => {
-        return $.get( host + '/getPermissions')
+        return getR( host + '/getPermissions')
     },
     saveRole: (role) => {
-        return $.ajax({
-                url: host + '/saveRole', 
-			    type: 'POST',
-			    data: JSON.stringify(role),
-			    //dataType: 'json',
-			    contentType: 'application/json'
-			  });
+        return postR(host + '/saveRole', role)
     },
     createRole: (role) => {
-        return $.ajax({
-                url: host + '/createRole', 
-			    type: 'POST',
-			    data: JSON.stringify(role),
-			    //dataType: 'json',
-			    contentType: 'application/json'
-			  });
+        return postR(host + '/createRole', role)
     },
     getUsers : () => {    
-        return $.get( host + '/getUsers')
+        return getR( host + '/getUsers')
     },
     saveUser: (user) => {
-        return $.ajax({
-                url: host + '/saveUser', 
-			    type: 'POST',
-			    data: JSON.stringify(user),
-			    //dataType: 'json',
-			    contentType: 'application/json'
-			  });
+        return getR( host + '/saveUser')
     },
     getUserByFacebookId: (facebookId) => {
-        return $.get( host + '/getUserByFacebookId/' + facebookId)
+        return getR( host + '/getUserByFacebookId/' + facebookId)
     },
     getEmailLists : () => {    
-        return $.get( host + '/getEmailLists')
+        return getR( host + '/getEmailLists')
     },
     getEmailListById: (id) => {
-        return $.get( host + '/getEmailListById/' + id)
+        return getR( host + '/getEmailListById/' + id)
     },
     saveEmailList: (list) => {
-        return $.ajax({
-                url: host + '/saveEmailList', 
-			    type: 'POST',
-			    data: JSON.stringify(list),
-			    //dataType: 'json',
-			    contentType: 'application/json'
-			  });
+        return postR(host + '/saveEmailList', list)
     },
     sendEmail: (email) => {
-        return $.ajax({
-                url: host + '/sendEmail', 
-			    type: 'POST',
-			    data: JSON.stringify(email),
-			    //dataType: 'json',
-			    contentType: 'application/json'
-			  });
+        return postR(host + '/sendEmail', email)
     },
     getSendersEmails: () => {
-        return $.get( host + '/getSendersEmails')
+        return getR( host + '/getSendersEmails')
     },
     saveAboutus: (about) => {
-        return $.ajax({
-                url: host + '/saveAboutus', 
-			    type: 'POST',
-			    data: JSON.stringify(about),
-			    //dataType: 'json',
-			    contentType: 'application/json'
-			  });
+        return postR(host + '/saveAboutus', about)
     },
     getAbouts : () => {    
-        return $.get( host + '/getAbouts')
+        return getR( host + '/getAbouts')
     },
     getAboutById: (id) => {
-        return $.get( host + '/getAboutById/' + id)
+        return getR( host + '/getAboutById/' + id)
     },
     getActiveAboutById: () => {
-        return $.get( host + '/getActiveAboutById')
+        return getR( host + '/getActiveAboutById')
     },
     getActiveAboutToDisplay: () => {
-        return $.get( host + '/getActiveAboutToDisplay')
+        return getR( host + '/getActiveAboutToDisplay')
     },
     saveContactTemplate: (template) => {
-        return $.ajax({
-                url: host + '/saveContactTemplate', 
-			    type: 'POST',
-			    data: JSON.stringify(template),
-			    //dataType: 'json',
-			    contentType: 'application/json'
-			  });
+        return postR(host + '/saveContactTemplate', template)
     },
     getContactTemplates : () => {    
-        return $.get( host + '/getContactTemplates')
+        return getR( host + '/getContactTemplates')
     },
     getContactTemplateById: (id) => {
-        return $.get( host + '/getContactTemplateById/' + id)
+        return getR( host + '/getContactTemplateById/' + id)
     },
     getActiveContactTemplate: () => {
-        return $.get( host + '/getActiveContactTemplate')
+        return getR( host + '/getActiveContactTemplate')
     },
     getActiveContactTemplateToDisplay: () => {
-        return $.get( host + '/getActiveContactTemplateToDisplay')
+        return getR( host + '/getActiveContactTemplateToDisplay')
     },
     saveQuestion: (question) => {
-        return $.ajax({
-                url: host + '/saveQuestion', 
-			    type: 'POST',
-			    data: JSON.stringify(question),
-			    //dataType: 'json',
-			    contentType: 'application/json'
-			  });
+        return postR(host + '/saveQuestion', question)
     },
     getQuestionOrder: () => {
-        return $.get( host + '/getQuestionOrder')
+        return getR( host + '/getQuestionOrder')
     },
     getQuestions: () => {
-        return $.get( host + '/getQuestions')
+        return getR( host + '/getQuestions')
     },
     saveQuestionOrder: (_order) => {
-        return $.ajax({
-                url: host + '/saveQuestionOrder', 
-			    type: 'POST',
-			    data: JSON.stringify(_order),
-			    //dataType: 'json',
-			    contentType: 'application/json'
-			  });
+        return postR(host + '/saveQuestionOrder', _order)
     },
     getQuestionById: (id) => {
-        return $.get( host + '/getQuestionById/' + id)
+        return getR( host + '/getQuestionById/' + id)
     },
     deleteQuestion: (id) => {
-        return $.ajax({
-                url: host + '/deleteQuestion', 
-			    type: 'POST',
-			    data: JSON.stringify(id),
-			    //dataType: 'json',
-			    contentType: 'application/json'
-			  });
+        return postR(host + '/deleteQuestion', id)
     }
 }
 

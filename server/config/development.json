@@ -6,7 +6,7 @@
     "fb":{
         "appID": "258563667910331",
         "appSecret": "cc35af8db6c0972604e46dfd1e65f7b3",
-        "callbackURL": "https://material-code84.c9users.io/auth/facebook/callback"
+        "callbackURL": "https://material-code84.c9users.io:8082/auth/facebook/callback"
     },
     "gmail":[{
       "user": "pumpedupdevs@gmail.com",
@@ -25,6 +25,23 @@
       "pass": "dkatthodyocnmjcq",
       "from": "\"Pumpedupbro \" <meike@theunderdogsresuce.com>"
     }],
+    "permissionCodes" : {
+      "ADDUSER" : "ADDUSER",
+      "ADDPET" : "ADDPET",
+      "CANEMAIL" : "CANEMAIL",
+      "CANEDITEMAILLIST" : "CANEDITEMAILLIST",
+      "CANCREATEROLE" : "CANCREATEROLE",
+      "CANEDITROLE" : "CANEDITROLE",
+      "CANEDITUSER" : "CANEDITUSER",
+      "CANCREATEEMAILLIST" : "CANCREATEEMAILLIST",
+      "CANEDITABOUTUS" : "CANEDITABOUTUS",
+      "CANEDITCONTACTINFO" : "CANEDITCONTACTINFO",
+      "CANADDFAQ" : "CANADDFAQ",
+      "CANDELETEFAQ" : "CANDELETEFAQ",
+      "CANEDITFAQ" : "CANEDITFAQ"
+    },
+    "addHeaderToDomain": "https://material-code84.c9users.io:8080",
+    "superAdmins" : ["10158081909300057"],
     "attachment_directory": "tmp_attachments", 
     "useCache": true
 }

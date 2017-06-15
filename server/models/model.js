@@ -262,10 +262,6 @@ module.exports = function (setup_mongoose) {
     
     FAQOrderModel = mongoose.model('faqOrder', faqOrderSchema);
     
-    return PermissionModel.insertMany([
-            
-        ]) 
-    
     /*
     //populate master data
     return PermissionModel.insertMany([

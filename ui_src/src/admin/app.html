@@ -69,7 +69,7 @@
                     <li>
                         <a href=""><i class="zmdi zmdi-settings"></i> Settings</a>
                     </li> -->
-                    <li>
+                    <li style="cursor:pointer">
                         <a click.delegate="click_logout()"><i class="zmdi zmdi-time-restore"></i> Logout</a>
                     </li>
                 </ul>
@@ -81,7 +81,7 @@
                 <li><a href="form-elements.html"><i class="zmdi zmdi-collection-text"></i> Form Elements</a></li>
                 <li><a href="buttons.html"><i class="zmdi zmdi-crop-16-9"></i> Buttons</a></li>
                 <li><a href="icons.html"><i class="zmdi zmdi-airplane"></i>Icons</a></li> -->
-                
+                <li><a click.delegate="click_logout()"><i class="zmdi zmdi-settings"></i> Logout</a></li>
                 <li><a href="#roles"><i class="zmdi zmdi-settings"></i> Manage Roles</a></li>
                 <li><a href="#users"><i class="zmdi zmdi-account"></i> Manage Users</a></li>
                 <li><a href="#emaillists"><i class="zmdi zmdi-email"></i> Manage Email List</a></li>
@@ -119,7 +119,7 @@
         </aside>
         <section id="content">
             <div class="container">
-        		<router-view></router-view>
+                <router-view></router-view>
             </div>
         </section>
 
