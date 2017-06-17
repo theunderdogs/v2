@@ -66,7 +66,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
       jsonParser,
       passport.authenticate('facebook-token'),
       (req, res) => {
-          console.log('authenticated', req.user);
+          //console.log('authenticated', req.user);
         // do something with req.user
         if(req.user) {
             res.json({ host: config.host, 
