@@ -1,4 +1,5 @@
 import $ from 'jquery';
+window.$ = $;
 import 'bootstrap';
 import routes from 'common/routes.json!';
 import {services} from 'common/services';
@@ -6,9 +7,10 @@ import _ from 'lodash';
 //we added full calendar so that calendar widget will work with bundling
 import 'fullcalendar';
 //we added jquery ui and touch punch so the faq drop drag works withn bundled
-import 'jquery-ui';
-import 'jquery-ui-touch-punch';
-window.$ = $;
+SystemJS.import('jquery-ui')
+.then(() => {
+  SystemJS.import('jquery-ui-touch-punch');	
+})
 
 export function configure(aurelia) {
   if(env === 'PROD') {
