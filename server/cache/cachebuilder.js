@@ -23,7 +23,13 @@ module.exports.buildRolesPermissionMap = () => {
             if(!roles)
                 return null;
                 
-            var ids = _.map(roles, '_id');
+            var ids = _.reduce(roles, function(idArray, role) {
+                  if (role.enable) {
+                     idArray.push(role._id);
+                  }
+                  return idArray;
+                }, []);
+            
             var p = [];
             
             ids.forEach((id) => {

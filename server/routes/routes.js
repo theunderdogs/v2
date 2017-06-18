@@ -32,7 +32,10 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
             
             //console.log('inside saveEmailList', userPermissions)             
             
-            if(!userPermissions.permissions || userPermissions.permissions.length == 0) {
+            if(!userPermissions) {
+                console.log('Permissions not found in map')
+                return false
+            } else if(!userPermissions.permissions || userPermissions.permissions.length == 0) {
                 console.log('permission array is empty')
                 return false //throw new Error('You don\'t have permission to perform this action') //res.status(401).send('You don\'t have permission to perform this actions')
             } else {
@@ -85,7 +88,8 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         //console.log('index route hit');
         res.render('home', { 
             host: config.host, 
-            year: new Date().getFullYear() 
+            year: new Date().getFullYear(),
+            env: config.env
         });
     });
     
@@ -147,7 +151,13 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        })
     });
     
-    router.post('/saveRole',  securePages, jsonParser ,(req, res, next) => {
+    router.post('/saveRole',  securePages, jsonParser, (req, res, next) => {
+            if(calculatePermissions(req, permissionCodes.CANEDITROLE, 'yes')){
+                next()
+            } else {
+                res.status(401).send('You dont have permission to perform this action')
+            }
+        }, (req, res, next) => {
         //console.log(req.body);
         userApi.saveRole(req.body)
         .then(() => {
@@ -160,7 +170,13 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         });
     });
     
-    router.post('/createRole',  securePages, jsonParser ,(req, res, next) => {
+    router.post('/createRole',  securePages, jsonParser, (req, res, next) => {
+        if(calculatePermissions(req, permissionCodes.CANCREATEROLE, 'yes')){
+            next()
+        } else {
+            res.status(401).send('You dont have permission to perform this action')
+        }
+    } ,(req, res, next) => {
         //console.log(req.body);
         userApi.saveRole(req.body)
         .then(() => {
@@ -195,6 +211,10 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
             }
         } else {
             //edit a user
+             
+            if(! calculatePermissions(req, permissionCodes.CANEDITUSER, 'yes')) {
+                return res.status(401).send('You dont have permission to perform this action')
+            } 
              
             //if someone other than admin tries to edit superadmin user then fuck him off
             if(!isSuperAdmin) {
@@ -253,7 +273,11 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
                 res.status(401).send('You dont have permission to perform this action')
             }
         } else {
-            next()
+            if(calculatePermissions(req, permissionCodes.CANCREATEEMAILLIST, 'yes')){
+                next()
+            } else {
+                res.status(401).send('You dont have permission to perform this action')
+            }
         }
     }, (req, res, next) => {
         //console.log(req.user.user);
@@ -312,7 +336,17 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        res.json(config.gmail.map( credentials => ({ user: credentials.user, from: credentials.from }) )  );
     });
     
-    router.post('/sendEmail',  securePages, jsonParser ,(req, res, next) => {
+    router.post('/sendEmail',  securePages, jsonParser, (req, res, next) => {
+        if(req.body._id) {
+            if(calculatePermissions(req, permissionCodes.CANEMAIL, 'yes')){
+                next()
+            } else {
+                res.status(401).send('You dont have permission to perform this action')
+            }
+        } else {
+            next()
+        }
+    }, (req, res, next) => {
         
         //console.log(req.body);
         var mail = _.filter(config.gmail, function(c) { 
@@ -391,7 +425,21 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         
     });
     
-    router.post('/saveAboutus',  securePages, jsonParser ,(req, res, next) => {
+    router.post('/saveAboutus',  securePages, jsonParser , (req, res, next) => {
+        if(req.body._id) {
+            if(calculatePermissions(req, permissionCodes.CANEDITABOUTUS, 'yes')){
+                next()
+            } else {
+                res.status(401).send('You dont have permission to perform this action')
+            }
+        } else {
+            if(calculatePermissions(req, permissionCodes.CANCREATEABOUTUS, 'yes')){
+                next()
+            } else {
+                res.status(401).send('You dont have permission to perform this action')
+            }
+        }
+    }, (req, res, next) => {
         if(!req.body._id)
             req.body.createdBy = req.user.user._id;
         
@@ -441,7 +489,21 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        })
     });
     
-    router.post('/saveContactTemplate',  securePages, jsonParser ,(req, res, next) => {
+    router.post('/saveContactTemplate',  securePages, jsonParser, (req, res, next) => {
+        if(req.body._id) {
+            if(calculatePermissions(req, permissionCodes.CANEDITCONTACTINFO, 'yes')){
+                next()
+            } else {
+                res.status(401).send('You dont have permission to perform this action')
+            }
+        } else {
+            if(calculatePermissions(req, permissionCodes.CANCREATECONTACTINFO, 'yes')){
+                next()
+            } else {
+                res.status(401).send('You dont have permission to perform this action')
+            }
+        }
+    }, (req, res, next) => {
         if(!req.body._id)
             req.body.createdBy = req.user.user._id;
         
@@ -514,7 +576,21 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        })
     });
     
-    router.post('/saveQuestion',  securePages, jsonParser ,(req, res, next) => {
+    router.post('/saveQuestion',  securePages, jsonParser, (req, res, next) => {
+        if(req.body._id) {
+            if(calculatePermissions(req, permissionCodes.CANEDITFAQ, 'yes')){
+                next()
+            } else {
+                res.status(401).send('You dont have permission to perform this action')
+            }
+        } else {
+            if(calculatePermissions(req, permissionCodes.CANADDFAQ, 'yes')){
+                next()
+            } else {
+                res.status(401).send('You dont have permission to perform this action')
+            }
+        }
+    }, (req, res, next) => {
         if(!req.body._id)
             req.body.createdBy = req.user.user._id;
         
@@ -568,7 +644,13 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
     //     //res.redirect('/login');
     // });
     
-    router.post('/deleteQuestion',  securePages, jsonParser ,(req, res, next) => {
+    router.post('/deleteQuestion',  securePages, jsonParser, (req, res, next) => {
+        if(calculatePermissions(req, permissionCodes.CANDELETEFAQ, 'yes')){
+            next()
+        } else {
+            res.status(401).send('You dont have permission to perform this action')
+        }
+    }, (req, res, next) => {
         //console.log(req.body);
         userApi.deleteQuestion(req.body.id)
         .then(() => {

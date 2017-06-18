@@ -2,17 +2,31 @@ import $ from 'jquery';
 import 'bootstrap';
 import routes from 'common/routes.json!';
 import {services} from 'common/services';
+import _ from 'lodash';
+//we added full calendar so that calendar widget will work with bundling
+import 'fullcalendar';
+//we added jquery ui and touch punch so the faq drop drag works withn bundled
+import 'jquery-ui';
+import 'jquery-ui-touch-punch';
 window.$ = $;
 
 export function configure(aurelia) {
+  if(env === 'PROD') {
+    window.console.log = () => {};
+  }
+  
+  
   let db = aurelia.container.get(services);
   window._aurelia = aurelia;
   
   //aurelia.use.instance('apiRoot', 'https://material-code84.c9users.io/');
   aurelia.use
     .standardConfiguration()
-    .developmentLogging()
     .plugin('aurelia-validation');
+
+  if(env !== 'PROD') {
+    aurelia.use.developmentLogging() 
+  }
 
   //Uncomment the line below to enable animation.
   //aurelia.use.plugin('aurelia-animator-css');
@@ -75,6 +89,25 @@ export function configure(aurelia) {
     localStorage.removeItem('accesstoken')
     console.log('root: publicapp')
     //root = 'public/publicapp'
+  }
+  
+  //make sure the route is present
+  if (window.location.hash) {
+    let _hash = window.location.hash
+    let lookupFor = _hash.replace('#', '')
+    
+    let routesToLookFor = root === 'admin/app' ? routes.protected : routes.public
+    
+    let routeFound = false
+    routesToLookFor.forEach((r) => {
+      if(_.find(r.routes, function(p) { return p === lookupFor; })) { 
+        routeFound = true
+      }
+    })
+    
+    if(!routeFound) {
+      window.location.hash = ''
+    }
   }
 
   rootP

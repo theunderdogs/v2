@@ -35,11 +35,15 @@ module.exports = function(path, passport, FacebookStrategy, FacebookTokenStrateg
                         done(null, { user, profile });
                 
                     else {
-                        var userPermissions =  _.filter(cacheBuilder.permissionMap, (r) => { 
+                        var userPermissions =  _.find(cacheBuilder.permissionMap, (r) => { 
                             return r.name === user.role.name;     
-                         })[0];
-                     
-                        done(null, {user, profile, userPermissions }) 
+                         });
+                         
+                         if(!userPermissions) {
+                           console.log('user role might have been disabled')  
+                         } else {
+                            done(null, {user, profile, userPermissions })
+                         }
                     }
                 } else {
                     console.log('No user present');
@@ -69,18 +73,23 @@ module.exports = function(path, passport, FacebookStrategy, FacebookTokenStrateg
                         done(null, { user, profile });
                     }
                     else {
-                        var userPermissions =  _.filter(cacheBuilder.permissionMap, (r) => { 
+                        var userPermissions =  _.find(cacheBuilder.permissionMap, (r) => { 
                             return r.name === user.role.name;     
-                         })[0];
-                        
-                        done(null, {user, profile, userPermissions }) 
+                         });
+                         
+                         if(!userPermissions) {
+                           console.log('user role might have been disabled') 
+                           done(null, null)
+                         } else {
+                            done(null, {user, profile, userPermissions })
+                         } 
                     }
                 } else {
-                    console.log('No user present');
+                    done(null, null) //console.log('No user present');
                 }
             })
             .catch((err) => {
-                console.log('Login failed')
+                done(null, null)//console.log('Login failed')
             })
     }));
 }

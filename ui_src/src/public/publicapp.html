@@ -239,11 +239,21 @@
             <nav class="ha-menu">
                 <ul>
                     <li class.bind="router.currentInstruction.config.moduleId === 'public/viewmodels/home'? 'active' : ''"><a href="#">Home</a></li>
+                    <li><a href="https://www.petfinder.com/pet-search?shelter_id=OK405" target="_blank">Adoptable Pets</a></li> 
                     <li class.bind="router.currentInstruction.config.moduleId === 'public/viewmodels/donate'? 'active' : ''"><a href="#donate">Donate</a></li>
                     <li class.bind="router.currentInstruction.config.moduleId === 'public/viewmodels/faq'? 'active' : ''"><a href="#faq">FAQ</a></li>
                     <li class.bind="router.currentInstruction.config.moduleId === 'public/viewmodels/about'? 'active' : ''"><a href="#about">About Us</a></li>
                     
-                    <li class="waves-effect pull-right"><a href="#"><i class="zmdi zmdi-facebook-box zmdi-hc-fw myicons"></i></a></li>
+                    <li class="waves-effect pull-center">
+                        <a href="https://www.facebook.com/theunderdogs/" target="_blank">
+                            <i class="zmdi zmdi-facebook-box"></i>
+                        </a>
+                    </li>
+                    <li class="waves-effect pull-center">
+                        <a href="https://www.instagram.com/theunderdogsrescue/" target="_blank">
+                            <i class="zmdi zmdi-instagram"></i>
+                        </a>
+                    </li>
                     <!--<li class="dropdown">-->
                     <!--    <a href="" data-toggle="dropdown">More</a>-->
 
@@ -358,16 +368,31 @@
             <!--</div>-->
 
             <ul class="main-menu">
-                <li class="active">
+                <li class.bind="router.currentInstruction.config.moduleId === 'public/viewmodels/home'? 'active' : ''">
                     <a href="#"><i class="zmdi zmdi-home"></i> Home</a>
                 </li>
-                <li class="sub-menu">
-                    <a href="" data-ma-action="submenu-toggle"><i class="zmdi zmdi-chart"></i> Dashboards</a>
+                <!--<li class="sub-menu">-->
+                <!--    <a href="" data-ma-action="submenu-toggle"><i class="zmdi zmdi-chart"></i> Dashboards</a>-->
 
-                    <ul>
-                        <li><a href="dashboards/analytics.html">Analytics</a></li>
-                        <li><a href="dashboards/school.html">School</a></li>
-                    </ul>
+                <!--    <ul>-->
+                <!--        <li><a href="dashboards/analytics.html">Analytics</a></li>-->
+                <!--        <li><a href="dashboards/school.html">School</a></li>-->
+                <!--    </ul>-->
+                <!--</li>-->
+                <li>
+                    <a href="https://www.petfinder.com/pet-search?shelter_id=OK405" target="_blank">
+                        <i class="zmdi zmdi-github-box"></i>
+                        Adoptable Pets
+                    </a>
+                </li>
+                <li class.bind="router.currentInstruction.config.moduleId === 'public/viewmodels/donate'? 'active' : ''">
+                    <a href="#donate"><i class="zmdi zmdi-money"></i> Donate</a>
+                </li>
+                <li class.bind="router.currentInstruction.config.moduleId === 'public/viewmodels/faq'? 'active' : ''">
+                    <a href="#faq"><i class="zmdi zmdi-pin-help"></i> FAQ</a>
+                </li>
+                <li class.bind="router.currentInstruction.config.moduleId === 'public/viewmodels/about'? 'active' : ''">
+                    <a href="#about"><i class="zmdi zmdi-mood"></i> About Us</a>
                 </li>
             </ul>
         </aside>

@@ -28,9 +28,20 @@
       <script>
         window.host = '{{ host  }}';
         window.year = '{{ year }}';
+        window.env = '{{env}}'
       </script>
   </head>
-  <body aurelia-app="main">
+  <body>
+    <div aurelia-app="main"></div>
+    <div class="page-loader">
+        <div class="preloader pls-blue">
+            <svg class="pl-circular" viewBox="25 25 50 50">
+                <circle class="plc-path" cx="50" cy="50" r="20"></circle>
+            </svg>
+
+            <p>Please wait...</p>
+        </div>
+    </div>
     <!-- <div class="splash">
       <div class="message">The Underdogs Resuce</div>
       <i class="fa fa-spinner fa-spin"></i>
@@ -58,21 +69,21 @@
 
       window.onload = function() {
 
-        function hasClass(element, cls) {
-            return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
-        }
+        // function hasClass(element, cls) {
+        //     return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+        // }
         /*----------------------------------------------------------
             Page Loader
          -----------------------------------------------------------*/
-        if(!hasClass(document.documentElement, 'ismobile')) {
-            if(document.getElementsByClassName('page-loader').length > 0) {
-                setTimeout (function () {
-                    //$('.page-loader').fadeOut();
-                    document.getElementsByClassName('page-loader')[0].style.display = "none";
-                }, 500);
+        // if(!hasClass(document.documentElement, 'ismobile')) {
+        //     if(document.getElementsByClassName('page-loader').length > 0) {
+        //         setTimeout (function () {
+        //             //$('.page-loader').fadeOut();
+        //             document.getElementsByClassName('page-loader')[0].style.display = "none";
+        //         }, 500);
 
-            }
-        }
+        //     }
+        // }
       };
     </script>
   </body>

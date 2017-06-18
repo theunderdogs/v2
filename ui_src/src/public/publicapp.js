@@ -6,6 +6,7 @@ import AuthorizeStep from 'common/AuthorizeStep';
 import PreActivateStep from 'common/PreActivateStep'; 
 import PreRenderStep from 'common/PreRenderStep'; 
 import PostRenderStep from 'common/PostRenderStep'; 
+import swal from 'sweet-alert';
 
 @inject(TaskQueue, Aurelia, services)
 export class App {
@@ -61,11 +62,12 @@ export class App {
 			     // .then(() => {
 				    //   self.aurelia.root.viewModel.router.navigateToRoute('');
 				    // }); 
-		      },(err) => {
+		      }, (err) => {
 		      	console.log('error', err)
 		      	//user not found in underdogs database
 		      	console.log('setting access token', null)
 		      	localStorage['accesstoken'] = null;
+		      	swal('You are not authorized to enter this site')
 		      });
         	
   }

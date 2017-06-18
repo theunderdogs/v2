@@ -262,112 +262,131 @@ module.exports = function (setup_mongoose) {
     
     FAQOrderModel = mongoose.model('faqOrder', faqOrderSchema);
     
+    return PermissionModel.count()
+        .then((c) => {
+            if (c > 0) {
+                return true
+            } else {
+                //populate master data
+                
+                return PermissionModel.insertMany([
+                    new PermissionModel({
+                              name: 'CANCREATECONTACTINFO',
+                        	  description: 'Can user create new versions of "Contact Us" template?', 
+                        	  acceptedValues: ['yes','no']
+                    }), new PermissionModel({
+                          name: 'CANCREATEABOUTUS',
+                    	  description: 'Can user create new versions of "About Us" page?', 
+                    	  acceptedValues: ['yes','no']
+                    }), new PermissionModel({
+                          name: 'ADDUSER',
+                    	  description: 'Is the user allowed to add another user?', 
+                    	  acceptedValues: ['yes','no']
+                    }), new PermissionModel({
+                          name: 'ADDPET',
+                    	  description: 'Is the user allowed to add pet?', 
+                    	  acceptedValues: ['yes','no']
+                    }), new PermissionModel({
+                          name: 'CANEMAIL',
+                    	  description: 'Can user mass email using email list?', 
+                    	  acceptedValues: ['yes', 'no']
+                    }), new PermissionModel({
+                          name: 'CANEDITEMAILLIST',
+                    	  description: 'Can user edit email list?', 
+                    	  acceptedValues: ['yes', 'no']
+                    }),
+                    new PermissionModel({
+                          name: 'CANCREATEROLE',
+                    	  description: 'Can user create new roles?', 
+                    	  acceptedValues: ['yes','no']
+                    }),
+                    new PermissionModel({
+                          name: 'CANEDITROLE',
+                    	  description: 'Can user create new roles?', 
+                    	  acceptedValues: ['yes','no']
+                    }),
+                    new PermissionModel({
+                          name: 'CANEDITUSER',
+                    	  description: 'Can user edit information about other users?', 
+                    	  acceptedValues: ['yes','no']
+                    }),
+                    new PermissionModel({
+                          name: 'CANCREATEEMAILLIST',
+                    	  description: 'Can user create email list?', 
+                    	  acceptedValues: ['yes','no']
+                    }),
+                    new PermissionModel({
+                          name: 'CANEDITABOUTUS',
+                    	  description: 'Can user edit \'About Us\' page?', 
+                    	  acceptedValues: ['yes','no']
+                    }), new PermissionModel({
+                          name: 'CANEDITCONTACTINFO',
+                    	  description: 'Can user edit \'Contact Us\' widget on main page?', 
+                    	  acceptedValues: ['yes','no']
+                    }), new PermissionModel({
+                          name: 'CANADDFAQ',
+                    	  description: 'Can user add question to \'FAQ\' page?', 
+                    	  acceptedValues: ['yes', 'no']
+                    }), new PermissionModel({
+                          name: 'CANDELETEFAQ',
+                    	  description: 'Can user delete question on \'FAQ\' page?', 
+                    	  acceptedValues: ['yes', 'no']
+                    }), new PermissionModel({
+                          name: 'CANEDITFAQ',
+                    	  description: 'Can user edit question on \'FAQ\' page?', 
+                    	  acceptedValues: ['yes', 'no']
+                    })
+                ]) 
+                .then((docs)=> {
+                    //console.log(docs);
+                    let id;
+                    docs.forEach((doc) => {
+                        if(doc.name == 'ADDUSER') {
+                            id = doc._id;
+                        }
+                    });
+                    
+                    var role = new RoleModel({
+                        name : 'MANAGER', 
+                    	permissions : [{
+                    		item: id,
+                    		value: 'yes'
+                    	}],
+                    	enable: true
+                    });
+                    
+                    return role.save()
+                    .then(() => {
+                        return role;
+                    });
+                })
+                .then((role) => {
+                    //console.log('role', role);
+                    return UserModel.insertMany([{ 
+                        realName : 'Kiran Deore', 
+                    	facebookId : '10158081909300057', 
+                    	isAdmin: true,
+                    	enable: true
+                    },{ 
+                        realName : 'Meike Parker', 
+                    	facebookId : '5555', 
+                    	isAdmin: false,
+                    	role: role._id,
+                    	enable: true 
+                    }])
+                })
+                .then((users) => {
+                   //console.log(users)        
+                })
+                .catch((error) => {
+                    console.log('oh boy: ' + error);
+                });
+            }
+        })
+    
     /*
     //populate master data
-    return PermissionModel.insertMany([
-            new PermissionModel({
-                  name: 'ADDUSER',
-            	  description: 'Is the user allowed to add another user?', 
-            	  acceptedValues: ['yes','no']
-            }), new PermissionModel({
-                  name: 'ADDPET',
-            	  description: 'Is the user allowed to add pet?', 
-            	  acceptedValues: ['yes','no']
-            }), new PermissionModel({
-                  name: 'CANEMAIL',
-            	  description: 'Can user mass email using email list?', 
-            	  acceptedValues: ['yes', 'no']
-            }), new PermissionModel({
-                  name: 'CANEDITEMAILLIST',
-            	  description: 'Can user edit email list?', 
-            	  acceptedValues: ['yes', 'no']
-            }),
-            new PermissionModel({
-                  name: 'CANCREATEROLE',
-            	  description: 'Can user create new roles?', 
-            	  acceptedValues: ['yes','no']
-            }),
-            new PermissionModel({
-                  name: 'CANEDITROLE',
-            	  description: 'Can user create new roles?', 
-            	  acceptedValues: ['yes','no']
-            }),
-            new PermissionModel({
-                  name: 'CANEDITUSER',
-            	  description: 'Can user edit information about other users?', 
-            	  acceptedValues: ['yes','no']
-            }),
-            new PermissionModel({
-                  name: 'CANCREATEEMAILLIST',
-            	  description: 'Can user create email list?', 
-            	  acceptedValues: ['yes','no']
-            }),
-            new PermissionModel({
-                  name: 'CANEDITABOUTUS',
-            	  description: 'Can user edit \'About Us\' page?', 
-            	  acceptedValues: ['yes','no']
-            }), new PermissionModel({
-                  name: 'CANEDITCONTACTINFO',
-            	  description: 'Can user edit \'Contact Us\' widget on main page?', 
-            	  acceptedValues: ['yes','no']
-            }), new PermissionModel({
-                  name: 'CANADDFAQ',
-            	  description: 'Can user add question to \'FAQ\' page?', 
-            	  acceptedValues: ['yes', 'no']
-            }), new PermissionModel({
-                  name: 'CANDELETEFAQ',
-            	  description: 'Can user delete question on \'FAQ\' page?', 
-            	  acceptedValues: ['yes', 'no']
-            }), new PermissionModel({
-                  name: 'CANEDITFAQ',
-            	  description: 'Can user edit question on \'FAQ\' page?', 
-            	  acceptedValues: ['yes', 'no']
-            })
-        ]) 
-    .then((docs)=> {
-        //console.log(docs);
-        let id;
-        docs.forEach((doc) => {
-            if(doc.name == 'ADDUSER') {
-                id = doc._id;
-            }
-        });
-        
-        var role = new RoleModel({
-            name : 'MANAGER', 
-        	permissions : [{
-        		item: id,
-        		value: 'yes'
-        	}],
-        	enable: true
-        });
-        
-        return role.save()
-        .then(() => {
-            return role;
-        });
-    })
-    .then((role) => {
-        //console.log('role', role);
-        return UserModel.insertMany([{ 
-            realName : 'Kiran Deore', 
-        	facebookId : '10158081909300057', 
-        	isAdmin: true,
-        	enable: true
-        },{ 
-            realName : 'Meike Parker', 
-        	facebookId : '5555', 
-        	isAdmin: false,
-        	role: role._id,
-        	enable: true 
-        }])
-    })
-    .then((users) => {
-       // console.log(users)        
-    })
-    .catch((error) => {
-        console.log('oh boy: ' + error);
-    });
+    
     */
     
 }

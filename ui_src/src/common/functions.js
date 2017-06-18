@@ -2,7 +2,7 @@ import { TaskQueue } from 'aurelia-framework';
 
 export const functions = {
     getRandomColor : () => {    
-        return ['lightblue', 'bluegray', 'cyan', 'teal', 'green', 'orange', 'blue', 'purple'][Math.floor((Math.random() * 8) + 1) - 1];
+        return ['lightblue', 'cyan', 'teal', 'green', 'orange', 'blue', 'purple'][Math.floor((Math.random() * 7) + 1) - 1]; //'bluegray'
     },
     postRenderScript : () => {
         let taskQueue = _aurelia.container.get(TaskQueue);
@@ -144,6 +144,24 @@ export const functions = {
       	                break;
       	        }
       	    });
+      
+            /*----------------------------------------------------------
+            Page Loader
+            -----------------------------------------------------------*/
+            function hasClass(element, cls) {
+                return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+            }
+            
+            if(!hasClass(document.documentElement, 'ismobile')) {
+                if(document.getElementsByClassName('page-loader').length > 0) {
+                    //setTimeout (function () {
+                        //$('.page-loader').fadeOut();
+                        document.getElementsByClassName('page-loader')[0].style.display = "none";
+                    //}, 500);
+    
+                }
+            }    
+      
       
           });
     }
