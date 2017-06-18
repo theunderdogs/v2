@@ -15,7 +15,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
          passport.authenticate('facebook-token', (err, userData, info) => {
              if(userData) {
                  req.user = userData
-                 console.log('Im in', req.user)
+                 //console.log('Im in', req.user)
                  return next()
              } else {
                  res.sendStatus(401)
@@ -196,7 +196,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
     });
     
     router.post('/saveUser',  securePages, jsonParser, (req, res, next) => {
-        var isSuperAdmin = _.find(config.superAdmins, ( a ) => {return a == req.user.user._id });
+        var isSuperAdmin = _.find(config.superAdmins, ( a ) => {return a == req.user.user.facebookId });
             
         if(!req.body._id) {
              // add a user 

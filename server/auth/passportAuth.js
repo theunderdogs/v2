@@ -66,6 +66,7 @@ module.exports = function(path, passport, FacebookStrategy, FacebookTokenStrateg
             .exec()
             .then((user) => {
                 if(user){
+                    //console.log('facebookid:', profile.id, 'displayName:' , profile.displayName)
                 //console.log(cacheBuilder.permissionMap)
                     //  console.log(userPermissions)
                     if(user.isAdmin) {

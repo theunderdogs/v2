@@ -67,7 +67,13 @@ export class App {
 		      	//user not found in underdogs database
 		      	console.log('setting access token', null)
 		      	localStorage['accesstoken'] = null;
-		      	swal('You are not authorized to enter this site')
+		      	
+		      	FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id,picture.width(150).height(150)'}, function(data) {
+			      console.log('profile', data)
+			      console.log('**************')
+			      
+			      swal('It looks like you are trying to access for the first time. Please pass the following code to admin to get access.<br>Code: ' + data.id )
+			    });
 		      });
         	
   }

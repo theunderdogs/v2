@@ -45,7 +45,7 @@ export const services = {
         return getR( host + '/getUsers')
     },
     saveUser: (user) => {
-        return getR( host + '/saveUser')
+        return postR( host + '/saveUser', user)
     },
     getUserByFacebookId: (facebookId) => {
         return getR( host + '/getUserByFacebookId/' + facebookId)
