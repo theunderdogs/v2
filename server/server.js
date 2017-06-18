@@ -5,7 +5,7 @@
 //watch video for facebook standrd login for unlimited users
 //https://developers.facebook.com/docs/marketing-api/access
 
-console.log("Node Version: " + process.version)
+console.log('Node Version: ' + process.version, 'Environment: ', process.env.NODE_ENV  || 'development')
 
 var express = require('express'),
     app = express(),
