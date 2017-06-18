@@ -1,6 +1,6 @@
 {
     "env":  "PROD",
-    "dbURL" : "mongodb://kirandeore:Shiv1984@ds023654.mlab.com:23654/underdogsdb",
+    "dbURL" : "mongodb://tinman:Shiv1984@ds149567.mlab.com:49567/underdogs_production",
     "host": "http://theunderdogs.info",
     "port": 80,
     "sessionSecret": "b956bc4234e7d195413463ea35144df8",
