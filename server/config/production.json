@@ -1,7 +1,7 @@
 {
     "env":  "PROD",
     "dbURL" : "mongodb://kirandeore:Shiv1984@ds023654.mlab.com:23654/underdogsdb",
-    "host": "https://theunderdogs.info",
+    "host": "http://theunderdogs.info",
     "port": 80,
     "sessionSecret": "b956bc4234e7d195413463ea35144df8",
     "fb":{
@@ -10,10 +10,6 @@
         "callbackURL": "https://theunderdogs.info/auth/facebook/callback"
     },
     "gmail":[{
-      "user": "pumpedupdevs@gmail.com",
-      "pass": "rmvsrtlpmpuzemkx",
-      "from": "\"Meike Parker 👻\" <mail@theunderdogs.com>"
-    },{
       "user": "kirandeore@gmail.com",
       "pass": "rmvsrtlpmpuzemkx",
       "from": "\"Kiran Deore 👻\" <mail@kiran.com>"
@@ -21,10 +17,6 @@
       "user": "theunderdogsrescue@gmail.com",
       "pass": "dkatthodyocnmjcq",
       "from": "\"Meike Parker \" <meike@theunderdogsresuce.com>"
-    },{
-      "user": "pumpedupbro@gmail.com",
-      "pass": "dkatthodyocnmjcq",
-      "from": "\"Pumpedupbro \" <meike@theunderdogsresuce.com>"
     }],
     "permissionCodes" : {
       "ADDUSER" : "ADDUSER",
