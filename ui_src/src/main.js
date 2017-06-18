@@ -11,7 +11,7 @@ SystemJS.import('jquery-ui')
 .then(() => {
   SystemJS.import('jquery-ui-touch-punch');	
 })
-
+ 
 export function configure(aurelia) {
   if(env === 'PROD') {
     window.console.log = () => {};
