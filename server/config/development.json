@@ -40,6 +40,7 @@
       "CANDELETEFAQ" : "CANDELETEFAQ",
       "CANEDITFAQ" : "CANEDITFAQ"
     },
+    "superAdmins" : ["10158081909300057"],
     "addHeaderToDomain": "https://material-code84.c9users.io:8080",
     "superAdmins" : ["10158081909300057"],
     "attachment_directory": "tmp_attachments", 

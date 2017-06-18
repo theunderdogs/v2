@@ -1,7 +1,7 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
 
 module.exports = function(express, app, passport, config, mongoose, formidable, bodyParser, _, fs, util, os, cacheBuilder){
-    //var nodemailer = require('nodemailer');
+    var permissionCodes = config.permissionCodes
     var router = express.Router();
     var jsonParser = bodyParser.json();
     var userApi =  require( process.cwd() + '/api/user_api');
@@ -15,6 +15,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
          passport.authenticate('facebook-token', (err, userData, info) => {
              if(userData) {
                  req.user = userData
+                 console.log('Im in', req.user)
                  return next()
              } else {
                  res.sendStatus(401)
@@ -24,7 +25,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         //return req.user?  next() : res.sendStatus(401);
     };
     var calculatePermissions = (req, permissionCode, validValue) => {
-        if(req.body._id && !req.user.user.isAdmin){
+        if(!req.user.user.isAdmin){
           var userPermissions =  _.filter(cacheBuilder.permissionMap, (r) => { 
                             return r.name === req.user.user.role.name;     
                          })[0];
@@ -178,7 +179,45 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        })
     });
     
-    router.post('/saveUser',  securePages, jsonParser ,(req, res, next) => {
+    router.post('/saveUser',  securePages, jsonParser, (req, res, next) => {
+        var isSuperAdmin = _.find(config.superAdmins, ( a ) => {return a == req.user.user._id });
+            
+        if(!req.body._id) {
+             // add a user 
+             
+             // is not super admin and trying to make admin
+            if(!isSuperAdmin && req.body.isAdmin) {
+                res.status(401).send('You dont have permission to make admins')
+            } else if(calculatePermissions(req, permissionCodes.ADDUSER, 'yes')){
+                next()
+            } else {
+                res.status(401).send('You dont have permission to perform this action')
+            }
+        } else {
+            //edit a user
+             
+            //if someone other than admin tries to edit superadmin user then fuck him off
+            if(!isSuperAdmin) {
+              var isTryingToEditSuperAdmin = _.find(config.superAdmins, ( a ) => { return a == req.body.facebookId })
+              
+              if(isTryingToEditSuperAdmin) {
+                  res.status(401).send('You can\'t edit super admin')
+              } else {
+                  // is trying to make someone admin
+                   var isTryingToMakeSomeOneAdmin = req.body.isAdmin
+                  
+                   if(isTryingToMakeSomeOneAdmin) {
+                       res.status(401).send('You can\'t make someone admin')
+                   } else {
+                      next()
+                   }
+              }
+            } else {
+              // user is superadmin
+              next()  
+            }
+        }
+    }, (req, res, next) => {
         //console.log(req.body);
         userApi.saveUser(req.body)
         .then(() => {
@@ -206,9 +245,9 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
        })
     });
     
-    router.post('/saveEmailList',  securePages, jsonParser , (req, res, next) => {
+    router.post('/saveEmailList',securePages ,jsonParser ,(req, res, next) => {
         if(req.body._id) {
-            if(calculatePermissions(req, 'CANEDITEMAILLIST', 'yes')){
+            if(calculatePermissions(req, permissionCodes.CANEDITEMAILLIST, 'yes')){
                 next()
             } else {
                 res.status(401).send('You dont have permission to perform this action')

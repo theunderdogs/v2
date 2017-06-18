@@ -175,7 +175,7 @@ export class CreateRole extends Page{
                 .then((role) => {
                     console.log('success', role);
                     hideFn();
-                    this.showSuccess('New role ' + this.role.name + ' created');
+                    this.showSuccess(this.editRole ? this.role.name + ' updated successfully' : 'New role ' + this.role.name + ' created');
                     this.router.navigate('roles');
                 },(err) => {
                     hideFn();
