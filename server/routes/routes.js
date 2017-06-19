@@ -291,7 +291,7 @@ module.exports = function(express, app, passport, config, mongoose, formidable, 
         });
     });
     
-    router.post('/file/post',  securePages, (req, res, next) => {
+    router.post('/file/post', (req, res, next) => {
         var form = new formidable.IncomingForm();
         var tmpFile, nfile, fname;
         
